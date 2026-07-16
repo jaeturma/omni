@@ -17,7 +17,7 @@ class StoreTaxRateRequest extends FormRequest
     {
         $profile = TaxProfile::query()->where('active', true)->first();
 
-        return $profile && (bool) $this->user()?->can('update', $profile);
+        return $profile && (bool) $this->user()?->can('tax-rates.manage');
     }
 
     /**

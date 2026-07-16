@@ -28,7 +28,7 @@ class TaxProfilePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('tax-profile.manage');
+        return $user->can('tax-profile.update');
     }
 
     /**
@@ -36,7 +36,7 @@ class TaxProfilePolicy
      */
     public function update(User $user, TaxProfile $taxProfile): bool
     {
-        return $user->can('tax-profile.manage');
+        return $user->can('tax-profile.update');
     }
 
     /**

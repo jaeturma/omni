@@ -15,9 +15,9 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run(): void
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
-        Permission::query()->where('name', 'system-settings.manage')->where('guard_name', 'web')->delete();
+        Permission::query()->whereIn('name', ['business-profile.manage', 'tax-profile.manage', 'system-settings.manage'])->where('guard_name', 'web')->delete();
         $permissions = [
-            'business-profile.view', 'business-profile.manage', 'tax-profile.view', 'tax-profile.manage',
+            'business-profile.view', 'business-profile.update', 'tax-profile.view', 'tax-profile.update', 'tax-rates.manage',
             'fiscal-years.view', 'fiscal-years.create', 'fiscal-periods.manage', 'fiscal-periods.close', 'fiscal-periods.lock',
             'document-sequences.view', 'document-sequences.manage', 'document-sequences.issue',
             'users.view', 'users.manage', 'roles.view', 'system-settings.view', 'system-settings.update',
@@ -30,7 +30,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $roles = [
             'Administrator' => $permissions,
             'Owner' => $permissions,
-            'Bookkeeper' => ['business-profile.view', 'tax-profile.view', 'tax-profile.manage', 'fiscal-years.view', 'fiscal-periods.manage', 'fiscal-periods.close', 'document-sequences.view', 'document-sequences.manage', 'document-sequences.issue', 'roles.view', 'system-settings.view'],
+            'Bookkeeper' => ['business-profile.view', 'tax-profile.view', 'tax-profile.update', 'tax-rates.manage', 'fiscal-years.view', 'fiscal-periods.manage', 'fiscal-periods.close', 'document-sequences.view', 'document-sequences.manage', 'document-sequences.issue', 'roles.view', 'system-settings.view'],
             'Encoder' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'document-sequences.issue', 'system-settings.view'],
             'Viewer' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'roles.view', 'system-settings.view'],
         ];

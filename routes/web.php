@@ -11,6 +11,7 @@ use App\Http\Controllers\RoleMatrixController;
 use App\Http\Controllers\SystemSettingController;
 use App\Http\Controllers\TaxProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\EnsureUserIsActive;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -28,7 +29,7 @@ Route::middleware('guest')->group(function () {
     Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
     Route::get('/business-profile', [BusinessProfileController::class, 'edit'])->name('business-profile.edit');
     Route::put('/business-profile', [BusinessProfileController::class, 'update'])->name('business-profile.update');

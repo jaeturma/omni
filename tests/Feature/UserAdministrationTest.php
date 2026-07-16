@@ -21,6 +21,8 @@ function managedUserData(array $changes = []): array
 test('initial roles and grouped phase one permissions exist', function () {
     expect(Role::query()->pluck('name')->sort()->values()->all())->toBe(['Administrator', 'Bookkeeper', 'Encoder', 'Owner', 'Viewer'])
         ->and(Permission::query()->where('name', 'users.manage')->exists())->toBeTrue()
+        ->and(Permission::query()->whereIn('name', ['business-profile.update', 'tax-profile.update', 'tax-rates.manage'])->count())->toBe(3)
+        ->and(Permission::query()->whereIn('name', ['business-profile.manage', 'tax-profile.manage'])->exists())->toBeFalse()
         ->and(Role::findByName('Administrator')->permissions)->toHaveCount(Permission::query()->count());
 });
 
@@ -57,6 +59,13 @@ test('inactive users cannot sign in', function () {
     $user = User::factory()->inactive()->create();
 
     $this->post(route('login.store'), ['email' => $user->email, 'password' => 'password'])->assertSessionHasErrors('email');
+    $this->assertGuest();
+});
+
+test('deactivated users cannot continue using an existing session', function () {
+    $user = User::factory()->inactive()->create();
+
+    $this->actingAs($user)->get(route('dashboard'))->assertRedirect(route('login'))->assertSessionHasErrors('email');
     $this->assertGuest();
 });
 

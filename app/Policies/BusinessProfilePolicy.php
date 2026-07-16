@@ -28,7 +28,7 @@ class BusinessProfilePolicy
      */
     public function create(User $user): bool
     {
-        return $user->can('business-profile.manage');
+        return $user->can('business-profile.update');
     }
 
     /**
@@ -36,7 +36,7 @@ class BusinessProfilePolicy
      */
     public function update(User $user, BusinessProfile $businessProfile): bool
     {
-        return $user->can('business-profile.manage');
+        return $user->can('business-profile.update');
     }
 
     /**
