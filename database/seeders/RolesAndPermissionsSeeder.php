@@ -15,11 +15,12 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run(): void
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
+        Permission::query()->where('name', 'system-settings.manage')->where('guard_name', 'web')->delete();
         $permissions = [
             'business-profile.view', 'business-profile.manage', 'tax-profile.view', 'tax-profile.manage',
             'fiscal-years.view', 'fiscal-years.create', 'fiscal-periods.manage', 'fiscal-periods.close', 'fiscal-periods.lock',
             'document-sequences.view', 'document-sequences.manage', 'document-sequences.issue',
-            'users.view', 'users.manage', 'roles.view', 'system-settings.view', 'system-settings.manage',
+            'users.view', 'users.manage', 'roles.view', 'system-settings.view', 'system-settings.update',
         ];
         foreach ($permissions as $permission) {
             Permission::findOrCreate($permission, 'web');

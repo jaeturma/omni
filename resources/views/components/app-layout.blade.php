@@ -5,7 +5,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>{{ $title }} | {{ config('app.name') }}</title>
+        <title>{{ $title }} | {{ $applicationDisplayName }}</title>
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="min-h-screen bg-slate-100 text-slate-900 antialiased">
@@ -21,7 +21,8 @@
                     @can('fiscal-years.view')<a href="{{ route('fiscal-years.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Fiscal Years</a>@endcan
                     @can('document-sequences.view')<a href="{{ route('document-sequences.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Sequences</a>@endcan
                     @can('users.view')<a href="{{ route('users.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Users</a>@endcan
-                    @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Customers', 'Suppliers', 'Accounting', 'Tax Reports', 'Settings'] as $navigationLabel)
+                    @can('system-settings.view')<a href="{{ route('system-settings.edit') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Settings</a>@endcan
+                    @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Customers', 'Suppliers', 'Accounting', 'Tax Reports'] as $navigationLabel)
                         <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                     @endforeach
                 </nav>
@@ -49,7 +50,8 @@
                             @can('fiscal-years.view')<a href="{{ route('fiscal-years.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Fiscal Years</a>@endcan
                             @can('document-sequences.view')<a href="{{ route('document-sequences.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Sequences</a>@endcan
                             @can('users.view')<a href="{{ route('users.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Users</a>@endcan
-                            @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Customers', 'Suppliers', 'Accounting', 'Tax Reports', 'Settings'] as $navigationLabel)
+                            @can('system-settings.view')<a href="{{ route('system-settings.edit') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Settings</a>@endcan
+                            @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Customers', 'Suppliers', 'Accounting', 'Tax Reports'] as $navigationLabel)
                                 <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                             @endforeach
                         </nav>

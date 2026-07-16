@@ -8,6 +8,7 @@ use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\RoleMatrixController;
+use App\Http\Controllers\SystemSettingController;
 use App\Http\Controllers\TaxProfileController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -43,5 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/document-sequences/{documentSequence}/issue', [DocumentSequenceController::class, 'issue'])->name('document-sequences.issue');
     Route::resource('users', UserController::class)->except(['show', 'destroy']);
     Route::get('/roles', RoleMatrixController::class)->name('roles.index');
+    Route::get('/system-settings', [SystemSettingController::class, 'edit'])->name('system-settings.edit');
+    Route::put('/system-settings', [SystemSettingController::class, 'update'])->name('system-settings.update');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
