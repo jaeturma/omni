@@ -7,6 +7,19 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## Omni Mini-ERP local environment
+
+Copy `.env.example` to `.env` without replacing an existing `.env`, then set the owner-controlled MySQL database name, username, and password. Keep `APP_NAME`, `APP_URL`, `APP_TIMEZONE`, and the local drivers aligned with `.env.example`.
+
+After updating `.env`, run:
+
+```bash
+php artisan config:clear
+php artisan migrate:fresh
+```
+
+Never commit `.env` or real credentials.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
