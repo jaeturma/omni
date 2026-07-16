@@ -24,6 +24,7 @@ class SalesInvoice extends Model
 
     protected $attributes = ['gross_amount' => 0, 'discount_amount' => 0, 'net_sales_amount' => 0, 'expected_withholding_amount' => 0, 'total_receivable' => 0, 'paid_amount' => 0, 'balance_due' => 0, 'status' => 'draft'];
 
+    /** @return BelongsTo<Customer, $this> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);

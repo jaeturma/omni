@@ -25,6 +25,7 @@ class CustomerPayment extends Model
 
     protected $attributes = ['withholding_amount' => 0, 'other_deductions' => 0, 'status' => 'draft'];
 
+    /** @return BelongsTo<Customer, $this> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
