@@ -53,6 +53,29 @@ final class SalesAmountCalculator
         ];
     }
 
+    /** @param list<array{gross_amount: string, discount_amount: string, net_amount: string}> $lines
+     * @return array{subtotal: string, line_discount_total: string, document_discount_amount: string, grand_total: string}
+     */
+    public function document(array $lines, string $documentDiscountRate = '0'): array
+    {
+        $this->assertDecimal($documentDiscountRate, 'document discount rate', 6);
+        if (bccomp($documentDiscountRate, '100', 6) === 1) {
+            throw new InvalidArgumentException('Document discount rate cannot exceed 100 percent.');
+        }
+
+        $subtotal = $lineDiscounts = $netLines = '0.0000';
+        foreach ($lines as $line) {
+            $subtotal = bcadd($subtotal, $line['gross_amount'], self::MONEY_SCALE);
+            $lineDiscounts = bcadd($lineDiscounts, $line['discount_amount'], self::MONEY_SCALE);
+            $netLines = bcadd($netLines, $line['net_amount'], self::MONEY_SCALE);
+        }
+        $documentDiscount = $this->round(bcdiv(bcmul($netLines, $documentDiscountRate, 10), '100', 10));
+
+        return ['subtotal' => $subtotal, 'line_discount_total' => $lineDiscounts,
+            'document_discount_amount' => $documentDiscount,
+            'grand_total' => bcsub($netLines, $documentDiscount, self::MONEY_SCALE)];
+    }
+
     private function assertDecimal(string $value, string $field, int $scale): void
     {
         if (! preg_match('/^(?:0|[1-9]\d*)(?:\.\d{1,'.$scale.'})?$/', $value)) {

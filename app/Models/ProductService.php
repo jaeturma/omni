@@ -24,6 +24,7 @@ class ProductService extends Model
         return $this->belongsTo(Category::class);
     }
 
+    /** @return BelongsTo<UnitOfMeasure, $this> */
     public function unitOfMeasure(): BelongsTo
     {
         return $this->belongsTo(UnitOfMeasure::class);

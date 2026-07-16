@@ -13,6 +13,7 @@ use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductServiceController;
+use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\RoleMatrixController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SystemSettingController;
@@ -71,5 +72,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
         ->parameters(['payment-methods' => 'payment_method'])
         ->except('show');
     Route::resource('banks', BankController::class)->except('show');
+    Route::patch('/quotations/{quotation}/status', [QuotationController::class, 'transition'])->name('quotations.transition');
+    Route::get('/quotations/{quotation}/print', [QuotationController::class, 'print'])->name('quotations.print');
+    Route::resource('quotations', QuotationController::class);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

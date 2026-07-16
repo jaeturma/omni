@@ -18,8 +18,8 @@ use Spatie\Permission\Models\Role;
 uses(LazilyRefreshDatabase::class);
 
 test('sales status transitions are explicit and terminal states are immutable', function () {
-    expect(QuotationStatus::Draft->canTransitionTo(QuotationStatus::Sent))->toBeTrue()
-        ->and(QuotationStatus::Accepted->allowedTransitions())->toBeEmpty()
+    expect(QuotationStatus::Draft->canTransitionTo(QuotationStatus::Submitted))->toBeTrue()
+        ->and(QuotationStatus::Approved->canTransitionTo(QuotationStatus::Converted))->toBeTrue()
         ->and(SalesOrderStatus::Confirmed->canTransitionTo(SalesOrderStatus::PartiallyDelivered))->toBeTrue()
         ->and(SalesOrderStatus::Completed->allowedTransitions())->toBeEmpty()
         ->and(DeliveryStatus::Released->canTransitionTo(DeliveryStatus::Delivered))->toBeTrue()
@@ -67,7 +67,7 @@ test('phase three permissions are seeded without transaction records', function 
         ->and(Role::findByName('Encoder')->hasAllPermissions(SalesWorkflow::ENCODER_PERMISSIONS))->toBeTrue()
         ->and(Role::findByName('Viewer')->hasAllPermissions(SalesWorkflow::VIEW_PERMISSIONS))->toBeTrue()
         ->and(Role::findByName('Viewer')->hasPermissionTo('sales-invoices.create'))->toBeFalse()
-        ->and(Schema::hasTable('quotations'))->toBeFalse()
+        ->and(Schema::hasTable('quotations'))->toBeTrue()
         ->and(Schema::hasTable('sales_orders'))->toBeFalse()
         ->and(Schema::hasTable('deliveries'))->toBeFalse()
         ->and(Schema::hasTable('sales_invoices'))->toBeFalse()

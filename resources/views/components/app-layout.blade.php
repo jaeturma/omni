@@ -31,7 +31,8 @@
                     @can('warehouses.view')<a href="{{ route('warehouses.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Warehouses</a>@endcan
                     @can('payment-methods.view')<a href="{{ route('payment-methods.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Payment Methods</a>@endcan
                     @can('banks.view')<a href="{{ route('banks.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Banks</a>@endcan
-                    @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
+                    @can('quotations.view')<a href="{{ route('quotations.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Quotations</a>@endcan
+                    @foreach (['Purchases', 'Expenses', 'Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
                         <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                     @endforeach
                 </nav>
@@ -69,7 +70,8 @@
                             @can('warehouses.view')<a href="{{ route('warehouses.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Warehouses</a>@endcan
                             @can('payment-methods.view')<a href="{{ route('payment-methods.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Payment Methods</a>@endcan
                             @can('banks.view')<a href="{{ route('banks.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Banks</a>@endcan
-                            @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
+                            @can('quotations.view')<a href="{{ route('quotations.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Quotations</a>@endcan
+                            @foreach (['Purchases', 'Expenses', 'Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
                                 <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                             @endforeach
                         </nav>

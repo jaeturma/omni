@@ -9,18 +9,20 @@ enum QuotationStatus: string
     use HasStatusTransitions;
 
     case Draft = 'draft';
-    case Sent = 'sent';
-    case Accepted = 'accepted';
+    case Submitted = 'submitted';
+    case Approved = 'approved';
     case Rejected = 'rejected';
     case Expired = 'expired';
+    case Converted = 'converted';
     case Cancelled = 'cancelled';
 
     /** @return list<self> */
     public function allowedTransitions(): array
     {
         return match ($this) {
-            self::Draft => [self::Sent, self::Cancelled],
-            self::Sent => [self::Accepted, self::Rejected, self::Expired, self::Cancelled],
+            self::Draft => [self::Submitted, self::Cancelled],
+            self::Submitted => [self::Approved, self::Rejected, self::Expired, self::Cancelled],
+            self::Approved => [self::Converted, self::Cancelled],
             default => [],
         };
     }

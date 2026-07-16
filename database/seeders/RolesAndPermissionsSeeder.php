@@ -16,7 +16,7 @@ class RolesAndPermissionsSeeder extends Seeder
     public function run(): void
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
-        Permission::query()->whereIn('name', ['business-profile.manage', 'tax-profile.manage', 'system-settings.manage'])->where('guard_name', 'web')->delete();
+        Permission::query()->whereIn('name', ['business-profile.manage', 'tax-profile.manage', 'system-settings.manage', 'quotations.issue'])->where('guard_name', 'web')->delete();
         $permissions = [
             'business-profile.view', 'business-profile.update', 'tax-profile.view', 'tax-profile.update', 'tax-rates.manage',
             'fiscal-years.view', 'fiscal-years.create', 'fiscal-periods.manage', 'fiscal-periods.close', 'fiscal-periods.lock',

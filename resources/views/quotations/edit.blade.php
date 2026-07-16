@@ -1,0 +1,1 @@
+<x-app-layout title="Edit Quotation"><x-page-header title="Edit Quotation" description="Update this draft quotation." /><x-quotation-form :action="route('quotations.update',$quotation)" method="PUT" :quotation="$quotation" :customers="$customers" :items="$items" submit-label="Save changes" /></x-app-layout>

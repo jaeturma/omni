@@ -1,0 +1,1 @@
+<x-app-layout title="Create Quotation"><x-page-header title="Create Quotation" description="Save a customer quotation as a draft." /><x-quotation-form :action="route('quotations.store')" :customers="$customers" :items="$items" submit-label="Save draft" /></x-app-layout>
