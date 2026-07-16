@@ -40,6 +40,11 @@ class BusinessProfile extends Model
         return $this->hasMany(FiscalYear::class);
     }
 
+    public function documentSequences(): HasMany
+    {
+        return $this->hasMany(DocumentSequence::class);
+    }
+
     protected function casts(): array
     {
         return [

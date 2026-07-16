@@ -35,6 +35,11 @@ class FiscalYear extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    public function documentSequences(): HasMany
+    {
+        return $this->hasMany(DocumentSequence::class);
+    }
+
     protected function casts(): array
     {
         return ['starts_on' => 'date', 'ends_on' => 'date', 'is_current' => 'boolean'];

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BusinessProfileController;
+use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\TaxProfileController;
@@ -28,5 +29,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/fiscal-years', [FiscalYearController::class, 'index'])->name('fiscal-years.index');
     Route::post('/fiscal-years', [FiscalYearController::class, 'store'])->name('fiscal-years.store');
     Route::patch('/fiscal-periods/{fiscalPeriod}/status', [FiscalPeriodController::class, 'update'])->name('fiscal-periods.status.update');
+    Route::get('/document-sequences', [DocumentSequenceController::class, 'index'])->name('document-sequences.index');
+    Route::post('/document-sequences', [DocumentSequenceController::class, 'store'])->name('document-sequences.store');
+    Route::put('/document-sequences/{documentSequence}', [DocumentSequenceController::class, 'update'])->name('document-sequences.update');
+    Route::post('/document-sequences/{documentSequence}/issue', [DocumentSequenceController::class, 'issue'])->name('document-sequences.issue');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
