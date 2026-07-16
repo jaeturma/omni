@@ -2,6 +2,8 @@
 
 This document defines conventions only. It does not authorize creation of all planned tables.
 
+Financial lifecycle and audit rules are defined in [`AUDIT_AND_DOCUMENT_STATUS.md`](AUDIT_AND_DOCUMENT_STATUS.md).
+
 ## Core Conventions
 
 - Primary keys: bigint
