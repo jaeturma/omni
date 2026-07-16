@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\BusinessProfileController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\FiscalPeriodController;
@@ -55,5 +56,6 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::resource('units-of-measure', UnitOfMeasureController::class)
         ->parameters(['units-of-measure' => 'unit_of_measure'])
         ->except('show');
+    Route::resource('categories', CategoryController::class)->except('show');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

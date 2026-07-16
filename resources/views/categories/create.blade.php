@@ -1,0 +1,1 @@
+<x-app-layout title="Create Category"><x-page-header title="Create Category" description="Add a product or service category." /><x-category-form :action="route('categories.store')" :parent-categories="$parentCategories" submit-label="Create category" /></x-app-layout>

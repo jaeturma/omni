@@ -24,6 +24,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'customers.view', 'customers.create', 'customers.update', 'customers.delete',
             'suppliers.view', 'suppliers.create', 'suppliers.update', 'suppliers.delete',
             'units-of-measure.view', 'units-of-measure.create', 'units-of-measure.update', 'units-of-measure.delete',
+            'categories.view', 'categories.create', 'categories.update', 'categories.delete',
         ];
         foreach ($permissions as $permission) {
             Permission::findOrCreate($permission, 'web');
@@ -33,9 +34,9 @@ class RolesAndPermissionsSeeder extends Seeder
         $roles = [
             'Administrator' => $permissions,
             'Owner' => $permissions,
-            'Bookkeeper' => ['business-profile.view', 'tax-profile.view', 'tax-profile.update', 'tax-rates.manage', 'fiscal-years.view', 'fiscal-periods.manage', 'fiscal-periods.close', 'document-sequences.view', 'document-sequences.manage', 'document-sequences.issue', 'roles.view', 'system-settings.view', 'customers.view', 'customers.create', 'customers.update', 'suppliers.view', 'suppliers.create', 'suppliers.update', 'units-of-measure.view', 'units-of-measure.create', 'units-of-measure.update'],
-            'Encoder' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'document-sequences.issue', 'system-settings.view', 'customers.view', 'customers.create', 'customers.update', 'suppliers.view', 'suppliers.create', 'suppliers.update', 'units-of-measure.view', 'units-of-measure.create', 'units-of-measure.update'],
-            'Viewer' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'roles.view', 'system-settings.view', 'customers.view', 'suppliers.view', 'units-of-measure.view'],
+            'Bookkeeper' => ['business-profile.view', 'tax-profile.view', 'tax-profile.update', 'tax-rates.manage', 'fiscal-years.view', 'fiscal-periods.manage', 'fiscal-periods.close', 'document-sequences.view', 'document-sequences.manage', 'document-sequences.issue', 'roles.view', 'system-settings.view', 'customers.view', 'customers.create', 'customers.update', 'suppliers.view', 'suppliers.create', 'suppliers.update', 'units-of-measure.view', 'units-of-measure.create', 'units-of-measure.update', 'categories.view', 'categories.create', 'categories.update'],
+            'Encoder' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'document-sequences.issue', 'system-settings.view', 'customers.view', 'customers.create', 'customers.update', 'suppliers.view', 'suppliers.create', 'suppliers.update', 'units-of-measure.view', 'units-of-measure.create', 'units-of-measure.update', 'categories.view', 'categories.create', 'categories.update'],
+            'Viewer' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'roles.view', 'system-settings.view', 'customers.view', 'suppliers.view', 'units-of-measure.view', 'categories.view'],
         ];
         foreach ($roles as $name => $rolePermissions) {
             Role::findOrCreate($name, 'web')->syncPermissions($rolePermissions);
