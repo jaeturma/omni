@@ -21,6 +21,7 @@ enum CustomerPaymentStatus: string
             self::Draft => [self::Posted],
             self::Posted => [self::PartiallyAllocated, self::FullyAllocated, self::Voided],
             self::PartiallyAllocated => [self::FullyAllocated, self::Voided],
+            self::FullyAllocated => [self::Voided],
             default => [],
         };
     }

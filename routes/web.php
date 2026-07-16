@@ -8,6 +8,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerPaymentController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\FiscalPeriodController;
@@ -88,5 +89,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::patch('/sales-invoices/{sales_invoice}/status', [SalesInvoiceController::class, 'transition'])->name('sales-invoices.transition');
     Route::get('/sales-invoices/{sales_invoice}/print', [SalesInvoiceController::class, 'print'])->name('sales-invoices.print');
     Route::resource('sales-invoices', SalesInvoiceController::class)->except('destroy');
+    Route::patch('/customer-payments/{customer_payment}/status', [CustomerPaymentController::class, 'transition'])->name('customer-payments.transition');
+    Route::post('/customer-payments/{customer_payment}/allocations', [CustomerPaymentController::class, 'allocate'])->name('customer-payments.allocate');
+    Route::resource('customer-payments', CustomerPaymentController::class)->except('destroy');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

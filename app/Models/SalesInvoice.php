@@ -10,9 +10,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
-/** @property SalesInvoiceStatus $status
+/**
+ * @property SalesInvoiceStatus $status
  * @property numeric-string $paid_amount
+ * @property numeric-string $balance_due
  * @property Carbon $invoice_date
+ * @property Carbon $due_date
  */
 #[Fillable(['sales_order_id', 'delivery_id', 'customer_id', 'fiscal_period_id', 'document_number_reservation_id', 'invoice_number', 'invoice_date', 'due_date', 'customer_name', 'customer_tin', 'billing_address', 'customer_po_number', 'source_type', 'gross_amount', 'discount_amount', 'net_sales_amount', 'expected_withholding_amount', 'total_receivable', 'paid_amount', 'balance_due', 'notes', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
 class SalesInvoice extends Model
@@ -46,6 +49,12 @@ class SalesInvoice extends Model
     public function lines(): HasMany
     {
         return $this->hasMany(SalesInvoiceLine::class)->orderBy('line_number');
+    }
+
+    /** @return HasMany<PaymentAllocation, $this> */
+    public function paymentAllocations(): HasMany
+    {
+        return $this->hasMany(PaymentAllocation::class);
     }
 
     protected function casts(): array

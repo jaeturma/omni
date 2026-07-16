@@ -28,7 +28,7 @@ test('sales status transitions are explicit and terminal states are immutable', 
         ->and(SalesInvoiceStatus::Posted->canTransitionTo(SalesInvoiceStatus::Draft))->toBeFalse()
         ->and(SalesInvoiceStatus::Voided->allowedTransitions())->toBeEmpty()
         ->and(CustomerPaymentStatus::Posted->canTransitionTo(CustomerPaymentStatus::FullyAllocated))->toBeTrue()
-        ->and(CustomerPaymentStatus::FullyAllocated->allowedTransitions())->toBeEmpty()
+        ->and(CustomerPaymentStatus::FullyAllocated->canTransitionTo(CustomerPaymentStatus::Voided))->toBeTrue()
         ->and(PaymentAllocationStatus::Active->canTransitionTo(PaymentAllocationStatus::Reversed))->toBeTrue()
         ->and(PaymentAllocationStatus::Reversed->allowedTransitions())->toBeEmpty();
 });
@@ -71,8 +71,8 @@ test('phase three permissions are seeded without transaction records', function 
         ->and(Schema::hasTable('sales_orders'))->toBeTrue()
         ->and(Schema::hasTable('deliveries'))->toBeTrue()
         ->and(Schema::hasTable('sales_invoices'))->toBeTrue()
-        ->and(Schema::hasTable('customer_payments'))->toBeFalse()
-        ->and(Schema::hasTable('payment_allocations'))->toBeFalse();
+        ->and(Schema::hasTable('customer_payments'))->toBeTrue()
+        ->and(Schema::hasTable('payment_allocations'))->toBeTrue();
 });
 
 test('sales documents map to controlled document sequence codes', function () {
