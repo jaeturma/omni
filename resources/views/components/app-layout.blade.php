@@ -12,7 +12,7 @@
         <header class="border-b border-slate-200 bg-white">
             <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 sm:px-6 lg:px-8">
                 <a href="{{ route('dashboard') }}" class="shrink-0" aria-label="Omni Mini-ERP dashboard">
-                    <span class="block text-sm font-semibold text-blue-700">Omni Mini-ERP</span>
+                    <span class="block text-sm font-semibold text-blue-700">{{ $businessDisplayName ?: config('app.name') }}</span>
                     <span class="block text-xs text-slate-500">Business workspace</span>
                 </a>
 

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\BusinessProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -16,5 +17,7 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::get('/business-profile', [BusinessProfileController::class, 'edit'])->name('business-profile.edit');
+    Route::put('/business-profile', [BusinessProfileController::class, 'update'])->name('business-profile.update');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
