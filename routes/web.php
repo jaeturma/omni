@@ -9,6 +9,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
+use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\RoleMatrixController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SystemSettingController;
@@ -57,5 +58,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
         ->parameters(['units-of-measure' => 'unit_of_measure'])
         ->except('show');
     Route::resource('categories', CategoryController::class)->except('show');
+    Route::resource('products-services', ProductServiceController::class)
+        ->parameters(['products-services' => 'product_service'])
+        ->except('show');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

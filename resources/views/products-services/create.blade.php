@@ -1,0 +1,1 @@
+<x-app-layout title="Create Catalog Item"><x-page-header title="Create Catalog Item" description="Add a product or service master record." /><x-product-service-form :action="route('products-services.store')" :categories="$categories" :units-of-measure="$unitsOfMeasure" submit-label="Create item" /></x-app-layout>
