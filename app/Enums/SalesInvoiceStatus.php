@@ -12,6 +12,7 @@ enum SalesInvoiceStatus: string
     case Posted = 'posted';
     case PartiallyPaid = 'partially_paid';
     case Paid = 'paid';
+    case Overdue = 'overdue';
     case Voided = 'voided';
 
     /** @return list<self> */
@@ -19,8 +20,9 @@ enum SalesInvoiceStatus: string
     {
         return match ($this) {
             self::Draft => [self::Posted],
-            self::Posted => [self::PartiallyPaid, self::Paid, self::Voided],
-            self::PartiallyPaid => [self::Paid, self::Voided],
+            self::Posted => [self::PartiallyPaid, self::Paid, self::Overdue, self::Voided],
+            self::PartiallyPaid => [self::Paid, self::Overdue, self::Voided],
+            self::Overdue => [self::PartiallyPaid, self::Paid, self::Voided],
             default => [],
         };
     }

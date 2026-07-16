@@ -39,6 +39,12 @@ class Delivery extends Model
         return $this->belongsTo(Warehouse::class);
     }
 
+    /** @return HasMany<SalesInvoice, $this> */
+    public function salesInvoices(): HasMany
+    {
+        return $this->hasMany(SalesInvoice::class);
+    }
+
     protected function casts(): array
     {
         return ['delivery_date' => 'date', 'status' => DeliveryStatus::class, 'released_at' => 'datetime', 'delivered_at' => 'datetime', 'received_at' => 'datetime', 'accepted_at' => 'datetime', 'cancelled_at' => 'datetime'];

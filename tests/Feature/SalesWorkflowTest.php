@@ -70,7 +70,7 @@ test('phase three permissions are seeded without transaction records', function 
         ->and(Schema::hasTable('quotations'))->toBeTrue()
         ->and(Schema::hasTable('sales_orders'))->toBeTrue()
         ->and(Schema::hasTable('deliveries'))->toBeTrue()
-        ->and(Schema::hasTable('sales_invoices'))->toBeFalse()
+        ->and(Schema::hasTable('sales_invoices'))->toBeTrue()
         ->and(Schema::hasTable('customer_payments'))->toBeFalse()
         ->and(Schema::hasTable('payment_allocations'))->toBeFalse();
 });

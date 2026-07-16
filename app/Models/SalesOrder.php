@@ -39,6 +39,12 @@ class SalesOrder extends Model
         return $this->hasMany(Delivery::class);
     }
 
+    /** @return HasMany<SalesInvoice, $this> */
+    public function salesInvoices(): HasMany
+    {
+        return $this->hasMany(SalesInvoice::class);
+    }
+
     protected function casts(): array
     {
         return ['order_date' => 'date', 'promised_delivery_date' => 'date', 'payment_terms' => 'integer', 'document_discount_rate' => 'decimal:6', 'subtotal' => 'decimal:4', 'line_discount_total' => 'decimal:4', 'document_discount_amount' => 'decimal:4', 'grand_total' => 'decimal:4', 'status' => SalesOrderStatus::class, 'confirmed_at' => 'datetime', 'closed_at' => 'datetime', 'cancelled_at' => 'datetime'];

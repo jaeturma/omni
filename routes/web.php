@@ -16,6 +16,7 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\RoleMatrixController;
+use App\Http\Controllers\SalesInvoiceController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SystemSettingController;
@@ -84,5 +85,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::patch('/deliveries/{delivery}/status', [DeliveryController::class, 'transition'])->name('deliveries.transition');
     Route::get('/deliveries/{delivery}/print', [DeliveryController::class, 'print'])->name('deliveries.print');
     Route::resource('deliveries', DeliveryController::class)->only(['index', 'create', 'store', 'show']);
+    Route::patch('/sales-invoices/{sales_invoice}/status', [SalesInvoiceController::class, 'transition'])->name('sales-invoices.transition');
+    Route::get('/sales-invoices/{sales_invoice}/print', [SalesInvoiceController::class, 'print'])->name('sales-invoices.print');
+    Route::resource('sales-invoices', SalesInvoiceController::class)->except('destroy');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

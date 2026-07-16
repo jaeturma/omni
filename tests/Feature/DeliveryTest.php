@@ -6,6 +6,7 @@ use App\Models\BusinessProfile;
 use App\Models\Delivery;
 use App\Models\DocumentSequence;
 use App\Models\FiscalYear;
+use App\Models\SalesInvoice;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderLine;
 use App\Models\User;
@@ -70,5 +71,5 @@ test('delivery lifecycle authorization print and prohibited effects are enforced
     $this->actingAs($f['u'])->patch(route('deliveries.transition', $d), ['status' => 'released']);
     $this->actingAs($f['u'])->patch(route('deliveries.transition', $d), ['status' => 'delivered', 'received_by_name' => 'Juan', 'received_at' => '2026-07-16 10:00'])->assertSessionHasNoErrors();
     $this->actingAs($f['u'])->patch(route('deliveries.transition', $d), ['status' => 'accepted', 'acceptance_notes' => 'Complete'])->assertSessionHasNoErrors();
-    expect($d->fresh()->status)->toBe(DeliveryStatus::Accepted)->and(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('sales_invoices'))->toBeFalse();
+    expect($d->fresh()->status)->toBe(DeliveryStatus::Accepted)->and(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('sales_invoices'))->toBeTrue()->and(SalesInvoice::count())->toBe(0);
 });
