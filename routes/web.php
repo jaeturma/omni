@@ -15,6 +15,7 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\RoleMatrixController;
+use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SystemSettingController;
 use App\Http\Controllers\TaxProfileController;
@@ -75,5 +76,9 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::patch('/quotations/{quotation}/status', [QuotationController::class, 'transition'])->name('quotations.transition');
     Route::get('/quotations/{quotation}/print', [QuotationController::class, 'print'])->name('quotations.print');
     Route::resource('quotations', QuotationController::class);
+    Route::post('/quotations/{quotation}/convert', [SalesOrderController::class, 'convert'])->name('quotations.convert');
+    Route::patch('/sales-orders/{sales_order}/status', [SalesOrderController::class, 'transition'])->name('sales-orders.transition');
+    Route::patch('/sales-orders/{sales_order}/fulfillment', [SalesOrderController::class, 'fulfill'])->name('sales-orders.fulfill');
+    Route::resource('sales-orders', SalesOrderController::class);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

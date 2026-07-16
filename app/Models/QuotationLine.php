@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/** @property numeric-string $quantity */
 #[Fillable(['quotation_id', 'product_service_id', 'line_number', 'item_type', 'sku', 'description', 'uom_code', 'uom_name', 'quantity', 'unit_price', 'discount_rate', 'gross_amount', 'discount_amount', 'net_amount'])]
 class QuotationLine extends Model
 {

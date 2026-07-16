@@ -32,6 +32,7 @@
                     @can('payment-methods.view')<a href="{{ route('payment-methods.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Payment Methods</a>@endcan
                     @can('banks.view')<a href="{{ route('banks.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Banks</a>@endcan
                     @can('quotations.view')<a href="{{ route('quotations.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Quotations</a>@endcan
+                    @can('sales-orders.view')<a href="{{ route('sales-orders.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Sales Orders</a>@endcan
                     @foreach (['Purchases', 'Expenses', 'Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
                         <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                     @endforeach
@@ -71,6 +72,7 @@
                             @can('payment-methods.view')<a href="{{ route('payment-methods.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Payment Methods</a>@endcan
                             @can('banks.view')<a href="{{ route('banks.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Banks</a>@endcan
                             @can('quotations.view')<a href="{{ route('quotations.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Quotations</a>@endcan
+                            @can('sales-orders.view')<a href="{{ route('sales-orders.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Sales Orders</a>@endcan
                             @foreach (['Purchases', 'Expenses', 'Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
                                 <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                             @endforeach

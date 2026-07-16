@@ -1,0 +1,1 @@
+<x-app-layout title="Create Sales Order"><x-page-header title="Create Sales Order" description="Create a direct sales-order draft."/><x-sales-order-form :action="route('sales-orders.store')" :customers="$customers" :items="$items" submit-label="Save draft"/></x-app-layout>

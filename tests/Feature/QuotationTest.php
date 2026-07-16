@@ -108,5 +108,5 @@ test('quotation access is authorized and print is available to viewers', functio
 
 test('quotations create no downstream financial inventory or order effects', function () {
     createQuotationViaRequest($this);
-    expect(Schema::hasTable('sales_orders'))->toBeFalse()->and(Schema::hasTable('sales_invoices'))->toBeFalse()->and(Schema::hasTable('customer_payments'))->toBeFalse()->and(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(Schema::hasTable('sales_orders'))->toBeTrue()->and(Schema::hasTable('sales_invoices'))->toBeFalse()->and(Schema::hasTable('customer_payments'))->toBeFalse()->and(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
 });

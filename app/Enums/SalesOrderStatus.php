@@ -10,8 +10,9 @@ enum SalesOrderStatus: string
 
     case Draft = 'draft';
     case Confirmed = 'confirmed';
-    case PartiallyDelivered = 'partially_delivered';
-    case Completed = 'completed';
+    case PartiallyFulfilled = 'partially_fulfilled';
+    case Fulfilled = 'fulfilled';
+    case Closed = 'closed';
     case Cancelled = 'cancelled';
 
     /** @return list<self> */
@@ -19,8 +20,9 @@ enum SalesOrderStatus: string
     {
         return match ($this) {
             self::Draft => [self::Confirmed, self::Cancelled],
-            self::Confirmed => [self::PartiallyDelivered, self::Completed, self::Cancelled],
-            self::PartiallyDelivered => [self::Completed, self::Cancelled],
+            self::Confirmed => [self::PartiallyFulfilled, self::Fulfilled, self::Cancelled],
+            self::PartiallyFulfilled => [self::Fulfilled, self::Cancelled],
+            self::Fulfilled => [self::Closed],
             default => [],
         };
     }
