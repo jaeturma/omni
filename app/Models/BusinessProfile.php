@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable([
     'registered_business_name', 'trade_name', 'proprietor_name', 'tin', 'branch_code', 'rdo_code',
@@ -26,6 +27,11 @@ class BusinessProfile extends Model
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('active', true);
+    }
+
+    public function taxProfile(): HasOne
+    {
+        return $this->hasOne(TaxProfile::class);
     }
 
     protected function casts(): array

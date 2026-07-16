@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\BusinessProfileController;
+use App\Http\Controllers\TaxProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,5 +20,8 @@ Route::middleware('auth')->group(function () {
     Route::view('/dashboard', 'dashboard')->name('dashboard');
     Route::get('/business-profile', [BusinessProfileController::class, 'edit'])->name('business-profile.edit');
     Route::put('/business-profile', [BusinessProfileController::class, 'update'])->name('business-profile.update');
+    Route::get('/tax-profile', [TaxProfileController::class, 'edit'])->name('tax-profile.edit');
+    Route::put('/tax-profile', [TaxProfileController::class, 'update'])->name('tax-profile.update');
+    Route::post('/tax-profile/rates', [TaxProfileController::class, 'storeRate'])->name('tax-profile.rates.store');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
