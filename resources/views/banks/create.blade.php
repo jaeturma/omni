@@ -1,0 +1,1 @@
+<x-app-layout title="Create Bank"><x-page-header title="Create Bank" description="Add a bank institution master record." /><x-bank-form :action="route('banks.store')" submit-label="Create bank" /></x-app-layout>

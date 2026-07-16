@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\BankController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessProfileController;
 use App\Http\Controllers\CategoryController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
+use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\RoleMatrixController;
 use App\Http\Controllers\SupplierController;
@@ -65,5 +67,9 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
         ->except('show');
     Route::resource('brands', BrandController::class)->except('show');
     Route::resource('warehouses', WarehouseController::class)->except('show');
+    Route::resource('payment-methods', PaymentMethodController::class)
+        ->parameters(['payment-methods' => 'payment_method'])
+        ->except('show');
+    Route::resource('banks', BankController::class)->except('show');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

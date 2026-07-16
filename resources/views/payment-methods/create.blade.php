@@ -1,0 +1,1 @@
+<x-app-layout title="Create Payment Method"><x-page-header title="Create Payment Method" description="Add a payment method definition." /><x-payment-method-form :action="route('payment-methods.store')" submit-label="Create method" /></x-app-layout>
