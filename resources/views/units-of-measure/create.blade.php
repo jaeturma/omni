@@ -1,0 +1,1 @@
+<x-app-layout title="Create Unit of Measure"><x-page-header title="Create Unit of Measure" description="Add a reusable quantity label." /><x-unit-of-measure-form :action="route('units-of-measure.store')" submit-label="Create unit" /></x-app-layout>

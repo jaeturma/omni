@@ -1,0 +1,12 @@
+@props(['action', 'method' => 'POST', 'unitOfMeasure' => null, 'submitLabel'])
+
+<form method="POST" action="{{ $action }}" class="max-w-3xl rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+    @csrf
+    @if ($method !== 'POST') @method($method) @endif
+    <div class="grid gap-4 md:grid-cols-2">
+        <label class="flex flex-col gap-1 text-sm font-medium">Unit code<input name="code" value="{{ old('code', $unitOfMeasure?->code) }}" required maxlength="20" placeholder="PCS" class="rounded-lg border border-slate-300 px-3 py-2">@error('code')<span class="text-red-700">{{ $message }}</span>@enderror</label>
+        <label class="flex flex-col gap-1 text-sm font-medium">Unit name<input name="name" value="{{ old('name', $unitOfMeasure?->name) }}" required placeholder="Pieces" class="rounded-lg border border-slate-300 px-3 py-2">@error('name')<span class="text-red-700">{{ $message }}</span>@enderror</label>
+        <label class="flex flex-col gap-1 text-sm font-medium">Status<select name="status" class="rounded-lg border border-slate-300 px-3 py-2"><option value="active" @selected(old('status', $unitOfMeasure?->status ?? 'active') === 'active')>Active</option><option value="inactive" @selected(old('status', $unitOfMeasure?->status) === 'inactive')>Inactive</option></select>@error('status')<span class="text-red-700">{{ $message }}</span>@enderror</label>
+    </div>
+    <div class="mt-5 flex flex-wrap gap-3"><button class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white">{{ $submitLabel }}</button><a href="{{ route('units-of-measure.index') }}" class="rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold">Cancel</a></div>
+</form>
