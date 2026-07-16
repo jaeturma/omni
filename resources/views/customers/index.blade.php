@@ -1,0 +1,15 @@
+<x-app-layout title="Customers">
+    <x-page-header title="Customers" description="Maintain private and government customer master records." />
+    <div class="mb-5 flex flex-wrap items-end justify-between gap-4">
+        <form method="GET" action="{{ route('customers.index') }}" class="flex flex-wrap items-end gap-3">
+            <label class="flex flex-col gap-1 text-sm font-medium">Search<input name="search" value="{{ request('search') }}" placeholder="Code, name, or TIN" class="rounded-lg border border-slate-300 px-3 py-2"></label>
+            <label class="flex flex-col gap-1 text-sm font-medium">Type<select name="type" class="rounded-lg border border-slate-300 px-3 py-2"><option value="">All</option><option value="private" @selected(request('type') === 'private')>Private</option><option value="government" @selected(request('type') === 'government')>Government</option></select></label>
+            <label class="flex flex-col gap-1 text-sm font-medium">Status<select name="status" class="rounded-lg border border-slate-300 px-3 py-2"><option value="">All</option><option value="active" @selected(request('status') === 'active')>Active</option><option value="inactive" @selected(request('status') === 'inactive')>Inactive</option></select></label>
+            <button class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold">Filter</button>
+        </form>
+        @can('create', \App\Models\Customer::class)<a href="{{ route('customers.create') }}" class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white">Create customer</a>@endcan
+    </div>
+    <div class="overflow-x-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-200"><table class="min-w-full divide-y divide-slate-200 text-sm"><thead class="bg-slate-50 text-left text-slate-600"><tr><th class="px-6 py-3">Code</th><th class="px-6 py-3">Customer</th><th class="px-6 py-3">Type</th><th class="px-6 py-3">Contact</th><th class="px-6 py-3">Terms</th><th class="px-6 py-3">Status</th><th class="px-6 py-3">Action</th></tr></thead><tbody class="divide-y divide-slate-100">
+    @forelse ($customers as $customer)<tr><td class="px-6 py-4 font-mono font-medium">{{ $customer->code }}</td><td class="px-6 py-4"><p class="font-medium">{{ $customer->name }}</p><p class="text-xs text-slate-500">{{ $customer->tin ?: 'No TIN' }}</p></td><td class="px-6 py-4 capitalize">{{ $customer->type }}</td><td class="px-6 py-4"><p>{{ $customer->contact_person }}</p><p class="text-xs text-slate-500">{{ $customer->email }}</p></td><td class="px-6 py-4">{{ $customer->payment_terms }} days</td><td class="px-6 py-4 capitalize">{{ $customer->status }}</td><td class="px-6 py-4">@can('update', $customer)<a href="{{ route('customers.edit', $customer) }}" class="font-semibold text-blue-700">Edit</a>@endcan</td></tr>@empty<tr><td colspan="7" class="px-6 py-8 text-center text-slate-500">No customers found.</td></tr>@endforelse
+    </tbody></table></div><div class="mt-6">{{ $customers->links() }}</div>
+</x-app-layout>

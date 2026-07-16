@@ -1,0 +1,1 @@
+<x-app-layout title="Create Customer"><x-page-header title="Create Customer" description="Add a private or government customer master record." /><x-customer-form :action="route('customers.store')" submit-label="Create customer" /></x-app-layout>

@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\BusinessProfileController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
@@ -47,5 +48,6 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/roles', RoleMatrixController::class)->name('roles.index');
     Route::get('/system-settings', [SystemSettingController::class, 'edit'])->name('system-settings.edit');
     Route::put('/system-settings', [SystemSettingController::class, 'update'])->name('system-settings.update');
+    Route::resource('customers', CustomerController::class)->except('show');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
