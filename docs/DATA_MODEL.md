@@ -5,7 +5,7 @@ This document defines conventions only. It does not authorize creation of all pl
 ## Core Conventions
 
 - Primary keys: bigint
-- Foreign keys: unsigned bigint
+- Foreign keys: unsigned bigint columns named with the singular related model plus `_id`
 - Money: decimal(19, 4)
 - Quantity: decimal(19, 4)
 - Rates and percentages: decimal(9, 6)
@@ -13,6 +13,8 @@ This document defines conventions only. It does not authorize creation of all pl
 - System events: timestamps
 - Currency: PHP by default
 - Timezone: Asia/Manila
+
+Foreign keys should use Laravel's `foreignId()->constrained()` convention where the table name can be inferred. Each relationship must choose an explicit delete behavior appropriate to the record lifecycle; financial and posted records must not cascade-delete.
 
 ## Record Status
 
@@ -47,6 +49,8 @@ Add only the fields required by the active module.
 ## Document Numbering
 
 Controlled documents should use a document sequence mechanism rather than calculating the next number from the current maximum.
+
+The resulting document number must also have a database unique constraint within its approved scope, such as document type, fiscal year, or business entity. Sequence allocation must be concurrency-safe and will be defined by its approved work package.
 
 Examples:
 
