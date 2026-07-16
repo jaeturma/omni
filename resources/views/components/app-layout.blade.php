@@ -18,6 +18,7 @@
 
                 <nav class="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
                     <a href="{{ route('dashboard') }}" class="rounded-lg bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-800" aria-current="page">Dashboard</a>
+                    <a href="{{ route('fiscal-years.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Fiscal Years</a>
                     @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Customers', 'Suppliers', 'Accounting', 'Tax Reports', 'Settings'] as $navigationLabel)
                         <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                     @endforeach
@@ -43,6 +44,7 @@
                     <div class="absolute right-0 z-10 mt-2 w-64 rounded-xl border border-slate-200 bg-white p-3 shadow-lg">
                         <nav class="flex flex-col gap-1" aria-label="Mobile navigation">
                             <a href="{{ route('dashboard') }}" class="rounded-lg bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-800" aria-current="page">Dashboard</a>
+                            <a href="{{ route('fiscal-years.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Fiscal Years</a>
                             @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Customers', 'Suppliers', 'Accounting', 'Tax Reports', 'Settings'] as $navigationLabel)
                                 <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                             @endforeach
