@@ -1,0 +1,34 @@
+OMNI MINI-ERP — START HERE
+
+1. Copy all files and folders into the root of your existing Laravel project.
+
+2. Do not overwrite your real .env file.
+
+3. Review:
+   - AGENTS.md
+   - docs/PROJECT_CONTEXT.md
+   - docs/DEVELOPMENT_RULES.md
+   - docs/CODEX_WORKFLOW.md
+
+4. Start Codex with this exact instruction:
+
+Execute `docs/work-packages/WP-00-01-repository-baseline.md`.
+
+Follow `AGENTS.md` strictly.
+
+Work only within the stated scope. Inspect only the files required to verify and complete this work package. Do not implement authentication, accounting, inventory, sales, purchasing, tax calculations, or other future modules.
+
+Run the required checks and make only the minimum necessary changes. Stop after the acceptance criteria are satisfied.
+
+In the completion report, include only:
+
+1. Files changed
+2. Commands and tests run
+3. Acceptance criteria result
+4. Remaining issues requiring owner action
+
+5. Complete the Phase 0 work packages in sequence.
+
+6. If Larastan is installed later, copy phpstan.neon.example to phpstan.neon.
+
+7. Commit after each completed work package.
