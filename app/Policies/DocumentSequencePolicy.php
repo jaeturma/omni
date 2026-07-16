@@ -12,7 +12,7 @@ class DocumentSequencePolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->can('document-sequences.view');
     }
 
     /**
@@ -20,7 +20,7 @@ class DocumentSequencePolicy
      */
     public function view(User $user, DocumentSequence $documentSequence): bool
     {
-        return true;
+        return $user->can('document-sequences.view');
     }
 
     /**
@@ -28,7 +28,7 @@ class DocumentSequencePolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->can('document-sequences.manage');
     }
 
     /**
@@ -36,7 +36,7 @@ class DocumentSequencePolicy
      */
     public function update(User $user, DocumentSequence $documentSequence): bool
     {
-        return true;
+        return $user->can('document-sequences.manage');
     }
 
     /**
@@ -65,6 +65,6 @@ class DocumentSequencePolicy
 
     public function issue(User $user, DocumentSequence $documentSequence): bool
     {
-        return true;
+        return $user->can('document-sequences.issue');
     }
 }

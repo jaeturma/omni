@@ -12,7 +12,7 @@ class FiscalYearPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->can('fiscal-years.view');
     }
 
     /**
@@ -20,7 +20,7 @@ class FiscalYearPolicy
      */
     public function view(User $user, FiscalYear $fiscalYear): bool
     {
-        return true;
+        return $user->can('fiscal-years.view');
     }
 
     /**
@@ -28,7 +28,7 @@ class FiscalYearPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->can('fiscal-years.create');
     }
 
     /**

@@ -4,9 +4,12 @@ use App\Models\BusinessProfile;
 use App\Models\FiscalPeriod;
 use App\Models\FiscalYear;
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
 uses(LazilyRefreshDatabase::class);
+
+beforeEach(fn () => $this->seed(RolesAndPermissionsSeeder::class));
 
 function fiscalYearData(array $changes = []): array
 {
@@ -14,7 +17,7 @@ function fiscalYearData(array $changes = []): array
 }
 
 test('an authorized user creates a partial fiscal year with monthly calendar quarters', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
     BusinessProfile::factory()->active()->create();
 
     $this->actingAs($user)->post(route('fiscal-years.store'), fiscalYearData())->assertSessionHasNoErrors();
@@ -29,7 +32,7 @@ test('an authorized user creates a partial fiscal year with monthly calendar qua
 });
 
 test('overlapping fiscal years are rejected', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
     $business = BusinessProfile::factory()->active()->create();
     FiscalYear::factory()->for($business)->for($user, 'creator')->create(['starts_on' => '2026-05-01', 'ends_on' => '2026-12-31']);
 
@@ -38,7 +41,7 @@ test('overlapping fiscal years are rejected', function () {
 });
 
 test('only the newest selected fiscal year remains current', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
     BusinessProfile::factory()->active()->create();
     $this->actingAs($user)->post(route('fiscal-years.store'), fiscalYearData())->assertSessionHasNoErrors();
     $this->actingAs($user)->post(route('fiscal-years.store'), fiscalYearData(['name' => 'FY 2027', 'starts_on' => '2027-01-01', 'ends_on' => '2027-12-31']))->assertSessionHasNoErrors();
@@ -54,7 +57,7 @@ test('guests cannot view years or change period status', function () {
 });
 
 test('periods must be closed before locking and locked periods cannot change', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
     $period = FiscalPeriod::factory()->create();
 
     $this->actingAs($user)->patch(route('fiscal-periods.status.update', $period), ['status' => 'locked'])->assertSessionHasErrors('status');

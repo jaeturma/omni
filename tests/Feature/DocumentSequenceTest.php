@@ -6,14 +6,17 @@ use App\Models\DocumentNumberReservation;
 use App\Models\DocumentSequence;
 use App\Models\FiscalYear;
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 
 uses(LazilyRefreshDatabase::class);
 
+beforeEach(fn () => $this->seed(RolesAndPermissionsSeeder::class));
+
 function makeDocumentSequence(array $changes = []): DocumentSequence
 {
-    $user = $changes['user'] ?? User::factory()->create();
+    $user = $changes['user'] ?? User::factory()->administrator()->create();
     $business = $changes['business'] ?? BusinessProfile::factory()->create();
     $year = $changes['year'] ?? FiscalYear::factory()->for($business)->for($user, 'creator')->create();
     unset($changes['user'], $changes['business'], $changes['year']);
@@ -31,7 +34,7 @@ function documentSequenceData(FiscalYear $year, array $changes = []): array
 }
 
 test('sequence definitions are configurable with fiscal year formatting and padding', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
     $business = BusinessProfile::factory()->active()->create();
     $year = FiscalYear::factory()->for($business)->for($user, 'creator')->create(['starts_on' => '2026-05-01', 'ends_on' => '2026-12-31']);
 
@@ -44,7 +47,7 @@ test('sequence definitions are configurable with fiscal year formatting and padd
 });
 
 test('preview does not consume and issuance is sequential with preserved history', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
     $sequence = makeDocumentSequence(['user' => $user]);
     $preview = $sequence->preview();
     $issuer = new IssueDocumentNumber;
@@ -60,7 +63,7 @@ test('preview does not consume and issuance is sequential with preserved history
 });
 
 test('repeated transaction-safe issuance produces no duplicate numbers', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
     $sequence = makeDocumentSequence(['user' => $user, 'document_type' => 'collection_receipt', 'prefix' => 'CR-{YYYY}-']);
     $issuer = new IssueDocumentNumber;
 
@@ -80,7 +83,7 @@ test('database constraints prevent duplicate definitions and issued numbers', fu
 });
 
 test('inactive sequences reject issuance', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
     $sequence = makeDocumentSequence(['user' => $user, 'active' => false]);
 
     $this->actingAs($user)->post(route('document-sequences.issue', $sequence))->assertSessionHasErrors('issue');
@@ -88,7 +91,7 @@ test('inactive sequences reject issuance', function () {
 });
 
 test('validation requires fiscal linkage for yearly formatting and protects issued history', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
     $business = BusinessProfile::factory()->active()->create();
     $year = FiscalYear::factory()->for($business)->for($user, 'creator')->create();
     $sequence = makeDocumentSequence(['user' => $user, 'business' => $business, 'year' => $year]);

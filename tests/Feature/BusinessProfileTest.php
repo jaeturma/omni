@@ -2,12 +2,15 @@
 
 use App\Models\BusinessProfile;
 use App\Models\User;
+use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 
 uses(LazilyRefreshDatabase::class);
+
+beforeEach(fn () => $this->seed(RolesAndPermissionsSeeder::class));
 
 function businessProfileData(array $overrides = []): array
 {
@@ -32,7 +35,7 @@ function businessProfileData(array $overrides = []): array
 }
 
 test('authenticated users can view and create the business profile', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
 
     $this->actingAs($user)->get(route('business-profile.edit'))->assertSuccessful();
     $this->actingAs($user)->put(route('business-profile.update'), businessProfileData())
@@ -42,7 +45,7 @@ test('authenticated users can view and create the business profile', function ()
 });
 
 test('authenticated users can update the active profile and the shell uses its name', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
     BusinessProfile::factory()->active()->create();
 
     $this->actingAs($user)->put(route('business-profile.update'), businessProfileData(['trade_name' => 'Omni Trading']))
@@ -57,7 +60,7 @@ test('guests cannot manage the business profile', function () {
 });
 
 test('required identity fields and reasonable tin codes are validated', function () {
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
 
     $this->actingAs($user)->put(route('business-profile.update'), businessProfileData([
         'registered_business_name' => '',
@@ -74,7 +77,7 @@ test('the database prevents more than one active business profile', function () 
 
 test('invalid logos are rejected and valid logos are stored', function () {
     Storage::fake('public');
-    $user = User::factory()->create();
+    $user = User::factory()->administrator()->create();
 
     $this->actingAs($user)->put(route('business-profile.update'), businessProfileData([
         'logo' => UploadedFile::fake()->create('logo.pdf', 10, 'application/pdf'),

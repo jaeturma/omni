@@ -9,17 +9,17 @@ class FiscalPeriodPolicy
 {
     public function manage(User $user, FiscalPeriod $fiscalPeriod): bool
     {
-        return true;
+        return $user->can('fiscal-periods.manage');
     }
 
     public function close(User $user, FiscalPeriod $fiscalPeriod): bool
     {
-        return true;
+        return $user->can('fiscal-periods.close');
     }
 
     public function lock(User $user, FiscalPeriod $fiscalPeriod): bool
     {
-        return true;
+        return $user->can('fiscal-periods.lock');
     }
 
     /**

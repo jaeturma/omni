@@ -1,0 +1,41 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
+
+class RolesAndPermissionsSeeder extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+        $permissions = [
+            'business-profile.view', 'business-profile.manage', 'tax-profile.view', 'tax-profile.manage',
+            'fiscal-years.view', 'fiscal-years.create', 'fiscal-periods.manage', 'fiscal-periods.close', 'fiscal-periods.lock',
+            'document-sequences.view', 'document-sequences.manage', 'document-sequences.issue',
+            'users.view', 'users.manage', 'roles.view', 'system-settings.view', 'system-settings.manage',
+        ];
+        foreach ($permissions as $permission) {
+            Permission::findOrCreate($permission, 'web');
+        }
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+
+        $roles = [
+            'Administrator' => $permissions,
+            'Owner' => $permissions,
+            'Bookkeeper' => ['business-profile.view', 'tax-profile.view', 'tax-profile.manage', 'fiscal-years.view', 'fiscal-periods.manage', 'fiscal-periods.close', 'document-sequences.view', 'document-sequences.manage', 'document-sequences.issue', 'roles.view', 'system-settings.view'],
+            'Encoder' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'document-sequences.issue', 'system-settings.view'],
+            'Viewer' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'roles.view', 'system-settings.view'],
+        ];
+        foreach ($roles as $name => $rolePermissions) {
+            Role::findOrCreate($name, 'web')->syncPermissions($rolePermissions);
+        }
+        app(PermissionRegistrar::class)->forgetCachedPermissions();
+    }
+}

@@ -58,6 +58,7 @@
                     <button type="submit" class="rounded-lg bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2">
                         Sign in
                     </button>
+                    <a href="{{ route('password.request') }}" class="text-center text-sm font-semibold text-blue-700 hover:text-blue-800">Forgot your password?</a>
                 </form>
             </section>
         </main>

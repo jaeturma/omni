@@ -12,7 +12,7 @@ class BusinessProfilePolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        return $user->can('business-profile.view');
     }
 
     /**
@@ -20,7 +20,7 @@ class BusinessProfilePolicy
      */
     public function view(User $user, BusinessProfile $businessProfile): bool
     {
-        return true;
+        return $user->can('business-profile.view');
     }
 
     /**
@@ -28,7 +28,7 @@ class BusinessProfilePolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        return $user->can('business-profile.manage');
     }
 
     /**
@@ -36,7 +36,7 @@ class BusinessProfilePolicy
      */
     public function update(User $user, BusinessProfile $businessProfile): bool
     {
-        return true;
+        return $user->can('business-profile.manage');
     }
 
     /**
