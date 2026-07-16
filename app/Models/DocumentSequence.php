@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['business_profile_id', 'fiscal_year_id', 'fiscal_year_scope', 'document_type', 'prefix', 'suffix', 'current_number', 'padding', 'reset_rule', 'active', 'created_by', 'updated_by'])]
 class DocumentSequence extends Model
 {
-    public const TYPES = ['sales_invoice', 'collection_receipt', 'purchase_invoice', 'supplier_payment', 'expense_voucher', 'inventory_adjustment', 'journal_entry'];
+    public const TYPES = ['quotation', 'sales_order', 'delivery_receipt', 'sales_invoice', 'collection_receipt', 'purchase_invoice', 'supplier_payment', 'expense_voucher', 'inventory_adjustment', 'journal_entry'];
 
     protected $attributes = ['prefix' => '', 'suffix' => '', 'current_number' => 0, 'padding' => 6, 'reset_rule' => 'never', 'active' => true];
 
