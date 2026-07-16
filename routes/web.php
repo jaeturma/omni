@@ -9,6 +9,7 @@ use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\RoleMatrixController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SystemSettingController;
 use App\Http\Controllers\TaxProfileController;
 use App\Http\Controllers\UserController;
@@ -49,5 +50,6 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/system-settings', [SystemSettingController::class, 'edit'])->name('system-settings.edit');
     Route::put('/system-settings', [SystemSettingController::class, 'update'])->name('system-settings.update');
     Route::resource('customers', CustomerController::class)->except('show');
+    Route::resource('suppliers', SupplierController::class)->except('show');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

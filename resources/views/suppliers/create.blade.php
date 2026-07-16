@@ -1,0 +1,1 @@
+<x-app-layout title="Create Supplier"><x-page-header title="Create Supplier" description="Add a supplier master record." /><x-supplier-form :action="route('suppliers.store')" submit-label="Create supplier" /></x-app-layout>

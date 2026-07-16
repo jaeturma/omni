@@ -23,7 +23,8 @@
                     @can('users.view')<a href="{{ route('users.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Users</a>@endcan
                     @can('system-settings.view')<a href="{{ route('system-settings.edit') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Settings</a>@endcan
                     @can('customers.view')<a href="{{ route('customers.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Customers</a>@endcan
-                    @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Suppliers', 'Accounting', 'Tax Reports'] as $navigationLabel)
+                    @can('suppliers.view')<a href="{{ route('suppliers.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Suppliers</a>@endcan
+                    @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
                         <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                     @endforeach
                 </nav>
@@ -53,7 +54,8 @@
                             @can('users.view')<a href="{{ route('users.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Users</a>@endcan
                             @can('system-settings.view')<a href="{{ route('system-settings.edit') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Settings</a>@endcan
                             @can('customers.view')<a href="{{ route('customers.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Customers</a>@endcan
-                            @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Suppliers', 'Accounting', 'Tax Reports'] as $navigationLabel)
+                            @can('suppliers.view')<a href="{{ route('suppliers.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Suppliers</a>@endcan
+                            @foreach (['Sales', 'Purchases', 'Expenses', 'Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
                                 <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                             @endforeach
                         </nav>
