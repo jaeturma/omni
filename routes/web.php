@@ -8,6 +8,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
@@ -80,5 +81,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::patch('/sales-orders/{sales_order}/status', [SalesOrderController::class, 'transition'])->name('sales-orders.transition');
     Route::patch('/sales-orders/{sales_order}/fulfillment', [SalesOrderController::class, 'fulfill'])->name('sales-orders.fulfill');
     Route::resource('sales-orders', SalesOrderController::class);
+    Route::patch('/deliveries/{delivery}/status', [DeliveryController::class, 'transition'])->name('deliveries.transition');
+    Route::get('/deliveries/{delivery}/print', [DeliveryController::class, 'print'])->name('deliveries.print');
+    Route::resource('deliveries', DeliveryController::class)->only(['index', 'create', 'store', 'show']);
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

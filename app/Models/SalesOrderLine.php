@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property numeric-string $delivered_quantity
  * @property numeric-string $invoiced_quantity
  * @property numeric-string $cancelled_quantity
+ * @property numeric-string $remaining_quantity
  */
 #[Fillable(['sales_order_id', 'quotation_line_id', 'product_service_id', 'line_number', 'item_type', 'sku', 'description', 'uom_code', 'uom_name', 'ordered_quantity', 'delivered_quantity', 'invoiced_quantity', 'cancelled_quantity', 'unit_price', 'discount_rate', 'gross_amount', 'discount_amount', 'net_amount'])]
 class SalesOrderLine extends Model

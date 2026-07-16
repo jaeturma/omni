@@ -11,6 +11,7 @@ enum DeliveryStatus: string
     case Draft = 'draft';
     case Released = 'released';
     case Delivered = 'delivered';
+    case Accepted = 'accepted';
     case Cancelled = 'cancelled';
 
     /** @return list<self> */
@@ -19,6 +20,7 @@ enum DeliveryStatus: string
         return match ($this) {
             self::Draft => [self::Released, self::Cancelled],
             self::Released => [self::Delivered, self::Cancelled],
+            self::Delivered => [self::Accepted, self::Cancelled],
             default => [],
         };
     }

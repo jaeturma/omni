@@ -23,7 +23,7 @@ test('sales status transitions are explicit and terminal states are immutable', 
         ->and(SalesOrderStatus::Confirmed->canTransitionTo(SalesOrderStatus::PartiallyFulfilled))->toBeTrue()
         ->and(SalesOrderStatus::Closed->allowedTransitions())->toBeEmpty()
         ->and(DeliveryStatus::Released->canTransitionTo(DeliveryStatus::Delivered))->toBeTrue()
-        ->and(DeliveryStatus::Delivered->allowedTransitions())->toBeEmpty()
+        ->and(DeliveryStatus::Delivered->canTransitionTo(DeliveryStatus::Accepted))->toBeTrue()
         ->and(SalesInvoiceStatus::Draft->canTransitionTo(SalesInvoiceStatus::Posted))->toBeTrue()
         ->and(SalesInvoiceStatus::Posted->canTransitionTo(SalesInvoiceStatus::Draft))->toBeFalse()
         ->and(SalesInvoiceStatus::Voided->allowedTransitions())->toBeEmpty()
@@ -69,7 +69,7 @@ test('phase three permissions are seeded without transaction records', function 
         ->and(Role::findByName('Viewer')->hasPermissionTo('sales-invoices.create'))->toBeFalse()
         ->and(Schema::hasTable('quotations'))->toBeTrue()
         ->and(Schema::hasTable('sales_orders'))->toBeTrue()
-        ->and(Schema::hasTable('deliveries'))->toBeFalse()
+        ->and(Schema::hasTable('deliveries'))->toBeTrue()
         ->and(Schema::hasTable('sales_invoices'))->toBeFalse()
         ->and(Schema::hasTable('customer_payments'))->toBeFalse()
         ->and(Schema::hasTable('payment_allocations'))->toBeFalse();

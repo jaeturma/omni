@@ -15,7 +15,7 @@ final class SalesWorkflow
     public const PERMISSIONS = [
         'quotations.view', 'quotations.create', 'quotations.update', 'quotations.approve', 'quotations.cancel', 'quotations.print',
         'sales-orders.view', 'sales-orders.create', 'sales-orders.update', 'sales-orders.confirm', 'sales-orders.cancel',
-        'deliveries.view', 'deliveries.create', 'deliveries.update', 'deliveries.release', 'deliveries.cancel',
+        'deliveries.view', 'deliveries.create', 'deliveries.release', 'deliveries.accept', 'deliveries.cancel', 'deliveries.print',
         'sales-invoices.view', 'sales-invoices.create', 'sales-invoices.update', 'sales-invoices.post', 'sales-invoices.void',
         'customer-payments.view', 'customer-payments.create', 'customer-payments.update', 'customer-payments.post', 'customer-payments.void',
         'payment-allocations.manage', 'receivables.view', 'sales-withholding.manage',
@@ -24,14 +24,14 @@ final class SalesWorkflow
     public const ENCODER_PERMISSIONS = [
         'quotations.view', 'quotations.create', 'quotations.update', 'quotations.print',
         'sales-orders.view', 'sales-orders.create', 'sales-orders.update', 'sales-orders.confirm',
-        'deliveries.view', 'deliveries.create', 'deliveries.update', 'deliveries.release',
+        'deliveries.view', 'deliveries.create', 'deliveries.release', 'deliveries.print',
         'sales-invoices.view', 'sales-invoices.create', 'sales-invoices.update',
         'customer-payments.view', 'customer-payments.create', 'customer-payments.update',
         'receivables.view',
     ];
 
     public const VIEW_PERMISSIONS = [
-        'quotations.view', 'quotations.print', 'sales-orders.view', 'deliveries.view', 'sales-invoices.view',
+        'quotations.view', 'quotations.print', 'sales-orders.view', 'deliveries.view', 'deliveries.print', 'sales-invoices.view',
         'customer-payments.view', 'receivables.view',
     ];
 
