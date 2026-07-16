@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessProfileController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\SystemSettingController;
 use App\Http\Controllers\TaxProfileController;
 use App\Http\Controllers\UnitOfMeasureController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WarehouseController;
 use App\Http\Middleware\EnsureUserIsActive;
 use Illuminate\Support\Facades\Route;
 
@@ -61,5 +63,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::resource('products-services', ProductServiceController::class)
         ->parameters(['products-services' => 'product_service'])
         ->except('show');
+    Route::resource('brands', BrandController::class)->except('show');
+    Route::resource('warehouses', WarehouseController::class)->except('show');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

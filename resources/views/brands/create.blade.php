@@ -1,0 +1,1 @@
+<x-app-layout title="Create Brand"><x-page-header title="Create Brand" description="Add a product brand master record." /><x-brand-form :action="route('brands.store')" submit-label="Create brand" /></x-app-layout>

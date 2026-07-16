@@ -1,0 +1,1 @@
+<x-app-layout title="Create Warehouse"><x-page-header title="Create Warehouse" description="Add a warehouse location master record." /><x-warehouse-form :action="route('warehouses.store')" submit-label="Create warehouse" /></x-app-layout>
