@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\QuotationStatus;
+use App\Models\Concerns\HasSalesAttachments;
 use Database\Factories\QuotationFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Quotation extends Model
 {
     /** @use HasFactory<QuotationFactory> */
-    use HasFactory;
+    use HasFactory, HasSalesAttachments;
 
     protected $attributes = ['document_discount_rate' => 0, 'subtotal' => 0, 'line_discount_total' => 0, 'document_discount_amount' => 0, 'grand_total' => 0, 'status' => 'draft'];
 

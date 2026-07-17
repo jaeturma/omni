@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\SalesOrderStatus;
+use App\Models\Concerns\HasSalesAttachments;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['quotation_id', 'customer_id', 'document_number_reservation_id', 'sales_order_number', 'order_date', 'promised_delivery_date', 'customer_po_number', 'payment_terms', 'customer_name', 'customer_tin', 'billing_address', 'delivery_address', 'notes', 'document_discount_rate', 'subtotal', 'line_discount_total', 'document_discount_amount', 'grand_total', 'status', 'confirmed_at', 'confirmed_by', 'closed_at', 'closed_by', 'cancelled_at', 'cancelled_by', 'cancellation_reason', 'created_by', 'updated_by'])]
 class SalesOrder extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSalesAttachments;
 
     protected $attributes = ['payment_terms' => 0, 'document_discount_rate' => 0, 'subtotal' => 0, 'line_discount_total' => 0, 'document_discount_amount' => 0, 'grand_total' => 0, 'status' => 'draft'];
 

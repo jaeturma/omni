@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\GovernmentDeductionStatus;
+use App\Models\Concerns\HasSalesAttachments;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,6 +20,8 @@ use Illuminate\Support\Carbon;
 #[Fillable(['customer_id', 'sales_invoice_id', 'customer_payment_id', 'tax_rate_setting_id', 'deduction_type', 'certificate_type', 'certificate_number', 'certificate_date', 'covered_from', 'covered_to', 'gross_basis', 'rate', 'amount', 'status', 'notes', 'attachment_reference', 'verified_at', 'verified_by', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
 class GovernmentDeduction extends Model
 {
+    use HasSalesAttachments;
+
     public const DEDUCTION_TYPES = ['percentage_tax_withheld', 'expanded_withholding_tax', 'retention', 'liquidated_damages', 'other_government_deduction'];
 
     public const CERTIFICATE_TYPES = ['2304', '2306', '2307', 'other'];

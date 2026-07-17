@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\DeliveryStatus;
+use App\Models\Concerns\HasSalesAttachments;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -13,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['sales_order_id', 'customer_id', 'warehouse_id', 'document_number_reservation_id', 'delivery_number', 'delivery_date', 'customer_name', 'customer_po_number', 'inspection_reference', 'delivery_address', 'recipient_name', 'recipient_contact', 'notes', 'status', 'released_at', 'released_by', 'delivered_at', 'delivered_by', 'received_at', 'received_by_name', 'accepted_at', 'accepted_by', 'acceptance_notes', 'cancelled_at', 'cancelled_by', 'cancellation_reason', 'created_by', 'updated_by'])]
 class Delivery extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSalesAttachments;
 
     protected $attributes = ['status' => 'draft'];
 

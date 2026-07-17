@@ -19,6 +19,7 @@ use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\ReceivableReportController;
 use App\Http\Controllers\RoleMatrixController;
+use App\Http\Controllers\SalesAttachmentController;
 use App\Http\Controllers\SalesInvoiceController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SupplierController;
@@ -103,5 +104,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/customers/{customer}/statement/print', [ReceivableReportController::class, 'statementPrint'])->name('customer-statements.print');
     Route::patch('/government-deductions/{government_deduction}/status', [GovernmentDeductionController::class, 'transition'])->name('government-deductions.transition');
     Route::resource('government-deductions', GovernmentDeductionController::class)->except('destroy');
+    Route::post('/sales-attachments/{attachableType}/{attachableId}', [SalesAttachmentController::class, 'store'])->whereNumber('attachableId')->name('sales-attachments.store');
+    Route::get('/sales-attachments/{salesAttachment}/download', [SalesAttachmentController::class, 'download'])->name('sales-attachments.download');
+    Route::delete('/sales-attachments/{salesAttachment}', [SalesAttachmentController::class, 'destroy'])->name('sales-attachments.destroy');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

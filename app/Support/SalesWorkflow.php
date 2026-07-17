@@ -20,6 +20,7 @@ final class SalesWorkflow
         'customer-payments.view', 'customer-payments.create', 'customer-payments.update', 'customer-payments.post', 'customer-payments.allocate', 'customer-payments.void',
         'receivables.view', 'receivables.export', 'customer-statements.view',
         'government-deductions.view', 'government-deductions.create', 'government-deductions.update', 'government-deductions.verify', 'government-deductions.void',
+        'sales-attachments.view', 'sales-attachments.upload', 'sales-attachments.delete',
     ];
 
     public const ENCODER_PERMISSIONS = [
@@ -29,11 +30,13 @@ final class SalesWorkflow
         'sales-invoices.view', 'sales-invoices.create', 'sales-invoices.update', 'sales-invoices.print',
         'customer-payments.view', 'customer-payments.create', 'customer-payments.update',
         'receivables.view', 'customer-statements.view', 'government-deductions.view', 'government-deductions.create', 'government-deductions.update',
+        'sales-attachments.view', 'sales-attachments.upload', 'sales-attachments.delete',
     ];
 
     public const VIEW_PERMISSIONS = [
         'quotations.view', 'quotations.print', 'sales-orders.view', 'deliveries.view', 'deliveries.print', 'sales-invoices.view', 'sales-invoices.print',
         'customer-payments.view', 'receivables.view', 'customer-statements.view', 'government-deductions.view',
+        'sales-attachments.view',
     ];
 
     private function __construct() {}

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\CustomerPaymentStatus;
+use App\Models\Concerns\HasSalesAttachments;
 use Database\Factories\CustomerPaymentFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -21,7 +22,7 @@ use Illuminate\Support\Carbon;
 class CustomerPayment extends Model
 {
     /** @use HasFactory<CustomerPaymentFactory> */
-    use HasFactory;
+    use HasFactory, HasSalesAttachments;
 
     protected $attributes = ['withholding_amount' => 0, 'other_deductions' => 0, 'status' => 'draft'];
 

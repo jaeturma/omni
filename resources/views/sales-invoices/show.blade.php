@@ -12,4 +12,5 @@
         @if ($invoice->status === \App\Enums\SalesInvoiceStatus::Draft) @can('post', $invoice)<form method="POST" action="{{ route('sales-invoices.transition', $invoice) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="posted"><button class="rounded-lg bg-blue-700 px-4 py-2 text-white">Post invoice</button></form>@endcan @endif
         @if (in_array($invoice->status, [\App\Enums\SalesInvoiceStatus::Posted, \App\Enums\SalesInvoiceStatus::PartiallyPaid, \App\Enums\SalesInvoiceStatus::Overdue], true)) @can('void', $invoice)<form method="POST" action="{{ route('sales-invoices.transition', $invoice) }}" class="flex gap-2">@csrf @method('PATCH')<input type="hidden" name="status" value="voided"><input name="reason" required placeholder="Void reason" class="rounded-lg border px-3 py-2"><button class="rounded-lg border border-red-300 px-4 py-2 text-red-700">Void</button></form>@endcan @endif
     </div>
+<x-sales-record-panel :record="$invoice" />
 </x-app-layout>

@@ -16,4 +16,5 @@
         @if ($delivery->status === \App\Enums\DeliveryStatus::Delivered) @can('accept', $delivery)<form method="POST" action="{{ route('deliveries.transition', $delivery) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="accepted"><input name="acceptance_notes" placeholder="Acceptance notes" class="rounded-lg border px-3 py-2"><button class="rounded-lg bg-emerald-700 px-4 py-2 text-white">Accept</button></form>@endcan @endif
         @can('cancel', $delivery) @if ($delivery->status !== \App\Enums\DeliveryStatus::Accepted && $delivery->status !== \App\Enums\DeliveryStatus::Cancelled)<form method="POST" action="{{ route('deliveries.transition', $delivery) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="cancelled"><input name="reason" required placeholder="Cancellation reason" class="rounded-lg border px-3 py-2"><button class="rounded-lg border border-red-300 px-4 py-2 text-red-700">Cancel</button></form>@endif @endcan
     </div>
+<x-sales-record-panel :record="$delivery" />
 </x-app-layout>

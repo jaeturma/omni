@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\SalesInvoiceStatus;
+use App\Models\Concerns\HasSalesAttachments;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -21,7 +22,7 @@ use Illuminate\Support\Carbon;
 #[Fillable(['sales_order_id', 'delivery_id', 'customer_id', 'fiscal_period_id', 'document_number_reservation_id', 'invoice_number', 'invoice_date', 'due_date', 'customer_name', 'customer_tin', 'billing_address', 'customer_po_number', 'source_type', 'gross_amount', 'discount_amount', 'net_sales_amount', 'expected_withholding_amount', 'total_receivable', 'paid_amount', 'balance_due', 'notes', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
 class SalesInvoice extends Model
 {
-    use HasFactory;
+    use HasFactory, HasSalesAttachments;
 
     protected $attributes = ['gross_amount' => 0, 'discount_amount' => 0, 'net_sales_amount' => 0, 'expected_withholding_amount' => 0, 'total_receivable' => 0, 'paid_amount' => 0, 'balance_due' => 0, 'status' => 'draft'];
 
