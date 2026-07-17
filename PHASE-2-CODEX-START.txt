@@ -1,0 +1,5 @@
+Execute docs/work-packages/WP-02-01-customers.md
+Follow AGENTS.md strictly.
+Work only within the scope of this work package.
+Do not implement sales, purchasing, inventory, accounting, reporting, or tax modules.
+Stop after acceptance criteria are satisfied.

@@ -1,0 +1,35 @@
+OMNI MINI-ERP — PHASE 3 START
+
+Copy the included `docs` folder into the root of the existing Laravel project.
+
+Execute the work packages one at a time:
+
+1. WP-03-01-sales-settings-workflow.md
+2. WP-03-02-quotations.md
+3. WP-03-03-sales-orders.md
+4. WP-03-04-delivery-records.md
+5. WP-03-05-sales-invoices.md
+6. WP-03-06-customer-payments-allocations.md
+7. WP-03-07-receivables-aging.md
+8. WP-03-08-government-sales-withholding.md
+9. WP-03-09-sales-attachments-traceability.md
+10. WP-03-10-phase-validation-gap-review.md
+
+FIRST CODEX PROMPT
+
+Execute `docs/work-packages/WP-03-01-sales-settings-workflow.md`.
+
+Follow `AGENTS.md` strictly.
+
+Work only within the stated scope. Inspect only the files required to complete this work package. Do not implement quotations, orders, deliveries, invoices, payments, inventory, accounting, financial statements, tax returns, or future modules beyond the shared Phase 3 foundations explicitly required.
+
+Run targeted tests during implementation and all completion checks before closing the work package. Stop after the acceptance criteria are satisfied.
+
+In the completion report, include only:
+
+1. Files changed
+2. Commands and tests run
+3. Acceptance criteria result
+4. Remaining issues requiring owner action
+
+Do not execute all work packages at once. Review `git diff` and commit after every completed work package.
