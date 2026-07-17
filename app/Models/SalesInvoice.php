@@ -14,6 +14,7 @@ use Illuminate\Support\Carbon;
  * @property SalesInvoiceStatus $status
  * @property numeric-string $paid_amount
  * @property numeric-string $balance_due
+ * @property numeric-string $gross_amount
  * @property Carbon $invoice_date
  * @property Carbon $due_date
  */
@@ -56,6 +57,12 @@ class SalesInvoice extends Model
     public function paymentAllocations(): HasMany
     {
         return $this->hasMany(PaymentAllocation::class);
+    }
+
+    /** @return HasMany<GovernmentDeduction, $this> */
+    public function governmentDeductions(): HasMany
+    {
+        return $this->hasMany(GovernmentDeduction::class);
     }
 
     protected function casts(): array

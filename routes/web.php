@@ -13,6 +13,7 @@ use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
+use App\Http\Controllers\GovernmentDeductionController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\QuotationController;
@@ -100,5 +101,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/receivables/export', [ReceivableReportController::class, 'export'])->name('receivables.export');
     Route::get('/customers/{customer}/statement', [ReceivableReportController::class, 'statement'])->name('customer-statements.show');
     Route::get('/customers/{customer}/statement/print', [ReceivableReportController::class, 'statementPrint'])->name('customer-statements.print');
+    Route::patch('/government-deductions/{government_deduction}/status', [GovernmentDeductionController::class, 'transition'])->name('government-deductions.transition');
+    Route::resource('government-deductions', GovernmentDeductionController::class)->except('destroy');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
