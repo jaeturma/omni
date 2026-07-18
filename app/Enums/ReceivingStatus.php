@@ -9,15 +9,21 @@ enum ReceivingStatus: string
     use HasStatusTransitions;
 
     case Draft = 'draft';
-    case Posted = 'posted';
-    case Voided = 'voided';
+    case Received = 'received';
+    case Inspected = 'inspected';
+    case Accepted = 'accepted';
+    case PartiallyAccepted = 'partially_accepted';
+    case Rejected = 'rejected';
+    case Cancelled = 'cancelled';
 
     /** @return list<self> */
     public function allowedTransitions(): array
     {
         return match ($this) {
-            self::Draft => [self::Posted],
-            self::Posted => [self::Voided],
+            self::Draft => [self::Received, self::Cancelled],
+            self::Received => [self::Inspected, self::Accepted, self::PartiallyAccepted, self::Rejected, self::Cancelled],
+            self::Inspected => [self::Accepted, self::PartiallyAccepted, self::Rejected, self::Cancelled],
+            self::Accepted, self::PartiallyAccepted, self::Rejected => [self::Cancelled],
             default => [],
         };
     }

@@ -21,6 +21,7 @@ use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseRequestController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\ReceivableReportController;
+use App\Http\Controllers\ReceivingRecordController;
 use App\Http\Controllers\RoleMatrixController;
 use App\Http\Controllers\SalesAttachmentController;
 use App\Http\Controllers\SalesInvoiceController;
@@ -91,6 +92,10 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::patch('/purchase-orders/{purchase_order}/status', [PurchaseOrderController::class, 'transition'])->name('purchase-orders.transition');
     Route::get('/purchase-orders/{purchase_order}/print', [PurchaseOrderController::class, 'print'])->name('purchase-orders.print');
     Route::resource('purchase-orders', PurchaseOrderController::class);
+    Route::get('/purchase-orders/{purchase_order}/receiving-records/create', [ReceivingRecordController::class, 'create'])->name('receiving-records.create');
+    Route::patch('/receiving-records/{receiving_record}/status', [ReceivingRecordController::class, 'transition'])->name('receiving-records.transition');
+    Route::get('/receiving-records/{receiving_record}/print', [ReceivingRecordController::class, 'print'])->name('receiving-records.print');
+    Route::resource('receiving-records', ReceivingRecordController::class)->only(['index', 'store', 'show', 'destroy']);
     Route::patch('/quotations/{quotation}/status', [QuotationController::class, 'transition'])->name('quotations.transition');
     Route::get('/quotations/{quotation}/print', [QuotationController::class, 'print'])->name('quotations.print');
     Route::resource('quotations', QuotationController::class);

@@ -26,8 +26,9 @@ test('purchasing status transitions are explicit and terminal states are immutab
         ->and(CanvassStatus::Awarded->allowedTransitions())->toBeEmpty()
         ->and(PurchaseOrderStatus::Issued->canTransitionTo(PurchaseOrderStatus::PartiallyReceived))->toBeTrue()
         ->and(PurchaseOrderStatus::Closed->allowedTransitions())->toBeEmpty()
-        ->and(ReceivingStatus::Posted->canTransitionTo(ReceivingStatus::Draft))->toBeFalse()
-        ->and(ReceivingStatus::Voided->allowedTransitions())->toBeEmpty()
+        ->and(ReceivingStatus::Received->canTransitionTo(ReceivingStatus::Inspected))->toBeTrue()
+        ->and(ReceivingStatus::Accepted->canTransitionTo(ReceivingStatus::Draft))->toBeFalse()
+        ->and(ReceivingStatus::Cancelled->allowedTransitions())->toBeEmpty()
         ->and(SupplierInvoiceStatus::Draft->canTransitionTo(SupplierInvoiceStatus::Posted))->toBeTrue()
         ->and(SupplierInvoiceStatus::Posted->canTransitionTo(SupplierInvoiceStatus::Draft))->toBeFalse()
         ->and(SupplierPaymentStatus::Posted->canTransitionTo(SupplierPaymentStatus::FullyAllocated))->toBeTrue()
@@ -68,7 +69,7 @@ test('phase four permissions are seeded with purchase request canvass and purcha
         ->and(Role::findByName('Viewer')->hasAllPermissions(PurchasingWorkflow::VIEW_PERMISSIONS))->toBeTrue()
         ->and(Role::findByName('Viewer')->hasPermissionTo('supplier-invoices.create'))->toBeFalse();
 
-    foreach (['purchase_requests', 'purchase_request_lines', 'canvass_quotations', 'purchase_orders', 'purchase_order_lines'] as $table) {
+    foreach (['purchase_requests', 'purchase_request_lines', 'canvass_quotations', 'purchase_orders', 'purchase_order_lines', 'receiving_records', 'receiving_record_lines'] as $table) {
         expect(Schema::hasTable($table))->toBeTrue();
     }
 

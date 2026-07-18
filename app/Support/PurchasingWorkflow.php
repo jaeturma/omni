@@ -18,6 +18,7 @@ final class PurchasingWorkflow
         'canvasses.view', 'canvasses.create', 'canvasses.update', 'canvasses.evaluate', 'canvasses.award', 'canvasses.cancel',
         'purchase-orders.view', 'purchase-orders.create', 'purchase-orders.update', 'purchase-orders.approve', 'purchase-orders.issue', 'purchase-orders.send', 'purchase-orders.cancel', 'purchase-orders.print',
         'receivings.view', 'receivings.create', 'receivings.update', 'receivings.post', 'receivings.void', 'receivings.print',
+        'receiving-records.view', 'receiving-records.create', 'receiving-records.inspect', 'receiving-records.accept', 'receiving-records.cancel', 'receiving-records.print',
         'supplier-invoices.view', 'supplier-invoices.create', 'supplier-invoices.update', 'supplier-invoices.post', 'supplier-invoices.void', 'supplier-invoices.print',
         'supplier-payments.view', 'supplier-payments.create', 'supplier-payments.update', 'supplier-payments.post', 'supplier-payments.allocate', 'supplier-payments.void', 'supplier-payments.print',
         'expenses.view', 'expenses.create', 'expenses.update', 'expenses.approve', 'expenses.post', 'expenses.void', 'expenses.print',
@@ -29,7 +30,7 @@ final class PurchasingWorkflow
         'purchase-requests.view', 'purchase-requests.create', 'purchase-requests.update', 'purchase-requests.submit',
         'canvasses.view', 'canvasses.create', 'canvasses.update', 'purchase-canvass.manage',
         'purchase-orders.view', 'purchase-orders.create', 'purchase-orders.update', 'purchase-orders.print',
-        'receivings.view', 'receivings.create', 'receivings.update', 'receivings.print',
+        'receivings.view', 'receivings.create', 'receivings.update', 'receivings.print', 'receiving-records.view', 'receiving-records.create', 'receiving-records.print',
         'supplier-invoices.view', 'supplier-invoices.create', 'supplier-invoices.update', 'supplier-invoices.print',
         'supplier-payments.view', 'supplier-payments.create', 'supplier-payments.update', 'supplier-payments.print',
         'expenses.view', 'expenses.create', 'expenses.update', 'expenses.print',
@@ -38,7 +39,7 @@ final class PurchasingWorkflow
 
     public const VIEW_PERMISSIONS = [
         'purchase-requests.view', 'canvasses.view', 'purchase-orders.view', 'purchase-orders.print',
-        'receivings.view', 'receivings.print', 'supplier-invoices.view', 'supplier-invoices.print',
+        'receivings.view', 'receivings.print', 'receiving-records.view', 'receiving-records.print', 'supplier-invoices.view', 'supplier-invoices.print',
         'supplier-payments.view', 'supplier-payments.print', 'expenses.view', 'expenses.print',
         'payables.view', 'supplier-statements.view', 'purchasing-attachments.view',
     ];

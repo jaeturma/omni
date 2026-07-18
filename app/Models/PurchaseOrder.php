@@ -40,6 +40,12 @@ class PurchaseOrder extends Model
         return $this->hasMany(PurchaseOrderLine::class)->orderBy('line_number');
     }
 
+    /** @return HasMany<ReceivingRecord, $this> */
+    public function receivingRecords(): HasMany
+    {
+        return $this->hasMany(ReceivingRecord::class);
+    }
+
     protected function casts(): array
     {
         return ['order_date' => 'date', 'expected_delivery_date' => 'date', 'document_discount_rate' => 'decimal:6', 'subtotal' => 'decimal:4', 'line_discount_total' => 'decimal:4', 'document_discount_amount' => 'decimal:4', 'freight' => 'decimal:4', 'other_charges' => 'decimal:4', 'grand_total' => 'decimal:4', 'status' => PurchaseOrderStatus::class, 'approved_at' => 'datetime', 'issued_at' => 'datetime', 'closed_at' => 'datetime', 'cancelled_at' => 'datetime'];
