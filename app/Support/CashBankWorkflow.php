@@ -18,7 +18,7 @@ final class CashBankWorkflow
     public const PETTY_CASH_TYPES = [CashTransactionType::PettyCashRelease, CashTransactionType::PettyCashReplenishment];
 
     public const PERMISSIONS = [
-        'financial-accounts.view', 'financial-accounts.create', 'financial-accounts.update', 'financial-accounts.close',
+        'financial-accounts.view', 'financial-accounts.create', 'financial-accounts.update', 'financial-accounts.activate', 'financial-accounts.deactivate', 'financial-accounts.view-sensitive',
         'cash-receipts.view', 'cash-receipts.create', 'cash-receipts.update', 'cash-receipts.post', 'cash-receipts.void', 'cash-receipts.print',
         'cash-disbursements.view', 'cash-disbursements.create', 'cash-disbursements.update', 'cash-disbursements.post', 'cash-disbursements.void', 'cash-disbursements.print',
         'fund-transfers.view', 'fund-transfers.create', 'fund-transfers.post', 'fund-transfers.void',

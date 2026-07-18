@@ -14,6 +14,7 @@ use App\Http\Controllers\CustomerPaymentController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\FinancialAccountController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\GovernmentDeductionController;
@@ -88,6 +89,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
         ->parameters(['payment-methods' => 'payment_method'])
         ->except('show');
     Route::resource('banks', BankController::class)->except('show');
+    Route::patch('/financial-accounts/{financial_account}/status', [FinancialAccountController::class, 'status'])->name('financial-accounts.status');
+    Route::resource('financial-accounts', FinancialAccountController::class)->except('destroy');
     Route::patch('/purchase-requests/{purchase_request}/status', [PurchaseRequestController::class, 'transition'])->name('purchase-requests.transition');
     Route::resource('purchase-requests', PurchaseRequestController::class);
     Route::post('/purchase-requests/{purchase_request}/canvass-quotations', [CanvassQuotationController::class, 'store'])->name('purchase-requests.canvass-quotations.store');
