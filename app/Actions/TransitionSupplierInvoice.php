@@ -37,6 +37,9 @@ class TransitionSupplierInvoice
                 $changes += ['internal_number' => $reservation->document_number, 'document_number_reservation_id' => $reservation->id, 'posted_at' => now(), 'posted_by' => $userId];
             }
             if ($target === SupplierInvoiceStatus::Voided) {
+                if (bccomp($locked->paid_amount, '0', 4) === 1) {
+                    throw ValidationException::withMessages(['status' => 'Reverse active supplier-payment allocations before voiding this invoice.']);
+                }
                 $this->applySourceQuantities($locked, true);
                 $changes += ['balance_due' => '0.0000', 'voided_at' => now(), 'voided_by' => $userId, 'void_reason' => $reason];
             }

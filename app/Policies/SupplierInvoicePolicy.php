@@ -40,7 +40,9 @@ class SupplierInvoicePolicy
 
     public function void(User $user, SupplierInvoice $invoice): bool
     {
-        return in_array($invoice->status, [SupplierInvoiceStatus::Posted, SupplierInvoiceStatus::PartiallyPaid, SupplierInvoiceStatus::Overdue], true) && $user->can('supplier-invoices.void');
+        return in_array($invoice->status, [SupplierInvoiceStatus::Posted, SupplierInvoiceStatus::Overdue], true)
+            && bccomp($invoice->paid_amount, '0', 4) === 0
+            && $user->can('supplier-invoices.void');
     }
 
     public function print(User $user, SupplierInvoice $invoice): bool

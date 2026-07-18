@@ -11,6 +11,7 @@ use App\Models\PurchaseOrder;
 use App\Models\ReceivingRecord;
 use App\Models\Supplier;
 use App\Models\SupplierInvoice;
+use App\Models\SupplierPayment;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -105,5 +106,5 @@ test('supplier invoice access is authorized and printable', function () {
 test('supplier invoices create no journal entries or tax returns', function () {
     $f = supplierInvoiceFixtures();
     saveSupplierInvoice($this, $f);
-    expect(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('tax_returns'))->toBeFalse()->and(Schema::hasTable('supplier_payments'))->toBeFalse();
+    expect(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('tax_returns'))->toBeFalse()->and(SupplierPayment::query()->count())->toBe(0);
 });

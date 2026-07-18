@@ -28,6 +28,7 @@ use App\Http\Controllers\SalesInvoiceController;
 use App\Http\Controllers\SalesOrderController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierInvoiceController;
+use App\Http\Controllers\SupplierPaymentController;
 use App\Http\Controllers\SystemSettingController;
 use App\Http\Controllers\TaxProfileController;
 use App\Http\Controllers\UnitOfMeasureController;
@@ -100,6 +101,10 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::patch('/supplier-invoices/{supplier_invoice}/status', [SupplierInvoiceController::class, 'transition'])->name('supplier-invoices.transition');
     Route::get('/supplier-invoices/{supplier_invoice}/print', [SupplierInvoiceController::class, 'print'])->name('supplier-invoices.print');
     Route::resource('supplier-invoices', SupplierInvoiceController::class);
+    Route::patch('/supplier-payments/{supplier_payment}/status', [SupplierPaymentController::class, 'transition'])->name('supplier-payments.transition');
+    Route::post('/supplier-payments/{supplier_payment}/allocations', [SupplierPaymentController::class, 'allocate'])->name('supplier-payments.allocate');
+    Route::get('/supplier-payments/{supplier_payment}/print', [SupplierPaymentController::class, 'print'])->name('supplier-payments.print');
+    Route::resource('supplier-payments', SupplierPaymentController::class);
     Route::patch('/quotations/{quotation}/status', [QuotationController::class, 'transition'])->name('quotations.transition');
     Route::get('/quotations/{quotation}/print', [QuotationController::class, 'print'])->name('quotations.print');
     Route::resource('quotations', QuotationController::class);
