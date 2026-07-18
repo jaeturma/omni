@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Support\CashBankWorkflow;
 use App\Support\PurchasingWorkflow;
 use App\Support\SalesWorkflow;
 use Illuminate\Database\Seeder;
@@ -34,6 +35,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'banks.view', 'banks.create', 'banks.update', 'banks.delete',
             ...SalesWorkflow::PERMISSIONS,
             ...PurchasingWorkflow::PERMISSIONS,
+            ...CashBankWorkflow::PERMISSIONS,
         ];
         foreach ($permissions as $permission) {
             Permission::findOrCreate($permission, 'web');
@@ -43,9 +45,9 @@ class RolesAndPermissionsSeeder extends Seeder
         $roles = [
             'Administrator' => $permissions,
             'Owner' => $permissions,
-            'Bookkeeper' => ['business-profile.view', 'tax-profile.view', 'tax-profile.update', 'tax-rates.manage', 'fiscal-years.view', 'fiscal-periods.manage', 'fiscal-periods.close', 'document-sequences.view', 'document-sequences.manage', 'document-sequences.issue', 'roles.view', 'system-settings.view', 'customers.view', 'customers.create', 'customers.update', 'suppliers.view', 'suppliers.create', 'suppliers.update', 'units-of-measure.view', 'units-of-measure.create', 'units-of-measure.update', 'categories.view', 'categories.create', 'categories.update', 'products-services.view', 'products-services.create', 'products-services.update', 'brands.view', 'brands.create', 'brands.update', 'warehouses.view', 'warehouses.create', 'warehouses.update', 'payment-methods.view', 'payment-methods.create', 'payment-methods.update', 'banks.view', 'banks.create', 'banks.update', ...SalesWorkflow::PERMISSIONS, ...PurchasingWorkflow::PERMISSIONS],
-            'Encoder' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'document-sequences.issue', 'system-settings.view', 'customers.view', 'customers.create', 'customers.update', 'suppliers.view', 'suppliers.create', 'suppliers.update', 'units-of-measure.view', 'units-of-measure.create', 'units-of-measure.update', 'categories.view', 'categories.create', 'categories.update', 'products-services.view', 'products-services.create', 'products-services.update', 'brands.view', 'brands.create', 'brands.update', 'warehouses.view', 'warehouses.create', 'warehouses.update', 'payment-methods.view', 'payment-methods.create', 'payment-methods.update', 'banks.view', 'banks.create', 'banks.update', ...SalesWorkflow::ENCODER_PERMISSIONS, ...PurchasingWorkflow::ENCODER_PERMISSIONS],
-            'Viewer' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'roles.view', 'system-settings.view', 'customers.view', 'suppliers.view', 'units-of-measure.view', 'categories.view', 'products-services.view', 'brands.view', 'warehouses.view', 'payment-methods.view', 'banks.view', ...SalesWorkflow::VIEW_PERMISSIONS, ...PurchasingWorkflow::VIEW_PERMISSIONS],
+            'Bookkeeper' => ['business-profile.view', 'tax-profile.view', 'tax-profile.update', 'tax-rates.manage', 'fiscal-years.view', 'fiscal-periods.manage', 'fiscal-periods.close', 'document-sequences.view', 'document-sequences.manage', 'document-sequences.issue', 'roles.view', 'system-settings.view', 'customers.view', 'customers.create', 'customers.update', 'suppliers.view', 'suppliers.create', 'suppliers.update', 'units-of-measure.view', 'units-of-measure.create', 'units-of-measure.update', 'categories.view', 'categories.create', 'categories.update', 'products-services.view', 'products-services.create', 'products-services.update', 'brands.view', 'brands.create', 'brands.update', 'warehouses.view', 'warehouses.create', 'warehouses.update', 'payment-methods.view', 'payment-methods.create', 'payment-methods.update', 'banks.view', 'banks.create', 'banks.update', ...SalesWorkflow::PERMISSIONS, ...PurchasingWorkflow::PERMISSIONS, ...CashBankWorkflow::PERMISSIONS],
+            'Encoder' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'document-sequences.issue', 'system-settings.view', 'customers.view', 'customers.create', 'customers.update', 'suppliers.view', 'suppliers.create', 'suppliers.update', 'units-of-measure.view', 'units-of-measure.create', 'units-of-measure.update', 'categories.view', 'categories.create', 'categories.update', 'products-services.view', 'products-services.create', 'products-services.update', 'brands.view', 'brands.create', 'brands.update', 'warehouses.view', 'warehouses.create', 'warehouses.update', 'payment-methods.view', 'payment-methods.create', 'payment-methods.update', 'banks.view', 'banks.create', 'banks.update', ...SalesWorkflow::ENCODER_PERMISSIONS, ...PurchasingWorkflow::ENCODER_PERMISSIONS, ...CashBankWorkflow::ENCODER_PERMISSIONS],
+            'Viewer' => ['business-profile.view', 'tax-profile.view', 'fiscal-years.view', 'document-sequences.view', 'roles.view', 'system-settings.view', 'customers.view', 'suppliers.view', 'units-of-measure.view', 'categories.view', 'products-services.view', 'brands.view', 'warehouses.view', 'payment-methods.view', 'banks.view', ...SalesWorkflow::VIEW_PERMISSIONS, ...PurchasingWorkflow::VIEW_PERMISSIONS, ...CashBankWorkflow::VIEW_PERMISSIONS],
         ];
         foreach ($roles as $name => $rolePermissions) {
             Role::findOrCreate($name, 'web')->syncPermissions($rolePermissions);
