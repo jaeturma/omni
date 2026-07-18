@@ -55,6 +55,12 @@ class ReceivingRecord extends Model
         return $this->hasMany(ReceivingRecordLine::class)->orderBy('line_number');
     }
 
+    /** @return HasMany<SupplierInvoice, $this> */
+    public function supplierInvoices(): HasMany
+    {
+        return $this->hasMany(SupplierInvoice::class);
+    }
+
     protected function casts(): array
     {
         return ['receiving_date' => 'date', 'status' => ReceivingStatus::class, 'received_at' => 'datetime', 'inspected_at' => 'datetime', 'accepted_at' => 'datetime', 'cancelled_at' => 'datetime'];

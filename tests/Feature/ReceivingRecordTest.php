@@ -10,6 +10,7 @@ use App\Models\ProductService;
 use App\Models\PurchaseOrder;
 use App\Models\ReceivingRecord;
 use App\Models\Supplier;
+use App\Models\SupplierInvoice;
 use App\Models\UnitOfMeasure;
 use App\Models\User;
 use App\Models\Warehouse;
@@ -103,5 +104,5 @@ test('receiving access and status actions are authorized and printable', functio
 test('receiving creates no inventory valuation payable or journal effects', function () {
     $f = receivingFixtures();
     createReceiving($this, $f, '1.0000', '1.0000');
-    expect(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('inventory_balances'))->toBeFalse()->and(Schema::hasTable('supplier_invoices'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('inventory_balances'))->toBeFalse()->and(SupplierInvoice::query()->count())->toBe(0)->and(Schema::hasTable('journal_entries'))->toBeFalse();
 });

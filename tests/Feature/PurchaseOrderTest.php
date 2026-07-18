@@ -11,6 +11,7 @@ use App\Models\ProductService;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequest;
 use App\Models\Supplier;
+use App\Models\SupplierInvoice;
 use App\Models\UnitOfMeasure;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -117,5 +118,5 @@ test('purchase order access is authorized and printable', function () {
 
 test('purchase orders create no receiving payable stock or journal effects', function () {
     createDirectPurchaseOrder($this);
-    expect(Schema::hasTable('receivings'))->toBeFalse()->and(Schema::hasTable('supplier_invoices'))->toBeFalse()->and(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(Schema::hasTable('receivings'))->toBeFalse()->and(SupplierInvoice::query()->count())->toBe(0)->and(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
 });

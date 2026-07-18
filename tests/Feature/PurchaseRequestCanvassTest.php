@@ -9,6 +9,7 @@ use App\Models\ProductService;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequest;
 use App\Models\Supplier;
+use App\Models\SupplierInvoice;
 use App\Models\UnitOfMeasure;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -116,5 +117,5 @@ test('purchase request and canvass actions are authorized', function () {
 
 test('purchase requests create no purchase order payable stock or journal records', function () {
     createPurchaseRequest($this);
-    expect(Schema::hasTable('purchase_orders'))->toBeTrue()->and(PurchaseOrder::count())->toBe(0)->and(Schema::hasTable('supplier_invoices'))->toBeFalse()->and(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(Schema::hasTable('purchase_orders'))->toBeTrue()->and(PurchaseOrder::count())->toBe(0)->and(SupplierInvoice::count())->toBe(0)->and(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
 });

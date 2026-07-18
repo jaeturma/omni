@@ -38,6 +38,7 @@
                     @can('purchase-requests.view')<a href="{{ route('purchase-requests.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Purchase Requests</a>@endcan
                     @can('purchase-orders.view')<a href="{{ route('purchase-orders.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Purchase Orders</a>@endcan
                     @can('receiving-records.view')<a href="{{ route('receiving-records.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Receiving</a>@endcan
+                    @can('supplier-invoices.view')<a href="{{ route('supplier-invoices.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Supplier Invoices</a>@endcan
                     @foreach (['Expenses', 'Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
                         <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                     @endforeach
@@ -83,6 +84,7 @@
                             @can('purchase-requests.view')<a href="{{ route('purchase-requests.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Purchase Requests</a>@endcan
                             @can('purchase-orders.view')<a href="{{ route('purchase-orders.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Purchase Orders</a>@endcan
                             @can('receiving-records.view')<a href="{{ route('receiving-records.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Receiving</a>@endcan
+                            @can('supplier-invoices.view')<a href="{{ route('supplier-invoices.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Supplier Invoices</a>@endcan
                             @foreach (['Expenses', 'Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
                                 <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                             @endforeach

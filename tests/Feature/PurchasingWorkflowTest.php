@@ -69,11 +69,11 @@ test('phase four permissions are seeded with purchase request canvass and purcha
         ->and(Role::findByName('Viewer')->hasAllPermissions(PurchasingWorkflow::VIEW_PERMISSIONS))->toBeTrue()
         ->and(Role::findByName('Viewer')->hasPermissionTo('supplier-invoices.create'))->toBeFalse();
 
-    foreach (['purchase_requests', 'purchase_request_lines', 'canvass_quotations', 'purchase_orders', 'purchase_order_lines', 'receiving_records', 'receiving_record_lines'] as $table) {
+    foreach (['purchase_requests', 'purchase_request_lines', 'canvass_quotations', 'purchase_orders', 'purchase_order_lines', 'receiving_records', 'receiving_record_lines', 'supplier_invoices', 'supplier_invoice_lines'] as $table) {
         expect(Schema::hasTable($table))->toBeTrue();
     }
 
-    foreach (['receivings', 'supplier_invoices', 'supplier_payments', 'supplier_payment_allocations', 'expenses'] as $table) {
+    foreach (['receivings', 'supplier_payments', 'supplier_payment_allocations', 'expenses'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }
 });
