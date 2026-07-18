@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\SupplierPaymentStatus;
+use App\Models\Concerns\HasPurchasingAttachments;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -21,6 +22,8 @@ use Illuminate\Support\Carbon;
 #[Fillable(['supplier_id', 'payment_method_id', 'bank_id', 'document_number_reservation_id', 'payment_number', 'payment_date', 'reference_number', 'gross_settlement_amount', 'withholding_amount', 'other_deductions', 'net_cash_paid', 'unapplied_amount', 'notes', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
 class SupplierPayment extends Model
 {
+    use HasPurchasingAttachments;
+
     protected $attributes = ['withholding_amount' => 0, 'other_deductions' => 0, 'status' => 'draft'];
 
     public function supplier(): BelongsTo

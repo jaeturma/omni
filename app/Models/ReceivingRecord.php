@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\ReceivingStatus;
+use App\Models\Concerns\HasPurchasingAttachments;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['purchase_order_id', 'supplier_id', 'warehouse_id', 'document_number_reservation_id', 'receiving_number', 'receiving_date', 'supplier_name', 'delivery_location', 'delivery_receipt_number', 'supplier_invoice_reference', 'inspection_reference', 'received_by', 'inspected_by', 'accepted_by', 'notes', 'status', 'purchase_order_status_before_receipt', 'received_at', 'inspected_at', 'accepted_at', 'cancelled_at', 'cancelled_by', 'cancellation_reason', 'created_by', 'updated_by'])]
 class ReceivingRecord extends Model
 {
+    use HasPurchasingAttachments;
+
     protected $attributes = ['status' => 'draft'];
 
     public function purchaseOrder(): BelongsTo

@@ -21,6 +21,7 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseRequestController;
+use App\Http\Controllers\PurchasingAttachmentController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\ReceivableReportController;
 use App\Http\Controllers\ReceivingRecordController;
@@ -146,5 +147,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/sales-attachments/{attachableType}/{attachableId}', [SalesAttachmentController::class, 'store'])->whereNumber('attachableId')->name('sales-attachments.store');
     Route::get('/sales-attachments/{salesAttachment}/download', [SalesAttachmentController::class, 'download'])->name('sales-attachments.download');
     Route::delete('/sales-attachments/{salesAttachment}', [SalesAttachmentController::class, 'destroy'])->name('sales-attachments.destroy');
+    Route::post('/purchasing-attachments/{attachableType}/{attachableId}', [PurchasingAttachmentController::class, 'store'])->whereNumber('attachableId')->name('purchasing-attachments.store');
+    Route::get('/purchasing-attachments/{purchasingAttachment}/download', [PurchasingAttachmentController::class, 'download'])->name('purchasing-attachments.download');
+    Route::delete('/purchasing-attachments/{purchasingAttachment}', [PurchasingAttachmentController::class, 'destroy'])->name('purchasing-attachments.destroy');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

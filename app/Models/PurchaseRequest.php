@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PurchaseRequestStatus;
+use App\Models\Concerns\HasPurchasingAttachments;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 #[Fillable(['document_number_reservation_id', 'request_number', 'request_date', 'requested_by', 'needed_by', 'purpose', 'requesting_unit', 'project_reference', 'notes', 'estimated_total', 'status', 'submitted_at', 'submitted_by', 'approved_at', 'approved_by', 'rejected_at', 'rejected_by', 'rejection_reason', 'converted_at', 'converted_by', 'cancelled_at', 'cancelled_by', 'cancellation_reason', 'created_by', 'updated_by'])]
 class PurchaseRequest extends Model
 {
+    use HasPurchasingAttachments;
+
     protected $attributes = ['estimated_total' => 0, 'status' => 'draft'];
 
     public function requester(): BelongsTo

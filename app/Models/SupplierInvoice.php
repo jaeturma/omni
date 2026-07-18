@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\SupplierInvoiceStatus;
+use App\Models\Concerns\HasPurchasingAttachments;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,6 +21,8 @@ use Illuminate\Support\Carbon;
 #[Fillable(['supplier_id', 'purchase_order_id', 'receiving_record_id', 'fiscal_period_id', 'document_number_reservation_id', 'internal_number', 'supplier_invoice_number', 'invoice_date', 'due_date', 'supplier_name', 'supplier_tin', 'supplier_address', 'gross_purchase_amount', 'discount_amount', 'net_purchase_amount', 'freight_amount', 'other_charges_amount', 'withholding_expected_amount', 'total_payable', 'paid_amount', 'balance_due', 'notes', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
 class SupplierInvoice extends Model
 {
+    use HasPurchasingAttachments;
+
     protected $attributes = ['gross_purchase_amount' => 0, 'discount_amount' => 0, 'net_purchase_amount' => 0, 'freight_amount' => 0, 'other_charges_amount' => 0, 'withholding_expected_amount' => 0, 'total_payable' => 0, 'paid_amount' => 0, 'balance_due' => 0, 'status' => 'draft'];
 
     public function supplier(): BelongsTo

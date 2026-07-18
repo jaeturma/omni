@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\PurchaseOrderStatus;
+use App\Models\Concerns\HasPurchasingAttachments;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +13,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['purchase_request_id', 'canvass_quotation_id', 'supplier_id', 'document_number_reservation_id', 'purchase_order_number', 'order_date', 'expected_delivery_date', 'supplier_name', 'supplier_tin', 'supplier_address', 'delivery_location', 'supplier_quotation_reference', 'payment_terms', 'notes', 'document_discount_rate', 'subtotal', 'line_discount_total', 'document_discount_amount', 'freight', 'other_charges', 'grand_total', 'status', 'approved_at', 'approved_by', 'issued_at', 'issued_by', 'closed_at', 'closed_by', 'cancelled_at', 'cancelled_by', 'cancellation_reason', 'created_by', 'updated_by'])]
 class PurchaseOrder extends Model
 {
+    use HasPurchasingAttachments;
+
     protected $attributes = ['document_discount_rate' => 0, 'subtotal' => 0, 'line_discount_total' => 0, 'document_discount_amount' => 0, 'freight' => 0, 'other_charges' => 0, 'grand_total' => 0, 'status' => 'draft'];
 
     public function purchaseRequest(): BelongsTo
