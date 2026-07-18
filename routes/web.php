@@ -12,6 +12,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerPaymentController;
 use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DocumentSequenceController;
+use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\GovernmentDeductionController;
@@ -105,6 +106,9 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/supplier-payments/{supplier_payment}/allocations', [SupplierPaymentController::class, 'allocate'])->name('supplier-payments.allocate');
     Route::get('/supplier-payments/{supplier_payment}/print', [SupplierPaymentController::class, 'print'])->name('supplier-payments.print');
     Route::resource('supplier-payments', SupplierPaymentController::class);
+    Route::patch('/expenses/{expense}/status', [ExpenseController::class, 'transition'])->name('expenses.transition');
+    Route::get('/expenses/{expense}/print', [ExpenseController::class, 'print'])->name('expenses.print');
+    Route::resource('expenses', ExpenseController::class);
     Route::patch('/quotations/{quotation}/status', [QuotationController::class, 'transition'])->name('quotations.transition');
     Route::get('/quotations/{quotation}/print', [QuotationController::class, 'print'])->name('quotations.print');
     Route::resource('quotations', QuotationController::class);

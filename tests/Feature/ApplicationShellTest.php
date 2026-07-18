@@ -24,7 +24,7 @@ test('the shell shows placeholders only for modules not yet implemented', functi
 
     $response->assertSuccessful()
         ->assertDontSee('Purchases')
-        ->assertSee('Expenses')
+        ->assertDontSee('Expenses')
         ->assertSee('Inventory')
         ->assertSee('Accounting')
         ->assertSee('Tax Reports');

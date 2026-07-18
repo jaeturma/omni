@@ -21,7 +21,7 @@ final class PurchasingWorkflow
         'receiving-records.view', 'receiving-records.create', 'receiving-records.inspect', 'receiving-records.accept', 'receiving-records.cancel', 'receiving-records.print',
         'supplier-invoices.view', 'supplier-invoices.create', 'supplier-invoices.update', 'supplier-invoices.post', 'supplier-invoices.void', 'supplier-invoices.print',
         'supplier-payments.view', 'supplier-payments.create', 'supplier-payments.update', 'supplier-payments.post', 'supplier-payments.allocate', 'supplier-payments.void', 'supplier-payments.print',
-        'expenses.view', 'expenses.create', 'expenses.update', 'expenses.approve', 'expenses.post', 'expenses.void', 'expenses.print',
+        'expenses.view', 'expenses.create', 'expenses.update', 'expenses.approve', 'expenses.pay', 'expenses.void', 'expenses.print',
         'payables.view', 'payables.export', 'supplier-statements.view',
         'purchasing-attachments.view', 'purchasing-attachments.upload', 'purchasing-attachments.delete',
     ];
