@@ -1,0 +1,1 @@
+<x-app-layout title="Create purchase request"><x-page-header title="Create purchase request" description="Record an internal requirement for goods, services, or free-text items." /><x-purchase-request-form :action="route('purchase-requests.store')" :requesters="$requesters" :items="$items" :suppliers="$suppliers" submit-label="Save draft" /></x-app-layout>

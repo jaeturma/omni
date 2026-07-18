@@ -1,6 +1,6 @@
 //
 document.addEventListener('click', (event) => {
-    const form = event.target.closest('[data-quotation-form]');
+    const form = event.target.closest('[data-quotation-form], [data-line-form]');
     if (!form) return;
     if (event.target.closest('[data-add-line]')) {
         const lines = form.querySelector('[data-lines]');

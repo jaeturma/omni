@@ -23,7 +23,8 @@ test('the shell shows placeholders only for modules not yet implemented', functi
     $response = $this->actingAs($user)->get(route('dashboard'));
 
     $response->assertSuccessful()
-        ->assertSee('Purchases')
+        ->assertDontSee('Purchases')
+        ->assertSee('Expenses')
         ->assertSee('Inventory')
         ->assertSee('Accounting')
         ->assertSee('Tax Reports');

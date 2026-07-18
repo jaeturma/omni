@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessProfileController;
+use App\Http\Controllers\CanvassQuotationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerPaymentController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\GovernmentDeductionController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductServiceController;
+use App\Http\Controllers\PurchaseRequestController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\ReceivableReportController;
 use App\Http\Controllers\RoleMatrixController;
@@ -79,6 +81,11 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
         ->parameters(['payment-methods' => 'payment_method'])
         ->except('show');
     Route::resource('banks', BankController::class)->except('show');
+    Route::patch('/purchase-requests/{purchase_request}/status', [PurchaseRequestController::class, 'transition'])->name('purchase-requests.transition');
+    Route::resource('purchase-requests', PurchaseRequestController::class);
+    Route::post('/purchase-requests/{purchase_request}/canvass-quotations', [CanvassQuotationController::class, 'store'])->name('purchase-requests.canvass-quotations.store');
+    Route::put('/purchase-requests/{purchase_request}/canvass-quotations/{canvass_quotation}', [CanvassQuotationController::class, 'update'])->name('purchase-requests.canvass-quotations.update');
+    Route::delete('/purchase-requests/{purchase_request}/canvass-quotations/{canvass_quotation}', [CanvassQuotationController::class, 'destroy'])->name('purchase-requests.canvass-quotations.destroy');
     Route::patch('/quotations/{quotation}/status', [QuotationController::class, 'transition'])->name('quotations.transition');
     Route::get('/quotations/{quotation}/print', [QuotationController::class, 'print'])->name('quotations.print');
     Route::resource('quotations', QuotationController::class);

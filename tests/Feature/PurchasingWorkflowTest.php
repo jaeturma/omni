@@ -57,7 +57,7 @@ test('purchasing calculations reject invalid rates and over-settlement', functio
         ->and(fn () => $calculator->settlement('100.0000', '10.0000', '5.0000', '20.0000', '75.0001'))->toThrow(InvalidArgumentException::class);
 });
 
-test('phase four permissions are seeded without purchasing transaction tables', function () {
+test('phase four permissions are seeded with only purchase request and canvass transaction tables', function () {
     $this->seed(RolesAndPermissionsSeeder::class);
 
     expect(Permission::query()->whereIn('name', PurchasingWorkflow::PERMISSIONS)->count())->toBe(count(PurchasingWorkflow::PERMISSIONS))
@@ -68,7 +68,11 @@ test('phase four permissions are seeded without purchasing transaction tables', 
         ->and(Role::findByName('Viewer')->hasAllPermissions(PurchasingWorkflow::VIEW_PERMISSIONS))->toBeTrue()
         ->and(Role::findByName('Viewer')->hasPermissionTo('supplier-invoices.create'))->toBeFalse();
 
-    foreach (['purchase_requests', 'canvasses', 'purchase_orders', 'receivings', 'supplier_invoices', 'supplier_payments', 'supplier_payment_allocations', 'expenses'] as $table) {
+    foreach (['purchase_requests', 'purchase_request_lines', 'canvass_quotations'] as $table) {
+        expect(Schema::hasTable($table))->toBeTrue();
+    }
+
+    foreach (['purchase_orders', 'receivings', 'supplier_invoices', 'supplier_payments', 'supplier_payment_allocations', 'expenses'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }
 });
