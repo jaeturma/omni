@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountsPayableReportController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
@@ -132,6 +133,14 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/receivables/export', [ReceivableReportController::class, 'export'])->name('receivables.export');
     Route::get('/customers/{customer}/statement', [ReceivableReportController::class, 'statement'])->name('customer-statements.show');
     Route::get('/customers/{customer}/statement/print', [ReceivableReportController::class, 'statementPrint'])->name('customer-statements.print');
+    Route::get('/payables', [AccountsPayableReportController::class, 'index'])->name('payables.index');
+    Route::get('/payables/summary', [AccountsPayableReportController::class, 'summary'])->name('payables.summary');
+    Route::get('/payables/unapplied', [AccountsPayableReportController::class, 'unapplied'])->name('payables.unapplied');
+    Route::get('/payables/expenses', [AccountsPayableReportController::class, 'expenses'])->name('payables.expenses');
+    Route::get('/payables/print', [AccountsPayableReportController::class, 'print'])->name('payables.print');
+    Route::get('/payables/export', [AccountsPayableReportController::class, 'export'])->name('payables.export');
+    Route::get('/suppliers/{supplier}/statement', [AccountsPayableReportController::class, 'statement'])->name('supplier-statements.show');
+    Route::get('/suppliers/{supplier}/statement/print', [AccountsPayableReportController::class, 'statementPrint'])->name('supplier-statements.print');
     Route::patch('/government-deductions/{government_deduction}/status', [GovernmentDeductionController::class, 'transition'])->name('government-deductions.transition');
     Route::resource('government-deductions', GovernmentDeductionController::class)->except('destroy');
     Route::post('/sales-attachments/{attachableType}/{attachableId}', [SalesAttachmentController::class, 'store'])->whereNumber('attachableId')->name('sales-attachments.store');

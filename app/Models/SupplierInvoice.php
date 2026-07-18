@@ -15,6 +15,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $due_date
  * @property numeric-string $paid_amount
  * @property numeric-string $balance_due
+ * @property numeric-string $total_payable
  */
 #[Fillable(['supplier_id', 'purchase_order_id', 'receiving_record_id', 'fiscal_period_id', 'document_number_reservation_id', 'internal_number', 'supplier_invoice_number', 'invoice_date', 'due_date', 'supplier_name', 'supplier_tin', 'supplier_address', 'gross_purchase_amount', 'discount_amount', 'net_purchase_amount', 'freight_amount', 'other_charges_amount', 'withholding_expected_amount', 'total_payable', 'paid_amount', 'balance_due', 'notes', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
 class SupplierInvoice extends Model
