@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /** @property PurchaseRequestStatus $status */
 #[Fillable(['document_number_reservation_id', 'request_number', 'request_date', 'requested_by', 'needed_by', 'purpose', 'requesting_unit', 'project_reference', 'notes', 'estimated_total', 'status', 'submitted_at', 'submitted_by', 'approved_at', 'approved_by', 'rejected_at', 'rejected_by', 'rejection_reason', 'converted_at', 'converted_by', 'cancelled_at', 'cancelled_by', 'cancellation_reason', 'created_by', 'updated_by'])]
@@ -19,6 +20,7 @@ class PurchaseRequest extends Model
         return $this->belongsTo(User::class, 'requested_by');
     }
 
+    /** @return HasMany<PurchaseRequestLine, $this> */
     public function lines(): HasMany
     {
         return $this->hasMany(PurchaseRequestLine::class)->orderBy('line_number');
@@ -33,6 +35,11 @@ class PurchaseRequest extends Model
     public function numberReservation(): BelongsTo
     {
         return $this->belongsTo(DocumentNumberReservation::class, 'document_number_reservation_id');
+    }
+
+    public function purchaseOrder(): HasOne
+    {
+        return $this->hasOne(PurchaseOrder::class);
     }
 
     protected function casts(): array

@@ -48,7 +48,7 @@ class PurchaseRequestController extends Controller
     {
         Gate::authorize('view', $purchaseRequest);
 
-        return view('purchase-requests.show', ['purchaseRequest' => $purchaseRequest->load(['requester', 'lines.preferredSupplier', 'canvassQuotations.supplier']), 'suppliers' => Supplier::query()->where('status', 'active')->orderBy('name')->get()]);
+        return view('purchase-requests.show', ['purchaseRequest' => $purchaseRequest->load(['requester', 'lines.preferredSupplier', 'canvassQuotations.supplier', 'purchaseOrder']), 'suppliers' => Supplier::query()->where('status', 'active')->orderBy('name')->get()]);
     }
 
     public function edit(PurchaseRequest $purchaseRequest): View

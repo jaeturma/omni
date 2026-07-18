@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\DocumentSequence;
 use App\Models\FiscalYear;
 use App\Models\ProductService;
+use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequest;
 use App\Models\Supplier;
 use App\Models\UnitOfMeasure;
@@ -113,7 +114,7 @@ test('purchase request and canvass actions are authorized', function () {
     $this->post(route('purchase-requests.canvass-quotations.store', $f['request']), ['supplier_id' => $f['supplierA']->id])->assertForbidden();
 });
 
-test('purchase requests create no payable stock journal or purchase order effects', function () {
+test('purchase requests create no purchase order payable stock or journal records', function () {
     createPurchaseRequest($this);
-    expect(Schema::hasTable('purchase_orders'))->toBeFalse()->and(Schema::hasTable('supplier_invoices'))->toBeFalse()->and(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(Schema::hasTable('purchase_orders'))->toBeTrue()->and(PurchaseOrder::count())->toBe(0)->and(Schema::hasTable('supplier_invoices'))->toBeFalse()->and(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
 });

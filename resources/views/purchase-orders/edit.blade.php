@@ -1,0 +1,1 @@
+<x-app-layout title="Edit purchase order"><x-page-header title="Edit purchase order" description="Update this draft before approval." /><x-purchase-order-form :action="route('purchase-orders.update', $purchaseOrder)" method="PUT" :purchase-order="$purchaseOrder" :suppliers="$suppliers" :items="$items" submit-label="Update draft" /></x-app-layout>

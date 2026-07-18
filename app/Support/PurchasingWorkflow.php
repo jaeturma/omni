@@ -16,7 +16,7 @@ final class PurchasingWorkflow
     public const PERMISSIONS = [
         'purchase-requests.view', 'purchase-requests.create', 'purchase-requests.update', 'purchase-requests.submit', 'purchase-requests.approve', 'purchase-requests.reject', 'purchase-requests.cancel', 'purchase-canvass.manage',
         'canvasses.view', 'canvasses.create', 'canvasses.update', 'canvasses.evaluate', 'canvasses.award', 'canvasses.cancel',
-        'purchase-orders.view', 'purchase-orders.create', 'purchase-orders.update', 'purchase-orders.approve', 'purchase-orders.issue', 'purchase-orders.cancel', 'purchase-orders.print',
+        'purchase-orders.view', 'purchase-orders.create', 'purchase-orders.update', 'purchase-orders.approve', 'purchase-orders.issue', 'purchase-orders.send', 'purchase-orders.cancel', 'purchase-orders.print',
         'receivings.view', 'receivings.create', 'receivings.update', 'receivings.post', 'receivings.void', 'receivings.print',
         'supplier-invoices.view', 'supplier-invoices.create', 'supplier-invoices.update', 'supplier-invoices.post', 'supplier-invoices.void', 'supplier-invoices.print',
         'supplier-payments.view', 'supplier-payments.create', 'supplier-payments.update', 'supplier-payments.post', 'supplier-payments.allocate', 'supplier-payments.void', 'supplier-payments.print',

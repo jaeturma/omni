@@ -17,6 +17,7 @@ use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\GovernmentDeductionController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductServiceController;
+use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseRequestController;
 use App\Http\Controllers\QuotationController;
 use App\Http\Controllers\ReceivableReportController;
@@ -86,6 +87,10 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/purchase-requests/{purchase_request}/canvass-quotations', [CanvassQuotationController::class, 'store'])->name('purchase-requests.canvass-quotations.store');
     Route::put('/purchase-requests/{purchase_request}/canvass-quotations/{canvass_quotation}', [CanvassQuotationController::class, 'update'])->name('purchase-requests.canvass-quotations.update');
     Route::delete('/purchase-requests/{purchase_request}/canvass-quotations/{canvass_quotation}', [CanvassQuotationController::class, 'destroy'])->name('purchase-requests.canvass-quotations.destroy');
+    Route::post('/purchase-requests/{purchase_request}/convert-to-order', [PurchaseOrderController::class, 'convert'])->name('purchase-requests.convert-to-order');
+    Route::patch('/purchase-orders/{purchase_order}/status', [PurchaseOrderController::class, 'transition'])->name('purchase-orders.transition');
+    Route::get('/purchase-orders/{purchase_order}/print', [PurchaseOrderController::class, 'print'])->name('purchase-orders.print');
+    Route::resource('purchase-orders', PurchaseOrderController::class);
     Route::patch('/quotations/{quotation}/status', [QuotationController::class, 'transition'])->name('quotations.transition');
     Route::get('/quotations/{quotation}/print', [QuotationController::class, 'print'])->name('quotations.print');
     Route::resource('quotations', QuotationController::class);

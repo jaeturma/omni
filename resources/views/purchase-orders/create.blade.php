@@ -1,0 +1,1 @@
+<x-app-layout title="Create purchase order"><x-page-header title="Create purchase order" description="Create a direct supplier order without stock or payable effects." /><x-purchase-order-form :action="route('purchase-orders.store')" :suppliers="$suppliers" :items="$items" submit-label="Save draft" /></x-app-layout>
