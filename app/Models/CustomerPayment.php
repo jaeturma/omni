@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
  * @property CustomerPaymentStatus $status
  * @property Carbon $payment_date
  * @property numeric-string $gross_settlement_amount
+ * @property numeric-string $net_cash_received
  * @property numeric-string $unapplied_amount
  */
 #[Fillable(['customer_id', 'payment_method_id', 'bank_id', 'document_number_reservation_id', 'payment_number', 'payment_date', 'reference_number', 'gross_settlement_amount', 'withholding_amount', 'other_deductions', 'net_cash_received', 'unapplied_amount', 'notes', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
@@ -46,6 +48,11 @@ class CustomerPayment extends Model
     public function allocations(): HasMany
     {
         return $this->hasMany(PaymentAllocation::class);
+    }
+
+    public function cashReceipt(): HasOne
+    {
+        return $this->hasOne(CashReceipt::class);
     }
 
     protected function casts(): array
