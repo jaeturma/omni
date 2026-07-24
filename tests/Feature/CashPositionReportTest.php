@@ -109,6 +109,26 @@ test('reconciled and unreconciled amounts and statement items remain separate', 
     expect($summary['reconciliation_history'])->toHaveCount(1);
 });
 
+test('confirmed draft match remains unreconciled until finalization', function () {
+    $matched = reportTransaction($this->account, $this->user, CashTransactionType::Deposit, '100.0000', '2026-07-10');
+    $import = BankStatementImport::query()->create(['financial_account_id' => $this->account->id, 'statement_start_date' => '2026-07-01',
+        'statement_end_date' => '2026-07-31', 'source_filename' => 'draft.csv', 'file_hash' => fake()->sha256(), 'column_mapping' => [],
+        'imported_by' => $this->user->id, 'imported_at' => now()]);
+    $line = $import->lines()->create(['line_number' => 2, 'transaction_date' => '2026-07-10', 'posting_date' => '2026-07-10',
+        'description' => 'Confirmed only', 'debit' => 0, 'credit' => 100, 'normalized_amount' => 100,
+        'match_status' => ReconciliationState::Matched, 'original_values' => []]);
+    $reconciliation = BankReconciliation::query()->create(['bank_statement_import_id' => $import->id, 'financial_account_id' => $this->account->id,
+        'statement_start_date' => '2026-07-01', 'statement_end_date' => '2026-07-31', 'statement_opening_balance' => 1000,
+        'statement_closing_balance' => 1100, 'system_opening_balance' => 1000, 'system_closing_balance' => 1100,
+        'reconciliation_difference' => 0, 'status' => BankReconciliationStatus::Draft, 'created_by' => $this->user->id]);
+    $reconciliation->matches()->create(['bank_statement_line_id' => $line->id, 'cash_transaction_id' => $matched->id,
+        'matched_amount' => 100, 'confirmed_by' => $this->user->id, 'confirmed_at' => now()]);
+
+    $summary = app(CashPositionReport::class)->summary(cashReportFilters(), true);
+
+    expect($summary['reconciled'])->toBe('0.0000')->and($summary['unreconciled'])->toBe('100.0000');
+});
+
 test('report pages csv and permissions are enforced', function () {
     reportTransaction($this->account, $this->user, CashTransactionType::Deposit, '100.0000', '2026-07-10');
     $query = cashReportFilters();

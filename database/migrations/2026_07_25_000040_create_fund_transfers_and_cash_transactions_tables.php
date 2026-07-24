@@ -38,8 +38,8 @@ return new class extends Migration
             $table->foreignId('created_by')->constrained('users')->restrictOnDelete();
             $table->foreignId('updated_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
-            $table->index(['source_financial_account_id', 'status', 'transfer_date']);
-            $table->index(['destination_financial_account_id', 'status', 'destination_date']);
+            $table->index(['source_financial_account_id', 'status', 'transfer_date'], 'fund_transfer_source_status_date_index');
+            $table->index(['destination_financial_account_id', 'status', 'destination_date'], 'fund_transfer_destination_status_date_index');
         });
 
         Schema::create('cash_transactions', function (Blueprint $table) {
@@ -60,7 +60,7 @@ return new class extends Migration
             $table->foreignId('created_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
             $table->unique(['fund_transfer_id', 'type']);
-            $table->index(['financial_account_id', 'status', 'transaction_date']);
+            $table->index(['financial_account_id', 'status', 'transaction_date'], 'cash_transaction_account_status_date_index');
         });
     }
 

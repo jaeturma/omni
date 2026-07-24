@@ -70,7 +70,7 @@ class CashPositionReport
                     $dailyMovements[$date]['disbursements'] = bcadd($dailyMovements[$date]['disbursements'], $outflow, 4);
                 }
                 $sourceMovements[$transaction->type->value] = bcadd($sourceMovements[$transaction->type->value] ?? '0.0000', $signed, 4);
-                if ($transaction->reconciliation_match_exists) {
+                if ($transaction->finalized_reconciliation_match_exists) {
                     $reconciled = bcadd($reconciled, str_replace('-', '', $signed), 4);
                 } else {
                     $unreconciled = bcadd($unreconciled, str_replace('-', '', $signed), 4);
@@ -108,7 +108,7 @@ class CashPositionReport
      */
     public function postedQuery(array $filters, bool $rangeOnly = true, bool $applyType = true): Builder
     {
-        return CashTransaction::query()->withExists('reconciliationMatch')->where('status', CashTransactionStatus::Posted)
+        return CashTransaction::query()->withExists('finalizedReconciliationMatch')->where('status', CashTransactionStatus::Posted)
             ->whereIn('financial_account_id', $this->accounts($filters)->pluck('id'))
             ->when($rangeOnly, fn (Builder $query) => $query->whereBetween('transaction_date', [$filters['start_date'], $filters['end_date']]))
             ->when(! $rangeOnly, fn (Builder $query) => $query->whereDate('transaction_date', '<=', $filters['as_of']))

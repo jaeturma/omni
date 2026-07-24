@@ -42,7 +42,7 @@ class CashPositionReportController extends Controller
                 fputcsv($stream, [$transaction->transaction_date->toDateString(), $accounts[$transaction->financial_account_id],
                     $transaction->type->value, $transaction->reference_number, $transaction->amount, $transaction->fee_amount,
                     $report->signed($transaction),
-                    $transaction->reconciliation_match_exists ? 'reconciled' : 'unreconciled']);
+                    $transaction->finalized_reconciliation_match_exists ? 'reconciled' : 'unreconciled']);
             }
             fclose($stream);
         }, 'cash-position-'.$filters['start_date'].'-'.$filters['end_date'].'.csv', ['Content-Type' => 'text/csv']);

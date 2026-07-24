@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Enums\CashTransactionStatus;
 use App\Enums\CashTransactionType;
+use App\Enums\ReconciliationState;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -16,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $transaction_date
  * @property numeric-string $amount
  * @property numeric-string $fee_amount
- * @property bool $reconciliation_match_exists
+ * @property bool $finalized_reconciliation_match_exists
  */
 #[Fillable(['fund_transfer_id', 'petty_cash_voucher_id', 'petty_cash_replenishment_id', 'bank_reconciliation_id', 'document_number_reservation_id', 'financial_account_id', 'type', 'adjustment_kind', 'transaction_date', 'amount', 'fee_amount', 'reference_number', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by'])]
 class CashTransaction extends Model
@@ -46,6 +47,12 @@ class CashTransaction extends Model
     public function reconciliationMatch(): HasOne
     {
         return $this->hasOne(BankReconciliationMatch::class);
+    }
+
+    public function finalizedReconciliationMatch(): HasOne
+    {
+        return $this->hasOne(BankReconciliationMatch::class)
+            ->whereHas('statementLine', fn ($query) => $query->where('match_status', ReconciliationState::Reconciled));
     }
 
     protected function casts(): array

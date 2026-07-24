@@ -1,6 +1,9 @@
 <?php
 
+use App\Enums\CashTransactionStatus;
+use App\Enums\CashTransactionType;
 use App\Enums\FinancialAccountType;
+use App\Models\CashTransaction;
 use App\Models\FinancialAccount;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -66,6 +69,20 @@ test('opening balance and activation changes retain audit attribution', function
     $this->put(route('financial-accounts.update', $account), financialAccountData())->assertForbidden();
     $this->patch(route('financial-accounts.status', $account), ['active' => true])->assertRedirect();
     expect($account->fresh()->active)->toBeTrue()->and($account->fresh()->activated_by)->toBe($admin->id);
+});
+
+test('reconciliation-enabled account cannot deactivate with unresolved posted activity', function () {
+    $admin = User::factory()->administrator()->create();
+    $account = FinancialAccount::factory()->create(['allow_reconciliation' => true]);
+    CashTransaction::query()->create(['financial_account_id' => $account->id, 'type' => CashTransactionType::Deposit,
+        'transaction_date' => '2026-07-31', 'amount' => '100.0000', 'status' => CashTransactionStatus::Posted,
+        'posted_at' => now(), 'posted_by' => $admin->id, 'created_by' => $admin->id]);
+
+    $this->actingAs($admin)->patch(route('financial-accounts.status', $account), [
+        'active' => false, 'reason' => 'Closing account',
+    ])->assertSessionHasErrors('active');
+
+    expect($account->fresh()->active)->toBeTrue();
 });
 
 test('authorization is enforced without secrets or future operational tables', function () {

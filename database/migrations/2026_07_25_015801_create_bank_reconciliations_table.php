@@ -37,7 +37,7 @@ return new class extends Migration
             $table->foreignId('reopened_by')->nullable()->constrained('users')->restrictOnDelete();
             $table->text('reopen_reason')->nullable();
             $table->timestamps();
-            $table->index(['financial_account_id', 'statement_end_date']);
+            $table->index(['financial_account_id', 'statement_end_date'], 'bank_reconciliation_account_end_date_index');
         });
 
         Schema::create('bank_reconciliation_matches', function (Blueprint $table) {

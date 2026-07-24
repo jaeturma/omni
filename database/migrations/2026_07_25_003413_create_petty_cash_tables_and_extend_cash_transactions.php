@@ -51,7 +51,7 @@ return new class extends Migration
             $table->foreignId('created_by')->constrained('users')->restrictOnDelete();
             $table->foreignId('updated_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
-            $table->index(['petty_cash_fund_id', 'status', 'voucher_date']);
+            $table->index(['petty_cash_fund_id', 'status', 'voucher_date'], 'petty_cash_voucher_fund_status_date_index');
         });
 
         Schema::create('petty_cash_replenishments', function (Blueprint $table) {
@@ -67,13 +67,13 @@ return new class extends Migration
             $table->foreignId('posted_by')->constrained('users')->restrictOnDelete();
             $table->foreignId('created_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
-            $table->index(['petty_cash_fund_id', 'replenishment_date']);
+            $table->index(['petty_cash_fund_id', 'replenishment_date'], 'petty_cash_replenishment_fund_date_index');
         });
 
         Schema::create('petty_cash_replenishment_voucher', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('petty_cash_replenishment_id')->constrained()->restrictOnDelete();
-            $table->foreignId('petty_cash_voucher_id')->unique()->constrained()->restrictOnDelete();
+            $table->foreignId('petty_cash_replenishment_id')->constrained(indexName: 'pc_replenishment_voucher_replenishment_fk')->restrictOnDelete();
+            $table->foreignId('petty_cash_voucher_id')->unique()->constrained(indexName: 'pc_replenishment_voucher_voucher_fk')->restrictOnDelete();
             $table->decimal('amount', 19, 4);
             $table->timestamps();
         });

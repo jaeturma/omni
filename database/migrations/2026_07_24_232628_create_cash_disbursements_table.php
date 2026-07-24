@@ -46,7 +46,7 @@ return new class extends Migration
             $table->foreignId('created_by')->constrained('users')->restrictOnDelete();
             $table->foreignId('updated_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
-            $table->index(['financial_account_id', 'status', 'disbursement_date']);
+            $table->index(['financial_account_id', 'status', 'disbursement_date'], 'cash_disbursement_account_status_date_index');
         });
     }
 

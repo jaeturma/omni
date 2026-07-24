@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\ChangeFinancialAccountStatus;
 use App\Enums\FinancialAccountType;
 use App\Http\Requests\StoreFinancialAccountRequest;
 use App\Models\Bank;
@@ -84,14 +85,12 @@ class FinancialAccountController extends Controller
         return redirect()->route('financial-accounts.show', $financialAccount)->with('success', 'Financial account updated.');
     }
 
-    public function status(Request $request, FinancialAccount $financialAccount): RedirectResponse
+    public function status(Request $request, FinancialAccount $financialAccount, ChangeFinancialAccountStatus $action): RedirectResponse
     {
         $activate = $request->boolean('active');
         Gate::authorize($activate ? 'activate' : 'deactivate', $financialAccount);
         $request->validate(['active' => ['required', 'boolean'], 'reason' => [Rule::requiredIf(! $activate), 'nullable', 'string', 'max:500']]);
-        $userId = $request->user()->id;
-        $financialAccount->update($activate ? ['active' => true, 'activated_at' => now(), 'activated_by' => $userId, 'deactivated_at' => null, 'deactivated_by' => null, 'deactivation_reason' => null, 'updated_by' => $userId]
-            : ['active' => false, 'deactivated_at' => now(), 'deactivated_by' => $userId, 'deactivation_reason' => $request->string('reason')->toString(), 'updated_by' => $userId]);
+        $action->handle($financialAccount, $activate, $request->input('reason'), $request->user());
 
         return back()->with('success', $activate ? 'Financial account activated.' : 'Financial account deactivated.');
     }
