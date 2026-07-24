@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -26,6 +27,7 @@ class SupplierPayment extends Model
 
     protected $attributes = ['withholding_amount' => 0, 'other_deductions' => 0, 'status' => 'draft'];
 
+    /** @return BelongsTo<Supplier, $this> */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
@@ -50,6 +52,11 @@ class SupplierPayment extends Model
     public function allocations(): HasMany
     {
         return $this->hasMany(SupplierPaymentAllocation::class);
+    }
+
+    public function cashDisbursement(): HasOne
+    {
+        return $this->hasOne(CashDisbursement::class);
     }
 
     protected function casts(): array

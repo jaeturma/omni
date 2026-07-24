@@ -8,6 +8,7 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessProfileController;
 use App\Http\Controllers\CanvassQuotationController;
+use App\Http\Controllers\CashDisbursementController;
 use App\Http\Controllers\CashReceiptController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
@@ -95,6 +96,9 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::patch('/cash-receipts/{cash_receipt}/status', [CashReceiptController::class, 'transition'])->name('cash-receipts.transition');
     Route::get('/cash-receipts/{cash_receipt}/print', [CashReceiptController::class, 'print'])->name('cash-receipts.print');
     Route::resource('cash-receipts', CashReceiptController::class)->except('destroy');
+    Route::patch('/cash-disbursements/{cash_disbursement}/status', [CashDisbursementController::class, 'transition'])->name('cash-disbursements.transition');
+    Route::get('/cash-disbursements/{cash_disbursement}/print', [CashDisbursementController::class, 'print'])->name('cash-disbursements.print');
+    Route::resource('cash-disbursements', CashDisbursementController::class)->except('destroy');
     Route::patch('/purchase-requests/{purchase_request}/status', [PurchaseRequestController::class, 'transition'])->name('purchase-requests.transition');
     Route::resource('purchase-requests', PurchaseRequestController::class);
     Route::post('/purchase-requests/{purchase_request}/canvass-quotations', [CanvassQuotationController::class, 'store'])->name('purchase-requests.canvass-quotations.store');

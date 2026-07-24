@@ -20,7 +20,7 @@ final class CashBankWorkflow
     public const PERMISSIONS = [
         'financial-accounts.view', 'financial-accounts.create', 'financial-accounts.update', 'financial-accounts.activate', 'financial-accounts.deactivate', 'financial-accounts.view-sensitive',
         'cash-receipts.view', 'cash-receipts.create', 'cash-receipts.update', 'cash-receipts.post', 'cash-receipts.clear', 'cash-receipts.void', 'cash-receipts.print',
-        'cash-disbursements.view', 'cash-disbursements.create', 'cash-disbursements.update', 'cash-disbursements.post', 'cash-disbursements.void', 'cash-disbursements.print',
+        'cash-disbursements.view', 'cash-disbursements.create', 'cash-disbursements.update', 'cash-disbursements.post', 'cash-disbursements.release', 'cash-disbursements.clear', 'cash-disbursements.stop', 'cash-disbursements.void', 'cash-disbursements.print',
         'fund-transfers.view', 'fund-transfers.create', 'fund-transfers.post', 'fund-transfers.void',
         'petty-cash.view', 'petty-cash.create', 'petty-cash.post', 'petty-cash.void', 'petty-cash.replenish',
         'bank-statements.view', 'bank-statements.import', 'bank-statements.delete',

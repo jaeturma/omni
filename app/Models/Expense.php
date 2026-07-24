@@ -7,6 +7,7 @@ use App\Models\Concerns\HasPurchasingAttachments;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -54,6 +55,11 @@ class Expense extends Model
     public function numberReservation(): BelongsTo
     {
         return $this->belongsTo(DocumentNumberReservation::class, 'document_number_reservation_id');
+    }
+
+    public function cashDisbursement(): HasOne
+    {
+        return $this->hasOne(CashDisbursement::class);
     }
 
     protected function casts(): array
