@@ -1,0 +1,14 @@
+<x-app-layout title="Create Petty-Cash Voucher">
+    <x-page-header title="Create Petty-Cash Voucher" description="Record a draft request before releasing accountable cash." />
+    <form method="POST" action="{{ route('petty-cash.vouchers.store') }}" class="grid gap-5 rounded-2xl bg-white p-6 ring-1 ring-slate-200 md:grid-cols-2">
+        @csrf
+        <label class="grid gap-1 text-sm">Fund<select name="petty_cash_fund_id" required class="rounded-lg border-slate-300"><option value="">Select fund</option>@foreach($funds as $fund)<option value="{{ $fund->id }}" @selected(old('petty_cash_fund_id') == $fund->id)>{{ $fund->financialAccount->code }} — available PHP {{ number_format((float) $fund->current_operational_balance, 2) }}</option>@endforeach</select>@error('petty_cash_fund_id')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Voucher date<input type="date" name="voucher_date" value="{{ old('voucher_date', now()->toDateString()) }}" required class="rounded-lg border-slate-300">@error('voucher_date')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Fiscal period<select name="fiscal_period_id" required class="rounded-lg border-slate-300"><option value="">Select period</option>@foreach($periods as $period)<option value="{{ $period->id }}" @selected(old('fiscal_period_id') == $period->id)>{{ $period->name }}</option>@endforeach</select>@error('fiscal_period_id')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Payee<input name="payee" value="{{ old('payee') }}" required class="rounded-lg border-slate-300">@error('payee')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Expense category<select name="expense_category" required class="rounded-lg border-slate-300">@foreach($categories as $category)<option value="{{ $category }}" @selected(old('expense_category') === $category)>{{ str($category)->headline() }}</option>@endforeach</select>@error('expense_category')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Amount released<input type="number" step="0.0001" min="0.0001" name="amount_released" value="{{ old('amount_released') }}" required class="rounded-lg border-slate-300">@error('amount_released')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm md:col-span-2">Purpose<textarea name="purpose" rows="3" required class="rounded-lg border-slate-300">{{ old('purpose') }}</textarea>@error('purpose')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <button class="w-fit rounded-lg bg-blue-700 px-4 py-2 font-semibold text-white">Save draft</button>
+    </form>
+</x-app-layout>

@@ -8,9 +8,11 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
+ * @property FinancialAccountType $type
  * @property numeric-string $opening_balance
  * @property Carbon|null $opening_balance_date
  * @property numeric-string|null $current_balance
@@ -28,6 +30,11 @@ class FinancialAccount extends Model
     public function bank(): BelongsTo
     {
         return $this->belongsTo(Bank::class);
+    }
+
+    public function pettyCashFund(): HasOne
+    {
+        return $this->hasOne(PettyCashFund::class);
     }
 
     public function maskedAccountNumber(): string

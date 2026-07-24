@@ -15,14 +15,14 @@ final class CashBankWorkflow
 
     public const TRANSFER_TYPES = [CashTransactionType::TransferOut, CashTransactionType::TransferIn];
 
-    public const PETTY_CASH_TYPES = [CashTransactionType::PettyCashRelease, CashTransactionType::PettyCashReplenishment];
+    public const PETTY_CASH_TYPES = [CashTransactionType::PettyCashRelease, CashTransactionType::PettyCashReturn, CashTransactionType::PettyCashReplenishment];
 
     public const PERMISSIONS = [
         'financial-accounts.view', 'financial-accounts.create', 'financial-accounts.update', 'financial-accounts.activate', 'financial-accounts.deactivate', 'financial-accounts.view-sensitive',
         'cash-receipts.view', 'cash-receipts.create', 'cash-receipts.update', 'cash-receipts.post', 'cash-receipts.clear', 'cash-receipts.void', 'cash-receipts.print',
         'cash-disbursements.view', 'cash-disbursements.create', 'cash-disbursements.update', 'cash-disbursements.post', 'cash-disbursements.release', 'cash-disbursements.clear', 'cash-disbursements.stop', 'cash-disbursements.void', 'cash-disbursements.print',
         'fund-transfers.view', 'fund-transfers.create', 'fund-transfers.post', 'fund-transfers.complete', 'fund-transfers.fail', 'fund-transfers.void',
-        'petty-cash.view', 'petty-cash.create', 'petty-cash.post', 'petty-cash.void', 'petty-cash.replenish',
+        'petty-cash.view', 'petty-cash.manage-fund', 'petty-cash.release', 'petty-cash.liquidate', 'petty-cash.replenish', 'petty-cash.void',
         'bank-statements.view', 'bank-statements.import', 'bank-statements.delete',
         'bank-reconciliations.view', 'bank-reconciliations.create', 'bank-reconciliations.complete', 'bank-reconciliations.reopen',
         'cash-reports.view', 'cash-reports.export',
@@ -30,7 +30,7 @@ final class CashBankWorkflow
 
     public const ENCODER_PERMISSIONS = ['financial-accounts.view', 'cash-receipts.view', 'cash-receipts.create', 'cash-receipts.update', 'cash-receipts.print',
         'cash-disbursements.view', 'cash-disbursements.create', 'cash-disbursements.update', 'cash-disbursements.print',
-        'fund-transfers.view', 'fund-transfers.create', 'petty-cash.view', 'petty-cash.create', 'bank-statements.view', 'bank-statements.import',
+        'fund-transfers.view', 'fund-transfers.create', 'petty-cash.view', 'bank-statements.view', 'bank-statements.import',
         'bank-reconciliations.view', 'cash-reports.view'];
 
     public const VIEW_PERMISSIONS = ['financial-accounts.view', 'cash-receipts.view', 'cash-receipts.print', 'cash-disbursements.view',

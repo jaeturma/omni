@@ -27,7 +27,7 @@ test('account transaction and reconciliation types are explicit and complete', f
         'cash_on_hand', 'petty_cash', 'bank_checking', 'bank_savings', 'e_wallet', 'clearing_account', 'other_cash_equivalent',
     ])->and(array_column(CashTransactionType::cases(), 'value'))->toBe([
         'customer_receipt', 'supplier_payment', 'expense_payment', 'deposit', 'withdrawal', 'transfer_in', 'transfer_out',
-        'petty_cash_release', 'petty_cash_replenishment', 'adjustment', 'opening_balance',
+        'petty_cash_release', 'petty_cash_return', 'petty_cash_replenishment', 'adjustment', 'opening_balance',
     ])->and(array_column(ReconciliationState::cases(), 'value'))->toBe(['unreconciled', 'matched', 'reconciled', 'disputed']);
 });
 
@@ -60,9 +60,11 @@ test('cash documents map to controlled sequence codes while future operational r
     }
 
     expect(Schema::hasTable('cash_transactions'))->toBeTrue()
-        ->and(Schema::hasTable('fund_transfers'))->toBeTrue();
+        ->and(Schema::hasTable('fund_transfers'))->toBeTrue()
+        ->and(Schema::hasTable('petty_cash_funds'))->toBeTrue()
+        ->and(Schema::hasTable('petty_cash_vouchers'))->toBeTrue();
 
-    foreach (['petty_cash_funds', 'bank_statement_lines', 'bank_reconciliations', 'journal_entries'] as $table) {
+    foreach (['bank_statement_lines', 'bank_reconciliations', 'journal_entries'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }
 });

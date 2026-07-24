@@ -62,6 +62,11 @@ class Expense extends Model
         return $this->hasOne(CashDisbursement::class);
     }
 
+    public function pettyCashVoucher(): HasOne
+    {
+        return $this->hasOne(PettyCashVoucher::class);
+    }
+
     protected function casts(): array
     {
         return ['expense_date' => 'date', 'gross_amount' => 'decimal:4', 'withholding_amount' => 'decimal:4', 'other_deductions' => 'decimal:4', 'net_cash_paid' => 'decimal:4', 'receipt_available' => 'boolean', 'reimbursable' => 'boolean', 'status' => ExpenseStatus::class, 'approved_at' => 'datetime', 'paid_at' => 'datetime', 'voided_at' => 'datetime'];

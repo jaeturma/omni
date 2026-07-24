@@ -16,7 +16,7 @@ use Illuminate\Support\Carbon;
  * @property numeric-string $amount
  * @property numeric-string $fee_amount
  */
-#[Fillable(['fund_transfer_id', 'financial_account_id', 'type', 'transaction_date', 'amount', 'fee_amount', 'reference_number', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by'])]
+#[Fillable(['fund_transfer_id', 'petty_cash_voucher_id', 'petty_cash_replenishment_id', 'financial_account_id', 'type', 'transaction_date', 'amount', 'fee_amount', 'reference_number', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by'])]
 class CashTransaction extends Model
 {
     protected $attributes = ['fee_amount' => 0, 'status' => 'draft'];
@@ -29,6 +29,16 @@ class CashTransaction extends Model
     public function financialAccount(): BelongsTo
     {
         return $this->belongsTo(FinancialAccount::class);
+    }
+
+    public function pettyCashVoucher(): BelongsTo
+    {
+        return $this->belongsTo(PettyCashVoucher::class);
+    }
+
+    public function pettyCashReplenishment(): BelongsTo
+    {
+        return $this->belongsTo(PettyCashReplenishment::class);
     }
 
     protected function casts(): array
