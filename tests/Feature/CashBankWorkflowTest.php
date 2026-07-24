@@ -64,7 +64,10 @@ test('cash documents map to controlled sequence codes while future operational r
         ->and(Schema::hasTable('petty_cash_funds'))->toBeTrue()
         ->and(Schema::hasTable('petty_cash_vouchers'))->toBeTrue();
 
-    foreach (['bank_statement_lines', 'bank_reconciliations', 'journal_entries'] as $table) {
+    expect(Schema::hasTable('bank_statement_imports'))->toBeTrue()
+        ->and(Schema::hasTable('bank_statement_lines'))->toBeTrue();
+
+    foreach (['bank_reconciliations', 'journal_entries'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }
 });

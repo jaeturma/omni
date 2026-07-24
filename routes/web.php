@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\BankController;
+use App\Http\Controllers\BankStatementImportController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessProfileController;
 use App\Http\Controllers\CanvassQuotationController;
@@ -113,6 +114,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/petty-cash/vouchers/{petty_cash_voucher}', [PettyCashController::class, 'showVoucher'])->name('petty-cash.vouchers.show');
     Route::patch('/petty-cash/vouchers/{petty_cash_voucher}/status', [PettyCashController::class, 'transition'])->name('petty-cash.vouchers.transition');
     Route::post('/petty-cash/replenishments', [PettyCashController::class, 'replenish'])->name('petty-cash.replenishments.store');
+    Route::get('/bank-statements/{bank_statement}/export', [BankStatementImportController::class, 'export'])->name('bank-statements.export');
+    Route::resource('bank-statements', BankStatementImportController::class)->only(['index', 'create', 'store', 'show', 'destroy']);
     Route::patch('/purchase-requests/{purchase_request}/status', [PurchaseRequestController::class, 'transition'])->name('purchase-requests.transition');
     Route::resource('purchase-requests', PurchaseRequestController::class);
     Route::post('/purchase-requests/{purchase_request}/canvass-quotations', [CanvassQuotationController::class, 'store'])->name('purchase-requests.canvass-quotations.store');
