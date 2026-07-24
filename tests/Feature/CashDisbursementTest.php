@@ -158,5 +158,5 @@ test('decimal validation and downstream boundaries are enforced', function () {
     $this->actingAs($fixture['user'])->post(route('cash-disbursements.store'), disbursementData($fixture, ['net_cash_out' => '900.0000']))
         ->assertSessionHasErrors('net_cash_out');
     expect(Schema::hasTable('journal_entries'))->toBeFalse()
-        ->and(Schema::hasTable('bank_reconciliations'))->toBeFalse();
+        ->and(Schema::hasTable('bank_reconciliations'))->toBeTrue();
 });

@@ -144,7 +144,7 @@ test('authorization and downstream boundaries are enforced', function () {
     $this->post(route('fund-transfers.store'), fundTransferData($fixture))->assertForbidden();
     expect(Schema::hasTable('cash_transactions'))->toBeTrue()
         ->and(Schema::hasTable('journal_entries'))->toBeFalse()
-        ->and(Schema::hasTable('bank_reconciliations'))->toBeFalse();
+        ->and(Schema::hasTable('bank_reconciliations'))->toBeTrue();
 });
 
 test('posting uses database transactions and deterministic account locks', function () {

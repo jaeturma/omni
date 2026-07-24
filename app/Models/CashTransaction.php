@@ -7,6 +7,7 @@ use App\Enums\CashTransactionType;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Carbon;
 
 /**
@@ -16,7 +17,7 @@ use Illuminate\Support\Carbon;
  * @property numeric-string $amount
  * @property numeric-string $fee_amount
  */
-#[Fillable(['fund_transfer_id', 'petty_cash_voucher_id', 'petty_cash_replenishment_id', 'financial_account_id', 'type', 'transaction_date', 'amount', 'fee_amount', 'reference_number', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by'])]
+#[Fillable(['fund_transfer_id', 'petty_cash_voucher_id', 'petty_cash_replenishment_id', 'bank_reconciliation_id', 'document_number_reservation_id', 'financial_account_id', 'type', 'adjustment_kind', 'transaction_date', 'amount', 'fee_amount', 'reference_number', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by'])]
 class CashTransaction extends Model
 {
     protected $attributes = ['fee_amount' => 0, 'status' => 'draft'];
@@ -39,6 +40,11 @@ class CashTransaction extends Model
     public function pettyCashReplenishment(): BelongsTo
     {
         return $this->belongsTo(PettyCashReplenishment::class);
+    }
+
+    public function reconciliationMatch(): HasOne
+    {
+        return $this->hasOne(BankReconciliationMatch::class);
     }
 
     protected function casts(): array

@@ -98,5 +98,5 @@ test('validation authorization and downstream boundaries are enforced', function
     $viewer->assignRole('Viewer');
     $this->actingAs($viewer)->get(route('cash-receipts.index'))->assertOk();
     $this->post(route('cash-receipts.store'), receiptData($f))->assertForbidden();
-    expect(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('bank_reconciliations'))->toBeFalse();
+    expect(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('bank_reconciliations'))->toBeTrue();
 });

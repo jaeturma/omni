@@ -202,5 +202,5 @@ test('authorization and downstream boundaries are enforced', function () {
     ])->assertForbidden();
     expect(Schema::hasTable('petty_cash_funds'))->toBeTrue()
         ->and(Schema::hasTable('journal_entries'))->toBeFalse()
-        ->and(Schema::hasTable('bank_reconciliations'))->toBeFalse();
+        ->and(Schema::hasTable('bank_reconciliations'))->toBeTrue();
 });

@@ -82,8 +82,9 @@ test('authorization is enforced without secrets or future operational tables', f
     expect(Schema::hasTable('cash_transactions'))->toBeTrue()
         ->and(Schema::hasTable('fund_transfers'))->toBeTrue()
         ->and(Schema::hasTable('bank_statement_imports'))->toBeTrue()
-        ->and(Schema::hasTable('bank_statement_lines'))->toBeTrue();
-    foreach (['bank_reconciliations', 'journal_entries'] as $table) {
+        ->and(Schema::hasTable('bank_statement_lines'))->toBeTrue()
+        ->and(Schema::hasTable('bank_reconciliations'))->toBeTrue();
+    foreach (['journal_entries'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }
 });

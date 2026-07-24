@@ -6,15 +6,18 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[Fillable(['financial_account_id', 'statement_start_date', 'statement_end_date', 'source_filename', 'file_hash', 'column_mapping', 'imported_by', 'imported_at', 'finalized_at', 'finalized_by', 'rolled_back_at', 'rolled_back_by'])]
 class BankStatementImport extends Model
 {
+    /** @return BelongsTo<FinancialAccount, $this> */
     public function financialAccount(): BelongsTo
     {
         return $this->belongsTo(FinancialAccount::class);
     }
 
+    /** @return HasMany<BankStatementLine, $this> */
     public function lines(): HasMany
     {
         return $this->hasMany(BankStatementLine::class);
@@ -23,6 +26,12 @@ class BankStatementImport extends Model
     public function importer(): BelongsTo
     {
         return $this->belongsTo(User::class, 'imported_by');
+    }
+
+    /** @return HasOne<BankReconciliation, $this> */
+    public function reconciliation(): HasOne
+    {
+        return $this->hasOne(BankReconciliation::class);
     }
 
     protected function casts(): array
