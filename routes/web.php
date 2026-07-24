@@ -11,6 +11,7 @@ use App\Http\Controllers\BrandController;
 use App\Http\Controllers\BusinessProfileController;
 use App\Http\Controllers\CanvassQuotationController;
 use App\Http\Controllers\CashDisbursementController;
+use App\Http\Controllers\CashPositionReportController;
 use App\Http\Controllers\CashReceiptController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CustomerController;
@@ -121,6 +122,9 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/bank-reconciliations/{bank_reconciliation}/adjustments', [BankReconciliationController::class, 'adjustment'])->name('bank-reconciliations.adjustments.store');
     Route::patch('/bank-reconciliations/{bank_reconciliation}/status', [BankReconciliationController::class, 'transition'])->name('bank-reconciliations.transition');
     Route::resource('bank-reconciliations', BankReconciliationController::class)->only(['index', 'create', 'store', 'show']);
+    Route::get('/cash-reports', [CashPositionReportController::class, 'index'])->name('cash-reports.index');
+    Route::get('/cash-reports/print', [CashPositionReportController::class, 'print'])->name('cash-reports.print');
+    Route::get('/cash-reports/export', [CashPositionReportController::class, 'export'])->name('cash-reports.export');
     Route::patch('/purchase-requests/{purchase_request}/status', [PurchaseRequestController::class, 'transition'])->name('purchase-requests.transition');
     Route::resource('purchase-requests', PurchaseRequestController::class);
     Route::post('/purchase-requests/{purchase_request}/canvass-quotations', [CanvassQuotationController::class, 'store'])->name('purchase-requests.canvass-quotations.store');

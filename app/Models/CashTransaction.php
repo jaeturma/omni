@@ -16,6 +16,7 @@ use Illuminate\Support\Carbon;
  * @property Carbon $transaction_date
  * @property numeric-string $amount
  * @property numeric-string $fee_amount
+ * @property bool $reconciliation_match_exists
  */
 #[Fillable(['fund_transfer_id', 'petty_cash_voucher_id', 'petty_cash_replenishment_id', 'bank_reconciliation_id', 'document_number_reservation_id', 'financial_account_id', 'type', 'adjustment_kind', 'transaction_date', 'amount', 'fee_amount', 'reference_number', 'status', 'posted_at', 'posted_by', 'voided_at', 'voided_by', 'void_reason', 'created_by'])]
 class CashTransaction extends Model

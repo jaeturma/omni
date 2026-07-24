@@ -25,16 +25,16 @@ final class CashBankWorkflow
         'petty-cash.view', 'petty-cash.manage-fund', 'petty-cash.release', 'petty-cash.liquidate', 'petty-cash.replenish', 'petty-cash.void',
         'bank-statements.view', 'bank-statements.import', 'bank-statements.rollback', 'bank-statements.export',
         'bank-reconciliation.view', 'bank-reconciliation.create', 'bank-reconciliation.match', 'bank-reconciliation.finalize', 'bank-reconciliation.reopen',
-        'cash-reports.view', 'cash-reports.export',
+        'cash-reports.view', 'cash-reports.export', 'reconciliation-reports.view',
     ];
 
     public const ENCODER_PERMISSIONS = ['financial-accounts.view', 'cash-receipts.view', 'cash-receipts.create', 'cash-receipts.update', 'cash-receipts.print',
         'cash-disbursements.view', 'cash-disbursements.create', 'cash-disbursements.update', 'cash-disbursements.print',
         'fund-transfers.view', 'fund-transfers.create', 'petty-cash.view', 'bank-statements.view', 'bank-statements.import',
-        'bank-reconciliation.view', 'cash-reports.view'];
+        'bank-reconciliation.view', 'cash-reports.view', 'reconciliation-reports.view'];
 
     public const VIEW_PERMISSIONS = ['financial-accounts.view', 'cash-receipts.view', 'cash-receipts.print', 'cash-disbursements.view',
-        'cash-disbursements.print', 'fund-transfers.view', 'petty-cash.view', 'bank-statements.view', 'bank-reconciliation.view', 'cash-reports.view'];
+        'cash-disbursements.print', 'fund-transfers.view', 'petty-cash.view', 'bank-statements.view', 'bank-reconciliation.view', 'cash-reports.view', 'reconciliation-reports.view'];
 
     private function __construct() {}
 }
