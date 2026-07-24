@@ -54,12 +54,15 @@ test('phase five permissions are seeded by role', function () {
         ->and(Role::findByName('Viewer')->hasPermissionTo('cash-receipts.create'))->toBeFalse();
 });
 
-test('cash documents map to controlled sequence codes without downstream operational records', function () {
+test('cash documents map to controlled sequence codes while future operational records remain absent', function () {
     foreach (CashBankWorkflow::DOCUMENT_SEQUENCES as $documentType) {
         expect(DocumentSequence::TYPES)->toContain($documentType);
     }
 
-    foreach (['cash_transactions', 'cash_transfers', 'petty_cash_funds', 'bank_statement_lines', 'bank_reconciliations', 'journal_entries'] as $table) {
+    expect(Schema::hasTable('cash_transactions'))->toBeTrue()
+        ->and(Schema::hasTable('fund_transfers'))->toBeTrue();
+
+    foreach (['petty_cash_funds', 'bank_statement_lines', 'bank_reconciliations', 'journal_entries'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }
 });

@@ -68,7 +68,7 @@ test('opening balance and activation changes retain audit attribution', function
     expect($account->fresh()->active)->toBeTrue()->and($account->fresh()->activated_by)->toBe($admin->id);
 });
 
-test('authorization is enforced and no secrets or operational transaction tables exist', function () {
+test('authorization is enforced without secrets or future operational tables', function () {
     $viewer = User::factory()->create();
     $viewer->assignRole('Viewer');
     $admin = User::factory()->administrator()->create();
@@ -79,7 +79,9 @@ test('authorization is enforced and no secrets or operational transaction tables
     foreach (['password', 'pin', 'api_key', 'api_secret', 'online_banking_username'] as $column) {
         expect(Schema::hasColumn('financial_accounts', $column))->toBeFalse();
     }
-    foreach (['cash_transactions', 'cash_transfers', 'bank_statement_lines', 'bank_reconciliations', 'journal_entries'] as $table) {
+    expect(Schema::hasTable('cash_transactions'))->toBeTrue()
+        ->and(Schema::hasTable('fund_transfers'))->toBeTrue();
+    foreach (['bank_statement_lines', 'bank_reconciliations', 'journal_entries'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }
 });

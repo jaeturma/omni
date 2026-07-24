@@ -1,0 +1,17 @@
+<x-app-layout title="Record Fund Transfer">
+    <x-page-header title="Record Fund Transfer" description="Save a draft before moving funds between operational accounts." />
+    <form method="POST" action="{{ route('fund-transfers.store') }}" class="grid gap-5 rounded-2xl bg-white p-6 ring-1 ring-slate-200 md:grid-cols-2">
+        @csrf
+        <label class="grid gap-1 text-sm">Source date<input type="date" name="transfer_date" value="{{ old('transfer_date', now()->toDateString()) }}" required class="rounded-lg border-slate-300">@error('transfer_date')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Destination date<input type="date" name="destination_date" value="{{ old('destination_date', now()->toDateString()) }}" required class="rounded-lg border-slate-300">@error('destination_date')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Fiscal period<select name="fiscal_period_id" required class="rounded-lg border-slate-300"><option value="">Select period</option>@foreach($periods as $period)<option value="{{ $period->id }}" @selected(old('fiscal_period_id') == $period->id)>{{ $period->name }}</option>@endforeach</select>@error('fiscal_period_id')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <span></span>
+        <label class="grid gap-1 text-sm">Source account<select name="source_financial_account_id" required class="rounded-lg border-slate-300"><option value="">Select source</option>@foreach($accounts as $account)<option value="{{ $account->id }}" @selected(old('source_financial_account_id') == $account->id)>{{ $account->code }} — {{ $account->name }} ({{ $account->currency }})</option>@endforeach</select>@error('source_financial_account_id')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Destination account<select name="destination_financial_account_id" required class="rounded-lg border-slate-300"><option value="">Select destination</option>@foreach($accounts as $account)<option value="{{ $account->id }}" @selected(old('destination_financial_account_id') == $account->id)>{{ $account->code }} — {{ $account->name }} ({{ $account->currency }})</option>@endforeach</select>@error('destination_financial_account_id')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Transfer amount<input type="number" step="0.0001" min="0.0001" name="amount" value="{{ old('amount', '0.0000') }}" required class="rounded-lg border-slate-300">@error('amount')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Transfer fee<input type="number" step="0.0001" min="0" name="transfer_fee" value="{{ old('transfer_fee', '0.0000') }}" required class="rounded-lg border-slate-300">@error('transfer_fee')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Reference number<input name="reference_number" value="{{ old('reference_number') }}" class="rounded-lg border-slate-300">@error('reference_number')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm md:col-span-2">Notes<textarea name="notes" rows="3" class="rounded-lg border-slate-300">{{ old('notes') }}</textarea></label>
+        <button class="w-fit rounded-lg bg-blue-700 px-4 py-2 font-semibold text-white">Save draft</button>
+    </form>
+</x-app-layout>

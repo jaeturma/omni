@@ -19,6 +19,7 @@ use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FinancialAccountController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
+use App\Http\Controllers\FundTransferController;
 use App\Http\Controllers\GovernmentDeductionController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductServiceController;
@@ -99,6 +100,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::patch('/cash-disbursements/{cash_disbursement}/status', [CashDisbursementController::class, 'transition'])->name('cash-disbursements.transition');
     Route::get('/cash-disbursements/{cash_disbursement}/print', [CashDisbursementController::class, 'print'])->name('cash-disbursements.print');
     Route::resource('cash-disbursements', CashDisbursementController::class)->except('destroy');
+    Route::patch('/fund-transfers/{fund_transfer}/status', [FundTransferController::class, 'transition'])->name('fund-transfers.transition');
+    Route::resource('fund-transfers', FundTransferController::class)->only(['index', 'create', 'store', 'show']);
     Route::patch('/purchase-requests/{purchase_request}/status', [PurchaseRequestController::class, 'transition'])->name('purchase-requests.transition');
     Route::resource('purchase-requests', PurchaseRequestController::class);
     Route::post('/purchase-requests/{purchase_request}/canvass-quotations', [CanvassQuotationController::class, 'store'])->name('purchase-requests.canvass-quotations.store');
