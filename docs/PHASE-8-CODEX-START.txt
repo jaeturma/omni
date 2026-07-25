@@ -1,0 +1,35 @@
+OMNI MINI-ERP — PHASE 8 START
+
+Copy the included `docs` folder into the root of the existing Laravel project.
+
+Execute the work packages one at a time:
+
+1. WP-08-01-reporting-settings-conventions.md
+2. WP-08-02-income-statement.md
+3. WP-08-03-balance-sheet.md
+4. WP-08-04-cash-flow-statement.md
+5. WP-08-05-owner-equity-statement.md
+6. WP-08-06-comparative-period-reports.md
+7. WP-08-07-management-profitability-reports.md
+8. WP-08-08-drilldowns-exports.md
+9. WP-08-09-financial-dashboard-report-pack.md
+10. WP-08-10-phase-validation-gap-review.md
+
+FIRST CODEX PROMPT
+
+Execute `docs/work-packages/WP-08-01-reporting-settings-conventions.md`.
+
+Follow `AGENTS.md` strictly.
+
+Work only within the stated scope. Inspect only the files required to complete this work package. Do not implement the income statement, balance sheet, cash flow, owner’s equity statement, comparative reports, management reports, dashboard, BIR returns, electronic filing, payroll, or future modules beyond the shared Phase 8 reporting conventions explicitly required.
+
+Run targeted tests during implementation and all completion checks before closing the work package. Stop after the acceptance criteria are satisfied.
+
+In the completion report, include only:
+
+1. Files changed
+2. Commands and tests run
+3. Acceptance criteria result
+4. Remaining issues requiring owner action
+
+Do not execute all work packages at once. Review `git diff` and commit after every completed work package.

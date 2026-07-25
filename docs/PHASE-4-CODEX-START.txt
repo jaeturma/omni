@@ -1,0 +1,35 @@
+OMNI MINI-ERP — PHASE 4 START
+
+Copy the included `docs` folder into the root of the existing Laravel project.
+
+Execute the work packages one at a time:
+
+1. WP-04-01-purchasing-settings-workflow.md
+2. WP-04-02-purchase-requests-canvass.md
+3. WP-04-03-purchase-orders.md
+4. WP-04-04-receiving-records.md
+5. WP-04-05-supplier-invoices.md
+6. WP-04-06-supplier-payments-allocations.md
+7. WP-04-07-operating-expenses.md
+8. WP-04-08-accounts-payable-aging.md
+9. WP-04-09-purchasing-attachments-traceability.md
+10. WP-04-10-phase-validation-gap-review.md
+
+FIRST CODEX PROMPT
+
+Execute `docs/work-packages/WP-04-01-purchasing-settings-workflow.md`.
+
+Follow `AGENTS.md` strictly.
+
+Work only within the stated scope. Inspect only the files required to complete this work package. Do not implement purchase requests, purchase orders, receiving, supplier invoices, payments, expenses, inventory valuation, accounting, financial statements, tax returns, or future modules beyond the shared Phase 4 foundations explicitly required.
+
+Run targeted tests during implementation and all completion checks before closing the work package. Stop after the acceptance criteria are satisfied.
+
+In the completion report, include only:
+
+1. Files changed
+2. Commands and tests run
+3. Acceptance criteria result
+4. Remaining issues requiring owner action
+
+Do not execute all work packages at once. Review `git diff` and commit after every completed work package.

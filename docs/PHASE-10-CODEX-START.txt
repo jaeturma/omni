@@ -1,0 +1,35 @@
+OMNI MINI-ERP — PHASE 10 START
+
+Copy the included `docs` folder into the root of the existing Laravel project.
+
+Execute the work packages one at a time:
+
+1. WP-10-01-security-access-hardening.md
+2. WP-10-02-audit-trail-completion.md
+3. WP-10-03-backup-restore-disaster-recovery.md
+4. WP-10-04-data-privacy-retention.md
+5. WP-10-05-error-logging-monitoring.md
+6. WP-10-06-performance-database-optimization.md
+7. WP-10-07-deployment-environment-governance.md
+8. WP-10-08-uat-operating-procedures.md
+9. WP-10-09-production-cutover-opening-balances.md
+10. WP-10-10-final-production-readiness-review.md
+
+FIRST CODEX PROMPT
+
+Execute `docs/work-packages/WP-10-01-security-access-hardening.md`.
+
+Follow `AGENTS.md` strictly.
+
+Work only within the stated scope. Inspect only the files required to complete this work package. Do not implement audit completion, backup, privacy controls, monitoring, optimization, deployment, UAT, cutover, new business modules, payroll, AI, OCR, mobile applications, or future features beyond the Phase 10 security baseline explicitly required.
+
+Run targeted tests during implementation and all completion checks before closing the work package. Stop after the acceptance criteria are satisfied.
+
+In the completion report, include only:
+
+1. Files changed
+2. Commands and tests run
+3. Acceptance criteria result
+4. Remaining issues requiring owner action
+
+Do not execute all work packages at once. Review `git diff` and commit after every completed work package.
