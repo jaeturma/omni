@@ -7,6 +7,7 @@ use App\Models\Customer;
 use App\Models\CustomerPayment;
 use App\Models\DocumentSequence;
 use App\Models\FiscalYear;
+use App\Models\InventoryMovement;
 use App\Models\ProductService;
 use App\Models\Quotation;
 use App\Models\SalesInvoice;
@@ -110,5 +111,5 @@ test('quotation access is authorized and print is available to viewers', functio
 
 test('quotations create no downstream financial inventory or order effects', function () {
     createQuotationViaRequest($this);
-    expect(Schema::hasTable('sales_orders'))->toBeTrue()->and(Schema::hasTable('sales_invoices'))->toBeTrue()->and(SalesInvoice::count())->toBe(0)->and(Schema::hasTable('customer_payments'))->toBeTrue()->and(CustomerPayment::count())->toBe(0)->and(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(Schema::hasTable('sales_orders'))->toBeTrue()->and(Schema::hasTable('sales_invoices'))->toBeTrue()->and(SalesInvoice::count())->toBe(0)->and(Schema::hasTable('customer_payments'))->toBeTrue()->and(CustomerPayment::count())->toBe(0)->and(InventoryMovement::count())->toBe(0)->and(Schema::hasTable('journal_entries'))->toBeFalse();
 });

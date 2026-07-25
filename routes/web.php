@@ -24,6 +24,7 @@ use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\FundTransferController;
 use App\Http\Controllers\GovernmentDeductionController;
+use App\Http\Controllers\InventoryOpeningBalanceController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PettyCashController;
 use App\Http\Controllers\ProductServiceController;
@@ -125,6 +126,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/cash-reports', [CashPositionReportController::class, 'index'])->name('cash-reports.index');
     Route::get('/cash-reports/print', [CashPositionReportController::class, 'print'])->name('cash-reports.print');
     Route::get('/cash-reports/export', [CashPositionReportController::class, 'export'])->name('cash-reports.export');
+    Route::patch('/inventory-opening-balances/{inventory_opening_balance}/status', [InventoryOpeningBalanceController::class, 'transition'])->name('inventory-opening-balances.transition');
+    Route::resource('inventory-opening-balances', InventoryOpeningBalanceController::class)->only(['index', 'create', 'store', 'show']);
     Route::patch('/purchase-requests/{purchase_request}/status', [PurchaseRequestController::class, 'transition'])->name('purchase-requests.transition');
     Route::resource('purchase-requests', PurchaseRequestController::class);
     Route::post('/purchase-requests/{purchase_request}/canvass-quotations', [CanvassQuotationController::class, 'store'])->name('purchase-requests.canvass-quotations.store');

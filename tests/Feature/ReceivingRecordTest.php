@@ -6,6 +6,8 @@ use App\Models\BusinessProfile;
 use App\Models\Category;
 use App\Models\DocumentSequence;
 use App\Models\FiscalYear;
+use App\Models\InventoryBalance;
+use App\Models\InventoryMovement;
 use App\Models\ProductService;
 use App\Models\PurchaseOrder;
 use App\Models\ReceivingRecord;
@@ -104,5 +106,5 @@ test('receiving access and status actions are authorized and printable', functio
 test('receiving creates no inventory valuation payable or journal effects', function () {
     $f = receivingFixtures();
     createReceiving($this, $f, '1.0000', '1.0000');
-    expect(Schema::hasTable('inventory_movements'))->toBeFalse()->and(Schema::hasTable('inventory_balances'))->toBeFalse()->and(SupplierInvoice::query()->count())->toBe(0)->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(InventoryMovement::count())->toBe(0)->and(InventoryBalance::count())->toBe(0)->and(SupplierInvoice::query()->count())->toBe(0)->and(Schema::hasTable('journal_entries'))->toBeFalse();
 });

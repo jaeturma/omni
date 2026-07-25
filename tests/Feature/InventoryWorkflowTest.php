@@ -69,8 +69,11 @@ test('phase six permissions are seeded by role', function () {
         ->and(Role::findByName('Viewer')->hasPermissionTo('inventory-movements.post'))->toBeFalse();
 });
 
-test('inventory and journal transaction tables are not created by the conventions package', function () {
-    foreach (['inventory_movements', 'inventory_balances', 'inventory_cost_layers', 'journal_entries', 'journal_entry_lines'] as $table) {
+test('opening balance foundations exist without future costing or journal tables', function () {
+    expect(Schema::hasTable('inventory_movements'))->toBeTrue()
+        ->and(Schema::hasTable('inventory_balances'))->toBeTrue();
+
+    foreach (['inventory_cost_layers', 'journal_entries', 'journal_entry_lines'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }
 });
