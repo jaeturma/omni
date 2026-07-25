@@ -17,7 +17,12 @@ class TransitionDeliveryRequest extends FormRequest
         }
 
         return match ($this->input('status')) {
-            DeliveryStatus::Released->value => (bool) $this->user()?->can('release', $d),DeliveryStatus::Accepted->value => (bool) $this->user()?->can('accept', $d),DeliveryStatus::Cancelled->value => (bool) $this->user()?->can('cancel', $d),default => (bool) $this->user()?->can('release', $d)
+            DeliveryStatus::Released->value => (bool) $this->user()?->can('release', $d),
+            DeliveryStatus::Delivered->value => (bool) $this->user()?->can('release', $d) && $this->user()->can('inventory-issues.post'),
+            DeliveryStatus::Accepted->value => (bool) $this->user()?->can('accept', $d),
+            DeliveryStatus::Cancelled->value => (bool) $this->user()?->can('cancel', $d)
+                && ($d->status !== DeliveryStatus::Delivered || $this->user()->can('inventory-issues.reverse')),
+            default => false
         };
     }
 

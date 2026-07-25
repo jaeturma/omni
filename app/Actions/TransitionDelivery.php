@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class TransitionDelivery
 {
-    public function __construct(private IssueDocumentNumber $issue) {}
+    public function __construct(private IssueDocumentNumber $issue, private PostSalesDeliveryInventory $inventory) {}
 
     public function handle(Delivery $d, DeliveryStatus $target, int $userId, array $data = []): Delivery
     {
@@ -38,10 +38,14 @@ class TransitionDelivery
                 $changes += ['delivery_number' => $r->document_number, 'document_number_reservation_id' => $r->id, 'released_at' => now(), 'released_by' => $userId];
                 $this->syncOrderStatus($order, $userId);
             }if ($target === DeliveryStatus::Delivered) {
+                $this->inventory->post($delivery, $userId);
                 $changes += ['delivered_at' => now(), 'delivered_by' => $userId, 'received_at' => $data['received_at'], 'received_by_name' => $data['received_by_name']];
             }if ($target === DeliveryStatus::Accepted) {
                 $changes += ['accepted_at' => now(), 'accepted_by' => $userId, 'acceptance_notes' => $data['acceptance_notes'] ?? null];
             }if ($target === DeliveryStatus::Cancelled) {
+                if ($delivery->status === DeliveryStatus::Delivered) {
+                    $this->inventory->reverse($delivery, $userId);
+                }
                 if ($delivery->status !== DeliveryStatus::Draft) {
                     $order = SalesOrder::with('lines')->lockForUpdate()->findOrFail($delivery->sales_order_id);
                     foreach ($delivery->lines as $line) {

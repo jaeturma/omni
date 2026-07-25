@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/** @property numeric-string $ordered_quantity
+/** @property int|null $product_service_id
+ * @property numeric-string $ordered_quantity
  * @property numeric-string $delivered_quantity
  * @property numeric-string $invoiced_quantity
  * @property numeric-string $cancelled_quantity

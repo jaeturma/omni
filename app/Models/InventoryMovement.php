@@ -20,7 +20,7 @@ use LogicException;
  * @property numeric-string|null $balance_quantity_after
  * @property numeric-string|null $balance_average_cost_after
  */
-#[Fillable(['inventory_opening_balance_line_id', 'receiving_record_line_id', 'reversal_of_id', 'product_service_id', 'warehouse_id', 'type', 'movement_date', 'quantity', 'unit_cost', 'total_cost', 'balance_quantity_before', 'balance_average_cost_before', 'balance_quantity_after', 'balance_average_cost_after', 'status', 'posted_at', 'posted_by', 'created_by'])]
+#[Fillable(['inventory_opening_balance_line_id', 'receiving_record_line_id', 'delivery_line_id', 'reversal_of_id', 'product_service_id', 'warehouse_id', 'type', 'movement_date', 'quantity', 'unit_cost', 'total_cost', 'balance_quantity_before', 'balance_average_cost_before', 'balance_quantity_after', 'balance_average_cost_after', 'status', 'posted_at', 'posted_by', 'created_by'])]
 class InventoryMovement extends Model
 {
     protected $attributes = ['status' => 'posted'];
@@ -45,6 +45,11 @@ class InventoryMovement extends Model
     public function receivingRecordLine(): BelongsTo
     {
         return $this->belongsTo(ReceivingRecordLine::class);
+    }
+
+    public function deliveryLine(): BelongsTo
+    {
+        return $this->belongsTo(DeliveryLine::class);
     }
 
     protected function casts(): array
