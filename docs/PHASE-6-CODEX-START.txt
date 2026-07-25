@@ -11,9 +11,9 @@ Execute the work packages one at a time:
 5. WP-06-05-inventory-adjustments.md - ok
 6. WP-06-06-warehouse-transfers.md - ok
 7. WP-06-07-physical-counts-reconciliation.md - ok
-8. WP-06-08-weighted-average-costing.md - ok
-9. WP-06-09-stock-ledger-valuation-alerts.md
-10. WP-06-10-phase-validation-gap-review.md
+8. WP-06-08-weighted-average-costing.md ok
+9. WP-06-09-stock-ledger-valuation-alerts.md - ok
+10. WP-06-10-phase-validation-gap-review.md - ok
 
 FIRST CODEX PROMPT
 
