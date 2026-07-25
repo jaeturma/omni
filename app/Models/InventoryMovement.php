@@ -37,6 +37,7 @@ class InventoryMovement extends Model
         return $this->belongsTo(InventoryOpeningBalanceLine::class, 'inventory_opening_balance_line_id');
     }
 
+    /** @return BelongsTo<self, $this> */
     public function reversalOf(): BelongsTo
     {
         return $this->belongsTo(self::class, 'reversal_of_id');

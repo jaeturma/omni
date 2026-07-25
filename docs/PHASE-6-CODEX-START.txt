@@ -4,14 +4,14 @@ Copy the included `docs` folder into the root of the existing Laravel project.
 
 Execute the work packages one at a time:
 
-1. WP-06-01-inventory-settings-costing.md
-2. WP-06-02-inventory-opening-balances.md
-3. WP-06-03-purchase-receipt-stock-posting.md
-4. WP-06-04-sales-delivery-stock-posting.md
-5. WP-06-05-inventory-adjustments.md
-6. WP-06-06-warehouse-transfers.md
-7. WP-06-07-physical-counts-reconciliation.md
-8. WP-06-08-weighted-average-costing.md
+1. WP-06-01-inventory-settings-costing.md - ok
+2. WP-06-02-inventory-opening-balances.md - ok
+3. WP-06-03-purchase-receipt-stock-posting.md - ok
+4. WP-06-04-sales-delivery-stock-posting.md - ok
+5. WP-06-05-inventory-adjustments.md - ok
+6. WP-06-06-warehouse-transfers.md - ok
+7. WP-06-07-physical-counts-reconciliation.md - ok
+8. WP-06-08-weighted-average-costing.md - ok
 9. WP-06-09-stock-ledger-valuation-alerts.md
 10. WP-06-10-phase-validation-gap-review.md
 

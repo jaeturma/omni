@@ -12,12 +12,13 @@ use App\Models\InventoryMovement;
 use App\Models\InventoryOpeningBalance;
 use App\Models\ProductService;
 use App\Support\InventoryWorkflow;
+use App\Support\WeightedAverageCosting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ManageInventoryOpeningBalance
 {
-    public function __construct(private IssueDocumentNumber $issue) {}
+    public function __construct(private IssueDocumentNumber $issue, private WeightedAverageCosting $costing) {}
 
     /** @param array<string, mixed> $data */
     public function create(array $data, int $userId): InventoryOpeningBalance
@@ -83,14 +84,19 @@ class ManageInventoryOpeningBalance
             $balance ??= InventoryBalance::query()->create([
                 'product_service_id' => $product->id, 'warehouse_id' => $opening->warehouse_id, 'updated_by' => $userId,
             ]);
+            $cost = $this->costing->inbound(
+                $balance->quantity_on_hand, $balance->weighted_average_cost, $line->quantity, $line->unit_cost
+            );
             $line->movements()->create([
                 'product_service_id' => $product->id, 'warehouse_id' => $opening->warehouse_id,
                 'type' => InventoryMovementType::OpeningBalance, 'movement_date' => $opening->opening_date,
                 'quantity' => $line->quantity, 'unit_cost' => $line->unit_cost, 'total_cost' => $line->total_cost,
+                'balance_quantity_before' => $balance->quantity_on_hand, 'balance_average_cost_before' => $balance->weighted_average_cost,
+                'balance_quantity_after' => $cost['quantity'], 'balance_average_cost_after' => $cost['average_cost'],
                 'status' => InventoryMovementStatus::Posted, 'posted_at' => now(), 'posted_by' => $userId, 'created_by' => $userId,
             ]);
-            $balance->update(['opening_balance_line_id' => $line->id, 'quantity_on_hand' => $line->quantity,
-                'weighted_average_cost' => $line->unit_cost, 'updated_by' => $userId]);
+            $balance->update(['opening_balance_line_id' => $line->id, 'quantity_on_hand' => $cost['quantity'],
+                'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId]);
         }
 
         $reservation = $this->issue->handle($sequence, $userId);
@@ -104,17 +110,22 @@ class ManageInventoryOpeningBalance
             $movement = InventoryMovement::query()->whereBelongsTo($line, 'openingBalanceLine')->whereNull('reversal_of_id')->lockForUpdate()->firstOrFail();
             $balance = InventoryBalance::query()->where('product_service_id', $line->product_service_id)
                 ->where('warehouse_id', $opening->warehouse_id)->lockForUpdate()->firstOrFail();
-            InventoryWorkflow::assertStockAvailable($balance->quantity_on_hand, $line->quantity);
+            $cost = $this->costing->removeInbound(
+                $balance->quantity_on_hand, $balance->weighted_average_cost, $line->quantity, $line->unit_cost
+            );
             InventoryMovement::query()->create([
                 'inventory_opening_balance_line_id' => $line->id, 'reversal_of_id' => $movement->id,
                 'product_service_id' => $line->product_service_id, 'warehouse_id' => $opening->warehouse_id,
                 'type' => InventoryMovementType::OpeningBalance, 'movement_date' => now()->toDateString(),
                 'quantity' => bcmul($line->quantity, '-1', 4), 'unit_cost' => $line->unit_cost,
-                'total_cost' => bcmul($line->total_cost, '-1', 4), 'status' => InventoryMovementStatus::Posted,
+                'total_cost' => bcmul($line->total_cost, '-1', 4),
+                'balance_quantity_before' => $balance->quantity_on_hand, 'balance_average_cost_before' => $balance->weighted_average_cost,
+                'balance_quantity_after' => $cost['quantity'], 'balance_average_cost_after' => $cost['average_cost'],
+                'status' => InventoryMovementStatus::Posted,
                 'posted_at' => now(), 'posted_by' => $userId, 'created_by' => $userId,
             ]);
-            $balance->update(['quantity_on_hand' => bcsub($balance->quantity_on_hand, $line->quantity, 4),
-                'weighted_average_cost' => '0.0000', 'updated_by' => $userId]);
+            $balance->update(['quantity_on_hand' => $cost['quantity'],
+                'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId]);
         }
         $opening->update(['status' => InventoryOpeningStatus::Voided, 'voided_at' => now(), 'voided_by' => $userId,
             'void_reason' => $reason, 'updated_by' => $userId]);

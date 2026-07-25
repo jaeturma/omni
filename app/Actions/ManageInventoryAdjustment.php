@@ -13,13 +13,14 @@ use App\Models\InventoryBalance;
 use App\Models\InventoryMovement;
 use App\Models\ProductService;
 use App\Support\InventoryWorkflow;
+use App\Support\WeightedAverageCosting;
 use DomainException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ManageInventoryAdjustment
 {
-    public function __construct(private IssueDocumentNumber $issue) {}
+    public function __construct(private IssueDocumentNumber $issue, private WeightedAverageCosting $costing) {}
 
     /** @param array<string, mixed> $data */
     public function create(array $data, int $userId): InventoryAdjustment
@@ -89,19 +90,16 @@ class ManageInventoryAdjustment
             $beforeQuantity = $balance->quantity_on_hand;
             $beforeCost = $balance->weighted_average_cost;
             if ($adjustment->type === 'out') {
-                InventoryWorkflow::assertStockAvailable($beforeQuantity, $line->quantity);
-                $unitCost = $beforeCost;
-                $afterQuantity = bcsub($beforeQuantity, $line->quantity, 4);
-                $afterCost = bccomp($afterQuantity, '0', 4) === 0 ? '0.0000' : $beforeCost;
+                $cost = $this->costing->outbound($beforeQuantity, $beforeCost, $line->quantity);
+                $unitCost = $cost['issue_unit_cost'];
             } else {
                 $unitCost = $line->unit_cost;
                 if ($unitCost === null) {
                     throw ValidationException::withMessages(['lines' => 'Every stock-in line requires a unit cost.']);
                 }
-                $afterQuantity = bcadd($beforeQuantity, $line->quantity, 4);
-                $afterCost = bcdiv(bcadd(bcmul($beforeQuantity, $beforeCost, 4), bcmul($line->quantity, $unitCost, 4), 4), $afterQuantity, 4);
+                $cost = $this->costing->inbound($beforeQuantity, $beforeCost, $line->quantity, $unitCost);
             }
-            $totalCost = bcmul($line->quantity, $unitCost, 4);
+            $totalCost = $cost['movement_value'];
             InventoryAdjustmentLine::withoutEvents(fn () => $line->update(['unit_cost' => $unitCost, 'total_cost' => $totalCost]));
             $line->movements()->create([
                 'product_service_id' => $product->id, 'warehouse_id' => $adjustment->warehouse_id,
@@ -110,10 +108,10 @@ class ManageInventoryAdjustment
                 'quantity' => $adjustment->type === 'in' ? $line->quantity : bcmul($line->quantity, '-1', 4),
                 'unit_cost' => $unitCost, 'total_cost' => $adjustment->type === 'in' ? $totalCost : bcmul($totalCost, '-1', 4),
                 'balance_quantity_before' => $beforeQuantity, 'balance_average_cost_before' => $beforeCost,
-                'balance_quantity_after' => $afterQuantity, 'balance_average_cost_after' => $afterCost,
+                'balance_quantity_after' => $cost['quantity'], 'balance_average_cost_after' => $cost['average_cost'],
                 'status' => InventoryMovementStatus::Posted, 'posted_at' => now(), 'posted_by' => $userId, 'created_by' => $userId,
             ]);
-            $balance->update(['quantity_on_hand' => $afterQuantity, 'weighted_average_cost' => $afterCost, 'updated_by' => $userId]);
+            $balance->update(['quantity_on_hand' => $cost['quantity'], 'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId]);
         }
         $reservation = $this->issue->handle($sequence, $userId);
         $adjustment->update(['document_number_reservation_id' => $reservation->id,
@@ -133,15 +131,12 @@ class ManageInventoryAdjustment
                 throw ValidationException::withMessages(['lines' => 'Posted adjustment costing details are incomplete.']);
             }
             if ($adjustment->type === 'in') {
-                InventoryWorkflow::assertStockAvailable($beforeQuantity, $line->quantity);
-                $afterQuantity = bcsub($beforeQuantity, $line->quantity, 4);
-                $afterCost = bccomp($afterQuantity, '0', 4) === 0 ? '0.0000' : $beforeCost;
+                $cost = $this->costing->removeInbound($beforeQuantity, $beforeCost, $line->quantity, $line->unit_cost);
                 $quantity = bcmul($line->quantity, '-1', 4);
                 $totalCost = bcmul($line->total_cost, '-1', 4);
                 $type = InventoryMovementType::AdjustmentOut;
             } else {
-                $afterQuantity = bcadd($beforeQuantity, $line->quantity, 4);
-                $afterCost = bcdiv(bcadd(bcmul($beforeQuantity, $beforeCost, 4), $line->total_cost, 4), $afterQuantity, 4);
+                $cost = $this->costing->inbound($beforeQuantity, $beforeCost, $line->quantity, $line->unit_cost);
                 $quantity = $line->quantity;
                 $totalCost = $line->total_cost;
                 $type = InventoryMovementType::AdjustmentIn;
@@ -152,10 +147,10 @@ class ManageInventoryAdjustment
                 'type' => $type, 'movement_date' => now()->toDateString(), 'quantity' => $quantity,
                 'unit_cost' => $line->unit_cost, 'total_cost' => $totalCost,
                 'balance_quantity_before' => $beforeQuantity, 'balance_average_cost_before' => $beforeCost,
-                'balance_quantity_after' => $afterQuantity, 'balance_average_cost_after' => $afterCost,
+                'balance_quantity_after' => $cost['quantity'], 'balance_average_cost_after' => $cost['average_cost'],
                 'status' => InventoryMovementStatus::Posted, 'posted_at' => now(), 'posted_by' => $userId, 'created_by' => $userId,
             ]);
-            $balance->update(['quantity_on_hand' => $afterQuantity, 'weighted_average_cost' => $afterCost, 'updated_by' => $userId]);
+            $balance->update(['quantity_on_hand' => $cost['quantity'], 'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId]);
         }
         $adjustment->update(['status' => InventoryAdjustmentStatus::Voided, 'voided_at' => now(),
             'voided_by' => $userId, 'void_reason' => $reason, 'updated_by' => $userId]);

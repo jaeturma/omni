@@ -12,11 +12,14 @@ use App\Models\ReceivingRecord;
 use App\Models\ReceivingRecordLine;
 use App\Models\SupplierInvoiceLine;
 use App\Support\InventoryWorkflow;
+use App\Support\WeightedAverageCosting;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class PostPurchaseReceiptInventory
 {
+    public function __construct(private WeightedAverageCosting $costing) {}
+
     public function post(ReceivingRecord $record, int $userId): void
     {
         DB::transaction(function () use ($record, $userId): void {
@@ -44,20 +47,17 @@ class PostPurchaseReceiptInventory
                     'product_service_id' => $product->id, 'warehouse_id' => $locked->warehouse_id, 'updated_by' => $userId,
                 ]);
                 $unitCost = $this->acceptedUnitCost($line);
-                $quantityAfter = bcadd($balance->quantity_on_hand, $line->accepted_quantity, 4);
-                $valueBefore = bcmul($balance->quantity_on_hand, $balance->weighted_average_cost, 4);
-                $receiptValue = bcmul($line->accepted_quantity, $unitCost, 4);
-                $averageAfter = bcdiv(bcadd($valueBefore, $receiptValue, 4), $quantityAfter, 4);
+                $cost = $this->costing->inbound($balance->quantity_on_hand, $balance->weighted_average_cost, $line->accepted_quantity, $unitCost);
 
                 $line->inventoryMovements()->create([
                     'product_service_id' => $product->id, 'warehouse_id' => $locked->warehouse_id,
                     'type' => InventoryMovementType::PurchaseReceipt, 'movement_date' => $locked->receiving_date,
-                    'quantity' => $line->accepted_quantity, 'unit_cost' => $unitCost, 'total_cost' => $receiptValue,
+                    'quantity' => $line->accepted_quantity, 'unit_cost' => $unitCost, 'total_cost' => $cost['movement_value'],
                     'balance_quantity_before' => $balance->quantity_on_hand, 'balance_average_cost_before' => $balance->weighted_average_cost,
-                    'balance_quantity_after' => $quantityAfter, 'balance_average_cost_after' => $averageAfter,
+                    'balance_quantity_after' => $cost['quantity'], 'balance_average_cost_after' => $cost['average_cost'],
                     'status' => InventoryMovementStatus::Posted, 'posted_at' => now(), 'posted_by' => $userId, 'created_by' => $userId,
                 ]);
-                $balance->update(['quantity_on_hand' => $quantityAfter, 'weighted_average_cost' => $averageAfter, 'updated_by' => $userId]);
+                $balance->update(['quantity_on_hand' => $cost['quantity'], 'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId]);
             }
         }, 3);
     }
@@ -78,7 +78,7 @@ class PostPurchaseReceiptInventory
                 $balance = InventoryBalance::query()->where('product_service_id', $movement->product_service_id)
                     ->where('warehouse_id', $movement->warehouse_id)->lockForUpdate()->firstOrFail();
                 InventoryWorkflow::assertStockAvailable($balance->quantity_on_hand, $movement->quantity);
-                [$quantityAfter, $averageAfter] = $this->balanceAfterReversal($balance, $movement);
+                $cost = $this->balanceAfterReversal($balance, $movement);
 
                 InventoryMovement::query()->create([
                     'reversal_of_id' => $movement->id,
@@ -87,10 +87,10 @@ class PostPurchaseReceiptInventory
                     'quantity' => bcmul($movement->quantity, '-1', 4), 'unit_cost' => $movement->unit_cost,
                     'total_cost' => bcmul($movement->total_cost, '-1', 4),
                     'balance_quantity_before' => $balance->quantity_on_hand, 'balance_average_cost_before' => $balance->weighted_average_cost,
-                    'balance_quantity_after' => $quantityAfter, 'balance_average_cost_after' => $averageAfter,
+                    'balance_quantity_after' => $cost['quantity'], 'balance_average_cost_after' => $cost['average_cost'],
                     'status' => InventoryMovementStatus::Posted, 'posted_at' => now(), 'posted_by' => $userId, 'created_by' => $userId,
                 ]);
-                $balance->update(['quantity_on_hand' => $quantityAfter, 'weighted_average_cost' => $averageAfter, 'updated_by' => $userId]);
+                $balance->update(['quantity_on_hand' => $cost['quantity'], 'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId]);
             }
         }, 3);
     }
@@ -106,22 +106,16 @@ class PostPurchaseReceiptInventory
         return $invoiceCost !== null ? (string) $invoiceCost : $line->purchaseOrderLine->unit_cost;
     }
 
-    /** @return array{numeric-string, numeric-string} */
+    /** @return array{quantity: numeric-string, average_cost: numeric-string, movement_value?: numeric-string} */
     private function balanceAfterReversal(InventoryBalance $balance, InventoryMovement $movement): array
     {
         if ($movement->balance_quantity_after === $balance->quantity_on_hand
             && $movement->balance_average_cost_after === $balance->weighted_average_cost) {
-            return [$movement->balance_quantity_before, $movement->balance_average_cost_before];
-        }
-        $quantity = bcsub($balance->quantity_on_hand, $movement->quantity, 4);
-        if (bccomp($quantity, '0', 4) === 0) {
-            return ['0.0000', '0.0000'];
-        }
-        $remainingValue = bcsub(bcmul($balance->quantity_on_hand, $balance->weighted_average_cost, 4), $movement->total_cost, 4);
-        if (bccomp($remainingValue, '0', 4) < 0) {
-            throw ValidationException::withMessages(['status' => 'The receipt cannot be reversed because the remaining inventory value would be negative.']);
+            return ['quantity' => $movement->balance_quantity_before, 'average_cost' => $movement->balance_average_cost_before];
         }
 
-        return [$quantity, bcdiv($remainingValue, $quantity, 4)];
+        return $this->costing->removeInbound(
+            $balance->quantity_on_hand, $balance->weighted_average_cost, $movement->quantity, $movement->unit_cost
+        );
     }
 }

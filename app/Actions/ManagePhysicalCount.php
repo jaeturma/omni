@@ -13,13 +13,14 @@ use App\Models\PhysicalCount;
 use App\Models\PhysicalCountLine;
 use App\Models\ProductService;
 use App\Support\InventoryWorkflow;
+use App\Support\WeightedAverageCosting;
 use DomainException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ManagePhysicalCount
 {
-    public function __construct(private IssueDocumentNumber $issue) {}
+    public function __construct(private IssueDocumentNumber $issue, private WeightedAverageCosting $costing) {}
 
     /** @param array<string, mixed> $data */
     public function create(array $data, int $userId): PhysicalCount
@@ -175,25 +176,23 @@ class ManagePhysicalCount
             $beforeCost = $balance->weighted_average_cost;
             $gain = bccomp($line->variance_quantity, '0', 4) === 1;
             $absoluteQuantity = $gain ? $line->variance_quantity : bcmul($line->variance_quantity, '-1', 4);
-            if (! $gain) {
-                InventoryWorkflow::assertStockAvailable($beforeQuantity, $absoluteQuantity);
-            }
-            $afterQuantity = bcadd($beforeQuantity, $line->variance_quantity, 4);
-            $afterCost = $gain
-                ? bcdiv(bcadd(bcmul($beforeQuantity, $beforeCost, 4), $line->variance_value, 4), $afterQuantity, 4)
-                : (bccomp($afterQuantity, '0', 4) === 0 ? '0.0000' : $beforeCost);
+            $cost = $gain
+                ? $this->costing->inbound($beforeQuantity, $beforeCost, $absoluteQuantity, $line->unit_cost_snapshot)
+                : $this->costing->outbound($beforeQuantity, $beforeCost, $absoluteQuantity);
+            $movementUnitCost = $gain ? $line->unit_cost_snapshot : $cost['issue_unit_cost'];
+            $movementValue = $gain ? $cost['movement_value'] : bcmul($cost['movement_value'], '-1', 4);
             $line->movements()->create([
                 'product_service_id' => $line->product_service_id, 'warehouse_id' => $count->warehouse_id,
                 'type' => $gain ? InventoryMovementType::PhysicalCountGain : InventoryMovementType::PhysicalCountLoss,
                 'movement_date' => $count->count_date, 'quantity' => $line->variance_quantity,
-                'unit_cost' => $line->unit_cost_snapshot, 'total_cost' => $line->variance_value,
+                'unit_cost' => $movementUnitCost, 'total_cost' => $movementValue,
                 'balance_quantity_before' => $beforeQuantity, 'balance_average_cost_before' => $beforeCost,
-                'balance_quantity_after' => $afterQuantity, 'balance_average_cost_after' => $afterCost,
+                'balance_quantity_after' => $cost['quantity'], 'balance_average_cost_after' => $cost['average_cost'],
                 'status' => InventoryMovementStatus::Posted, 'posted_at' => now(),
                 'posted_by' => $userId, 'created_by' => $userId,
             ]);
             $balance->update([
-                'quantity_on_hand' => $afterQuantity, 'weighted_average_cost' => $afterCost, 'updated_by' => $userId,
+                'quantity_on_hand' => $cost['quantity'], 'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId,
             ]);
         }
         $reservation = $this->issue->handle($sequence, $userId);
@@ -230,20 +229,16 @@ class ManagePhysicalCount
         $beforeQuantity = $balance->quantity_on_hand;
         $beforeCost = $balance->weighted_average_cost;
         $gain = bccomp($quantity, '0', 4) === 1;
-        if (! $gain) {
-            InventoryWorkflow::assertStockAvailable($beforeQuantity, bcmul($quantity, '-1', 4));
-        }
-        $afterQuantity = bcadd($beforeQuantity, $quantity, 4);
         $unchangedSincePosting = $movement->balance_quantity_after !== null
             && $movement->balance_average_cost_after !== null
             && bccomp($beforeQuantity, $movement->balance_quantity_after, 4) === 0
             && bccomp($beforeCost, $movement->balance_average_cost_after, 4) === 0;
         if ($unchangedSincePosting && $movement->balance_average_cost_before !== null) {
-            $afterCost = $movement->balance_average_cost_before;
+            $cost = ['quantity' => $movement->balance_quantity_before, 'average_cost' => $movement->balance_average_cost_before];
         } else {
-            $afterCost = bccomp($afterQuantity, '0', 4) === 0
-                ? '0.0000'
-                : bcdiv(bcadd(bcmul($beforeQuantity, $beforeCost, 4), $totalCost, 4), $afterQuantity, 4);
+            $cost = $gain
+                ? $this->costing->inbound($beforeQuantity, $beforeCost, $quantity, $movement->unit_cost)
+                : $this->costing->removeInbound($beforeQuantity, $beforeCost, bcmul($quantity, '-1', 4), $movement->unit_cost);
         }
         InventoryMovement::query()->create([
             'physical_count_line_id' => $line->id, 'reversal_of_id' => $movement->id,
@@ -252,12 +247,12 @@ class ManagePhysicalCount
             'movement_date' => now()->toDateString(), 'quantity' => $quantity,
             'unit_cost' => $line->unit_cost_snapshot, 'total_cost' => $totalCost,
             'balance_quantity_before' => $beforeQuantity, 'balance_average_cost_before' => $beforeCost,
-            'balance_quantity_after' => $afterQuantity, 'balance_average_cost_after' => $afterCost,
+            'balance_quantity_after' => $cost['quantity'], 'balance_average_cost_after' => $cost['average_cost'],
             'status' => InventoryMovementStatus::Posted, 'posted_at' => now(),
             'posted_by' => $userId, 'created_by' => $userId,
         ]);
         $balance->update([
-            'quantity_on_hand' => $afterQuantity, 'weighted_average_cost' => $afterCost, 'updated_by' => $userId,
+            'quantity_on_hand' => $cost['quantity'], 'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId,
         ]);
     }
 }

@@ -13,13 +13,14 @@ use App\Models\InventoryTransfer;
 use App\Models\InventoryTransferLine;
 use App\Models\ProductService;
 use App\Support\InventoryWorkflow;
+use App\Support\WeightedAverageCosting;
 use DomainException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class ManageInventoryTransfer
 {
-    public function __construct(private IssueDocumentNumber $issue) {}
+    public function __construct(private IssueDocumentNumber $issue, private WeightedAverageCosting $costing) {}
 
     /** @param array<string, mixed> $data */
     public function create(array $data, int $userId): InventoryTransfer
@@ -87,21 +88,19 @@ class ManageInventoryTransfer
             if (! $balance) {
                 throw ValidationException::withMessages(['lines' => "{$product->name} has no stock in the source warehouse."]);
             }
-            InventoryWorkflow::assertStockAvailable($balance->quantity_on_hand, $line->quantity);
-            $afterQuantity = bcsub($balance->quantity_on_hand, $line->quantity, 4);
-            $afterCost = bccomp($afterQuantity, '0', 4) === 0 ? '0.0000' : $balance->weighted_average_cost;
-            $totalCost = bcmul($line->quantity, $balance->weighted_average_cost, 4);
+            $cost = $this->costing->outbound($balance->quantity_on_hand, $balance->weighted_average_cost, $line->quantity);
+            $totalCost = $cost['movement_value'];
             InventoryTransferLine::withoutEvents(fn () => $line->update([
-                'source_unit_cost' => $balance->weighted_average_cost, 'total_cost' => $totalCost]));
+                'source_unit_cost' => $cost['issue_unit_cost'], 'total_cost' => $totalCost]));
             $line->movements()->create(['product_service_id' => $product->id,
                 'warehouse_id' => $transfer->source_warehouse_id, 'type' => InventoryMovementType::TransferOut,
                 'movement_date' => $transfer->transfer_date, 'quantity' => bcmul($line->quantity, '-1', 4),
-                'unit_cost' => $balance->weighted_average_cost, 'total_cost' => bcmul($totalCost, '-1', 4),
+                'unit_cost' => $cost['issue_unit_cost'], 'total_cost' => bcmul($totalCost, '-1', 4),
                 'balance_quantity_before' => $balance->quantity_on_hand,
                 'balance_average_cost_before' => $balance->weighted_average_cost,
-                'balance_quantity_after' => $afterQuantity, 'balance_average_cost_after' => $afterCost,
+                'balance_quantity_after' => $cost['quantity'], 'balance_average_cost_after' => $cost['average_cost'],
                 'status' => InventoryMovementStatus::Posted, 'posted_at' => now(), 'posted_by' => $userId, 'created_by' => $userId]);
-            $balance->update(['quantity_on_hand' => $afterQuantity, 'weighted_average_cost' => $afterCost, 'updated_by' => $userId]);
+            $balance->update(['quantity_on_hand' => $cost['quantity'], 'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId]);
         }
         $reservation = $this->issue->handle($sequence, $userId);
         $transfer->update(['document_number_reservation_id' => $reservation->id,
@@ -119,18 +118,18 @@ class ManageInventoryTransfer
                 ->where('warehouse_id', $transfer->destination_warehouse_id)->lockForUpdate()->first();
             $balance ??= InventoryBalance::query()->create(['product_service_id' => $line->product_service_id,
                 'warehouse_id' => $transfer->destination_warehouse_id, 'updated_by' => $userId]);
-            $afterQuantity = bcadd($balance->quantity_on_hand, $line->quantity, 4);
-            $afterCost = bcdiv(bcadd(bcmul($balance->quantity_on_hand, $balance->weighted_average_cost, 4),
-                $line->total_cost, 4), $afterQuantity, 4);
+            $cost = $this->costing->inbound(
+                $balance->quantity_on_hand, $balance->weighted_average_cost, $line->quantity, $line->source_unit_cost
+            );
             $line->movements()->create(['product_service_id' => $line->product_service_id,
                 'warehouse_id' => $transfer->destination_warehouse_id, 'type' => InventoryMovementType::TransferIn,
                 'movement_date' => now()->toDateString(), 'quantity' => $line->quantity,
                 'unit_cost' => $line->source_unit_cost, 'total_cost' => $line->total_cost,
                 'balance_quantity_before' => $balance->quantity_on_hand,
                 'balance_average_cost_before' => $balance->weighted_average_cost,
-                'balance_quantity_after' => $afterQuantity, 'balance_average_cost_after' => $afterCost,
+                'balance_quantity_after' => $cost['quantity'], 'balance_average_cost_after' => $cost['average_cost'],
                 'status' => InventoryMovementStatus::Posted, 'posted_at' => now(), 'posted_by' => $userId, 'created_by' => $userId]);
-            $balance->update(['quantity_on_hand' => $afterQuantity, 'weighted_average_cost' => $afterCost, 'updated_by' => $userId]);
+            $balance->update(['quantity_on_hand' => $cost['quantity'], 'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId]);
         }
         $transfer->update(['status' => InventoryTransferStatus::Received, 'received_at' => now(),
             'received_by' => $userId, 'updated_by' => $userId]);
@@ -158,27 +157,25 @@ class ManageInventoryTransfer
         if ($inMovement) {
             $destination = InventoryBalance::query()->where('product_service_id', $line->product_service_id)
                 ->where('warehouse_id', $transfer->destination_warehouse_id)->lockForUpdate()->firstOrFail();
-            InventoryWorkflow::assertStockAvailable($destination->quantity_on_hand, $line->quantity);
-            $afterQuantity = bcsub($destination->quantity_on_hand, $line->quantity, 4);
-            $afterCost = bccomp($afterQuantity, '0', 4) === 0 ? '0.0000'
-                : bcdiv(bcsub(bcmul($destination->quantity_on_hand, $destination->weighted_average_cost, 4),
-                    $line->total_cost, 4), $afterQuantity, 4);
+            $cost = $this->costing->removeInbound(
+                $destination->quantity_on_hand, $destination->weighted_average_cost, $line->quantity, $line->source_unit_cost
+            );
             $this->reversalMovement($line, $inMovement, $transfer->destination_warehouse_id,
                 InventoryMovementType::TransferOut, bcmul($line->quantity, '-1', 4),
-                bcmul($line->total_cost, '-1', 4), $destination, $afterQuantity, $afterCost, $userId);
-            $destination->update(['quantity_on_hand' => $afterQuantity, 'weighted_average_cost' => $afterCost, 'updated_by' => $userId]);
+                bcmul($line->total_cost, '-1', 4), $destination, $cost['quantity'], $cost['average_cost'], $userId);
+            $destination->update(['quantity_on_hand' => $cost['quantity'], 'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId]);
         }
         $outMovement = InventoryMovement::query()->whereBelongsTo($line, 'transferLine')
             ->where('type', InventoryMovementType::TransferOut)->whereNull('reversal_of_id')->lockForUpdate()->firstOrFail();
         $source = InventoryBalance::query()->where('product_service_id', $line->product_service_id)
             ->where('warehouse_id', $transfer->source_warehouse_id)->lockForUpdate()->firstOrFail();
-        $afterQuantity = bcadd($source->quantity_on_hand, $line->quantity, 4);
-        $afterCost = bcdiv(bcadd(bcmul($source->quantity_on_hand, $source->weighted_average_cost, 4),
-            $line->total_cost, 4), $afterQuantity, 4);
+        $cost = $this->costing->inbound(
+            $source->quantity_on_hand, $source->weighted_average_cost, $line->quantity, $line->source_unit_cost
+        );
         $this->reversalMovement($line, $outMovement, $transfer->source_warehouse_id,
             InventoryMovementType::TransferIn, $line->quantity, $line->total_cost,
-            $source, $afterQuantity, $afterCost, $userId);
-        $source->update(['quantity_on_hand' => $afterQuantity, 'weighted_average_cost' => $afterCost, 'updated_by' => $userId]);
+            $source, $cost['quantity'], $cost['average_cost'], $userId);
+        $source->update(['quantity_on_hand' => $cost['quantity'], 'weighted_average_cost' => $cost['average_cost'], 'updated_by' => $userId]);
     }
 
     private function reversalMovement(InventoryTransferLine $line, InventoryMovement $original, int $warehouseId,
