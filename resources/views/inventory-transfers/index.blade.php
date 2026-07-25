@@ -1,0 +1,7 @@
+<x-app-layout title="Warehouse Transfers">
+    <x-page-header title="Warehouse Transfers" description="Track stock released, in transit, and received between warehouses." />
+    <div class="mb-5 flex justify-end">@can('create', \App\Models\InventoryTransfer::class)<a href="{{ route('inventory-transfers.create') }}" class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white">New transfer</a>@endcan</div>
+    <div class="overflow-x-auto rounded-2xl bg-white ring-1 ring-slate-200"><table class="min-w-full text-sm"><thead><tr><th class="px-5 py-3 text-left">Transfer</th><th>Date</th><th>Source</th><th>Destination</th><th>Status</th></tr></thead>
+        <tbody>@forelse($transfers as $transfer)<tr class="border-t"><td class="px-5 py-3"><a class="font-semibold text-blue-700" href="{{ route('inventory-transfers.show', $transfer) }}">{{ $transfer->transfer_number ?? 'Draft #'.$transfer->id }}</a></td><td class="text-center">{{ $transfer->transfer_date->format('M d, Y') }}</td><td class="text-center">{{ $transfer->sourceWarehouse->code }}</td><td class="text-center">{{ $transfer->destinationWarehouse->code }}</td><td class="text-center">{{ str($transfer->status->value)->headline() }}</td></tr>
+        @empty<tr><td colspan="5" class="p-8 text-center text-slate-500">No warehouse transfers found.</td></tr>@endforelse</tbody></table></div><div class="mt-5">{{ $transfers->links() }}</div>
+</x-app-layout>
