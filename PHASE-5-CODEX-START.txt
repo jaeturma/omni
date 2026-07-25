@@ -10,10 +10,10 @@ Execute the work packages one at a time:
 4. WP-05-04-cash-disbursements.md - ok
 5. WP-05-05-fund-transfers.md - ok
 6. WP-05-06-petty-cash.md - ok
-7. WP-05-07-bank-statement-imports.md
-8. WP-05-08-bank-reconciliation.md
-9. WP-05-09-cash-position-reports.md
-10. WP-05-10-phase-validation-gap-review.md
+7. WP-05-07-bank-statement-imports.md - ok
+8. WP-05-08-bank-reconciliation.md - ok
+9. WP-05-09-cash-position-reports.md - ok
+10. WP-05-10-phase-validation-gap-review.md - ok
 
 FIRST CODEX PROMPT
 
