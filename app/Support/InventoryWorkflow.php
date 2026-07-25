@@ -36,6 +36,7 @@ final class InventoryWorkflow
         'inventory-issues.view', 'inventory-issues.post', 'inventory-issues.reverse',
         'inventory-adjustments.view', 'inventory-adjustments.create', 'inventory-adjustments.approve', 'inventory-adjustments.post', 'inventory-adjustments.void',
         'inventory-transfers.view', 'inventory-transfers.create', 'inventory-transfers.approve', 'inventory-transfers.release', 'inventory-transfers.receive', 'inventory-transfers.void',
+        'physical-counts.view', 'physical-counts.create', 'physical-counts.count', 'physical-counts.review', 'physical-counts.approve', 'physical-counts.post', 'physical-counts.void',
         'inventory-movements.view', 'inventory-movements.post', 'inventory-movements.reverse',
         'inventory-opening-balances.manage', 'inventory-adjustments.manage', 'inventory-transfers.manage',
         'inventory-counts.manage', 'inventory-costing.view', 'inventory-reports.view', 'inventory-reports.export',
@@ -47,12 +48,13 @@ final class InventoryWorkflow
         'inventory-issues.view',
         'inventory-adjustments.view', 'inventory-adjustments.create',
         'inventory-transfers.view', 'inventory-transfers.create',
+        'physical-counts.view', 'physical-counts.create', 'physical-counts.count',
         'inventory-movements.view', 'inventory-opening-balances.manage', 'inventory-adjustments.manage',
         'inventory-transfers.manage', 'inventory-counts.manage', 'inventory-costing.view', 'inventory-reports.view',
     ];
 
     public const VIEW_PERMISSIONS = [
-        'inventory-opening.view', 'inventory-receipts.view', 'inventory-issues.view', 'inventory-adjustments.view', 'inventory-transfers.view', 'inventory-movements.view', 'inventory-costing.view', 'inventory-reports.view',
+        'inventory-opening.view', 'inventory-receipts.view', 'inventory-issues.view', 'inventory-adjustments.view', 'inventory-transfers.view', 'physical-counts.view', 'inventory-movements.view', 'inventory-costing.view', 'inventory-reports.view',
     ];
 
     public static function tracks(ProductService $product): bool

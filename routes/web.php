@@ -29,6 +29,7 @@ use App\Http\Controllers\InventoryOpeningBalanceController;
 use App\Http\Controllers\InventoryTransferController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PettyCashController;
+use App\Http\Controllers\PhysicalCountController;
 use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseRequestController;
@@ -134,6 +135,10 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::resource('inventory-adjustments', InventoryAdjustmentController::class)->only(['index', 'create', 'store', 'show']);
     Route::patch('/inventory-transfers/{inventory_transfer}/status', [InventoryTransferController::class, 'transition'])->name('inventory-transfers.transition');
     Route::resource('inventory-transfers', InventoryTransferController::class)->only(['index', 'create', 'store', 'show']);
+    Route::put('/physical-counts/{physical_count}/counts', [PhysicalCountController::class, 'record'])->name('physical-counts.record');
+    Route::patch('/physical-counts/{physical_count}/review', [PhysicalCountController::class, 'review'])->name('physical-counts.review');
+    Route::patch('/physical-counts/{physical_count}/status', [PhysicalCountController::class, 'transition'])->name('physical-counts.transition');
+    Route::resource('physical-counts', PhysicalCountController::class)->only(['index', 'create', 'store', 'show']);
     Route::patch('/purchase-requests/{purchase_request}/status', [PurchaseRequestController::class, 'transition'])->name('purchase-requests.transition');
     Route::resource('purchase-requests', PurchaseRequestController::class);
     Route::post('/purchase-requests/{purchase_request}/canvass-quotations', [CanvassQuotationController::class, 'store'])->name('purchase-requests.canvass-quotations.store');
