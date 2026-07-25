@@ -34,6 +34,7 @@ final class InventoryWorkflow
         'inventory-opening.view', 'inventory-opening.create', 'inventory-opening.post', 'inventory-opening.void',
         'inventory-receipts.view', 'inventory-receipts.post', 'inventory-receipts.reverse',
         'inventory-issues.view', 'inventory-issues.post', 'inventory-issues.reverse',
+        'inventory-adjustments.view', 'inventory-adjustments.create', 'inventory-adjustments.approve', 'inventory-adjustments.post', 'inventory-adjustments.void',
         'inventory-movements.view', 'inventory-movements.post', 'inventory-movements.reverse',
         'inventory-opening-balances.manage', 'inventory-adjustments.manage', 'inventory-transfers.manage',
         'inventory-counts.manage', 'inventory-costing.view', 'inventory-reports.view', 'inventory-reports.export',
@@ -43,12 +44,13 @@ final class InventoryWorkflow
         'inventory-opening.view', 'inventory-opening.create',
         'inventory-receipts.view',
         'inventory-issues.view',
+        'inventory-adjustments.view', 'inventory-adjustments.create',
         'inventory-movements.view', 'inventory-opening-balances.manage', 'inventory-adjustments.manage',
         'inventory-transfers.manage', 'inventory-counts.manage', 'inventory-costing.view', 'inventory-reports.view',
     ];
 
     public const VIEW_PERMISSIONS = [
-        'inventory-opening.view', 'inventory-receipts.view', 'inventory-issues.view', 'inventory-movements.view', 'inventory-costing.view', 'inventory-reports.view',
+        'inventory-opening.view', 'inventory-receipts.view', 'inventory-issues.view', 'inventory-adjustments.view', 'inventory-movements.view', 'inventory-costing.view', 'inventory-reports.view',
     ];
 
     public static function tracks(ProductService $product): bool

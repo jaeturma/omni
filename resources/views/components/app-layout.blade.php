@@ -49,7 +49,8 @@
                     @can('supplier-invoices.view')<a href="{{ route('supplier-invoices.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Supplier Invoices</a>@endcan
                     @can('supplier-payments.view')<a href="{{ route('supplier-payments.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Supplier Payments</a>@endcan
                     @can('expenses.view')<a href="{{ route('expenses.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Expenses</a>@endcan
-                    @foreach (['Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
+                    @can('inventory-adjustments.view')<a href="{{ route('inventory-adjustments.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Inventory Adjustments</a>@else<span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">Inventory</span>@endcan
+                    @foreach (['Accounting', 'Tax Reports'] as $navigationLabel)
                         <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                     @endforeach
                 </nav>
@@ -105,7 +106,8 @@
                             @can('supplier-invoices.view')<a href="{{ route('supplier-invoices.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Supplier Invoices</a>@endcan
                             @can('supplier-payments.view')<a href="{{ route('supplier-payments.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Supplier Payments</a>@endcan
                             @can('expenses.view')<a href="{{ route('expenses.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Expenses</a>@endcan
-                            @foreach (['Inventory', 'Accounting', 'Tax Reports'] as $navigationLabel)
+                            @can('inventory-adjustments.view')<a href="{{ route('inventory-adjustments.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Inventory Adjustments</a>@else<span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">Inventory</span>@endcan
+                            @foreach (['Accounting', 'Tax Reports'] as $navigationLabel)
                                 <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
                             @endforeach
                         </nav>
