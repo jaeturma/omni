@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property numeric-string $received_quantity
@@ -20,9 +21,16 @@ class ReceivingRecordLine extends Model
         return $this->belongsTo(ReceivingRecord::class);
     }
 
+    /** @return BelongsTo<PurchaseOrderLine, $this> */
     public function purchaseOrderLine(): BelongsTo
     {
         return $this->belongsTo(PurchaseOrderLine::class);
+    }
+
+    /** @return HasMany<InventoryMovement, $this> */
+    public function inventoryMovements(): HasMany
+    {
+        return $this->hasMany(InventoryMovement::class);
     }
 
     protected function casts(): array

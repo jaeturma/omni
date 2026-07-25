@@ -12,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class TransitionReceivingRecord
 {
-    public function __construct(private IssueDocumentNumber $issueNumber) {}
+    public function __construct(private IssueDocumentNumber $issueNumber, private PostPurchaseReceiptInventory $inventory) {}
 
     public function handle(ReceivingRecord $record, ReceivingStatus $target, int $userId, ?string $reason = null): ReceivingRecord
     {
@@ -51,9 +51,15 @@ class TransitionReceivingRecord
                     $orderLine->update(['received_quantity' => bcadd($orderLine->received_quantity, $delta, 4)]);
                     $line->update(['credited_quantity' => $line->accepted_quantity]);
                 }
+                if ($target !== ReceivingStatus::Rejected) {
+                    $this->inventory->post($locked, $userId);
+                }
                 $changes += ['accepted_at' => now(), 'accepted_by' => $userId];
             }
             if ($target === ReceivingStatus::Cancelled) {
+                if (in_array($locked->status, [ReceivingStatus::Accepted, ReceivingStatus::PartiallyAccepted], true)) {
+                    $this->inventory->reverse($locked, $userId);
+                }
                 foreach ($locked->lines as $line) {
                     $orderLine = $order->lines->firstWhere('id', $line->purchase_order_line_id);
                     $orderLine->update(['received_quantity' => bcsub($orderLine->received_quantity, $line->credited_quantity, 4)]);

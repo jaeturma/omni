@@ -17,7 +17,14 @@ class TransitionReceivingRecordRequest extends FormRequest
         }
 
         return match ($this->input('status')) {
-            'received' => (bool) $this->user()?->can('receive', $record), 'inspected' => (bool) $this->user()?->can('inspect', $record), 'accepted', 'partially_accepted', 'rejected' => (bool) $this->user()?->can('accept', $record), 'cancelled' => (bool) $this->user()?->can('cancel', $record), default => false
+            'received' => (bool) $this->user()?->can('receive', $record),
+            'inspected' => (bool) $this->user()?->can('inspect', $record),
+            'accepted', 'partially_accepted' => (bool) $this->user()?->can('accept', $record) && $this->user()->can('inventory-receipts.post'),
+            'rejected' => (bool) $this->user()?->can('accept', $record),
+            'cancelled' => (bool) $this->user()?->can('cancel', $record)
+                && (! in_array($record->status, [ReceivingStatus::Accepted, ReceivingStatus::PartiallyAccepted], true)
+                    || $this->user()->can('inventory-receipts.reverse')),
+            default => false
         };
     }
 

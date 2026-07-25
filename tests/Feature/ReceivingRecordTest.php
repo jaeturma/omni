@@ -1,5 +1,6 @@
 <?php
 
+use App\Actions\PostPurchaseReceiptInventory;
 use App\Enums\PurchaseOrderStatus;
 use App\Enums\ReceivingStatus;
 use App\Models\BusinessProfile;
@@ -19,6 +20,9 @@ use App\Models\Warehouse;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\ValidationException;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 uses(LazilyRefreshDatabase::class);
 beforeEach(fn () => $this->seed(RolesAndPermissionsSeeder::class));
@@ -37,7 +41,7 @@ function receivingFixtures(): array
     $year = FiscalYear::factory()->for($business)->for($admin, 'creator')->create(['starts_on' => '2026-01-01', 'ends_on' => '2026-12-31']);
     DocumentSequence::query()->create(['business_profile_id' => $business->id, 'fiscal_year_id' => $year->id, 'fiscal_year_scope' => $year->id, 'document_type' => 'receiving_report', 'prefix' => 'RR-{YYYY}-', 'suffix' => '', 'current_number' => 0, 'padding' => 6, 'reset_rule' => 'fiscal_year', 'active' => true, 'created_by' => $admin->id, 'updated_by' => $admin->id]);
 
-    return compact('admin', 'supplier', 'warehouse', 'order', 'line');
+    return compact('admin', 'supplier', 'warehouse', 'order', 'line', 'product');
 }
 
 function receivingData(array $f, string $received, string $accepted, string $rejected = '0.0000', ?string $reason = null): array
@@ -107,4 +111,92 @@ test('receiving creates no inventory valuation payable or journal effects', func
     $f = receivingFixtures();
     createReceiving($this, $f, '1.0000', '1.0000');
     expect(InventoryMovement::count())->toBe(0)->and(InventoryBalance::count())->toBe(0)->and(SupplierInvoice::query()->count())->toBe(0)->and(Schema::hasTable('journal_entries'))->toBeFalse();
+});
+
+test('accepted and partial quantities post once with source traceability', function () {
+    $f = receivingFixtures();
+    $record = createReceiving($this, $f, '3.0000', '2.0000', '1.0000', 'Damaged');
+    $this->patch(route('receiving-records.transition', $record), ['status' => 'received'])->assertSessionHasNoErrors();
+    $this->patch(route('receiving-records.transition', $record), ['status' => 'partially_accepted'])->assertSessionHasNoErrors();
+
+    $movement = InventoryMovement::query()->sole();
+    expect($movement->receiving_record_line_id)->toBe($record->lines()->sole()->id)
+        ->and($movement->quantity)->toBe('2.0000')
+        ->and($movement->unit_cost)->toBe('1000.0000')
+        ->and($movement->total_cost)->toBe('2000.0000')
+        ->and(InventoryBalance::query()->sole()->quantity_on_hand)->toBe('2.0000');
+
+    expect(fn () => app(PostPurchaseReceiptInventory::class)->post($record, $f['admin']->id))
+        ->toThrow(ValidationException::class);
+    expect(InventoryMovement::query()->count())->toBe(1);
+});
+
+test('purchase receipts update weighted average cost with decimal arithmetic', function () {
+    $f = receivingFixtures();
+    InventoryBalance::query()->create([
+        'product_service_id' => $f['product']->id, 'warehouse_id' => $f['warehouse']->id,
+        'quantity_on_hand' => '10.0000', 'weighted_average_cost' => '500.0000', 'updated_by' => $f['admin']->id,
+    ]);
+    $record = createReceiving($this, $f, '2.0000', '2.0000');
+    $this->patch(route('receiving-records.transition', $record), ['status' => 'received']);
+    $this->patch(route('receiving-records.transition', $record), ['status' => 'accepted'])->assertSessionHasNoErrors();
+
+    expect(InventoryBalance::query()->sole()->quantity_on_hand)->toBe('12.0000')
+        ->and(InventoryBalance::query()->sole()->weighted_average_cost)->toBe('583.3333');
+});
+
+test('services and non inventory products do not create receipt movements', function () {
+    $f = receivingFixtures();
+    foreach ([['type' => 'service', 'is_inventory' => false], ['type' => 'product', 'is_inventory' => false]] as $attributes) {
+        $f['product']->update($attributes);
+        $record = createReceiving($this, $f, '1.0000', '1.0000');
+        $this->patch(route('receiving-records.transition', $record), ['status' => 'received']);
+        $this->patch(route('receiving-records.transition', $record), ['status' => 'accepted'])->assertSessionHasNoErrors();
+    }
+    expect(InventoryMovement::query()->count())->toBe(0)->and(InventoryBalance::query()->count())->toBe(0);
+});
+
+test('cancelling an accepted receipt creates a safe reversal and restores balance', function () {
+    $f = receivingFixtures();
+    InventoryBalance::query()->create([
+        'product_service_id' => $f['product']->id, 'warehouse_id' => $f['warehouse']->id,
+        'quantity_on_hand' => '10.0000', 'weighted_average_cost' => '500.0000', 'updated_by' => $f['admin']->id,
+    ]);
+    $record = createReceiving($this, $f, '2.0000', '2.0000');
+    $this->patch(route('receiving-records.transition', $record), ['status' => 'received']);
+    $this->patch(route('receiving-records.transition', $record), ['status' => 'accepted']);
+    $this->patch(route('receiving-records.transition', $record), ['status' => 'cancelled', 'reason' => 'Supplier recalled delivery'])
+        ->assertSessionHasNoErrors();
+
+    $movements = InventoryMovement::query()->orderBy('id')->get();
+    expect($movements)->toHaveCount(2)
+        ->and($movements->last()->reversal_of_id)->toBe($movements->first()->id)
+        ->and($movements->last()->quantity)->toBe('-2.0000')
+        ->and(InventoryBalance::query()->sole()->quantity_on_hand)->toBe('10.0000')
+        ->and(InventoryBalance::query()->sole()->weighted_average_cost)->toBe('500.0000');
+});
+
+test('inventory receipt permissions are seeded and required for stock effects', function () {
+    expect(Permission::query()->whereIn('name', ['inventory-receipts.view', 'inventory-receipts.post', 'inventory-receipts.reverse'])->count())->toBe(3)
+        ->and(Role::findByName('Administrator')->hasAllPermissions(['inventory-receipts.view', 'inventory-receipts.post', 'inventory-receipts.reverse']))->toBeTrue()
+        ->and(Role::findByName('Viewer')->hasPermissionTo('inventory-receipts.view'))->toBeTrue()
+        ->and(Role::findByName('Viewer')->hasPermissionTo('inventory-receipts.post'))->toBeFalse();
+
+    $f = receivingFixtures();
+    $record = createReceiving($this, $f, '1.0000', '1.0000');
+    $this->patch(route('receiving-records.transition', $record), ['status' => 'received']);
+    $restricted = User::factory()->create();
+    $restricted->givePermissionTo('receiving-records.accept');
+    $this->actingAs($restricted)->patch(route('receiving-records.transition', $record), ['status' => 'accepted'])->assertForbidden();
+    expect(InventoryMovement::query()->count())->toBe(0);
+});
+
+test('inventory receipt posting does not create journal entries', function () {
+    $f = receivingFixtures();
+    $record = createReceiving($this, $f, '1.0000', '1.0000');
+    $this->patch(route('receiving-records.transition', $record), ['status' => 'received']);
+    $this->patch(route('receiving-records.transition', $record), ['status' => 'accepted']);
+
+    expect(InventoryMovement::query()->count())->toBe(1)
+        ->and(Schema::hasTable('journal_entries'))->toBeFalse();
 });

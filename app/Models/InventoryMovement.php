@@ -9,7 +9,18 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use LogicException;
 
-#[Fillable(['inventory_opening_balance_line_id', 'reversal_of_id', 'product_service_id', 'warehouse_id', 'type', 'movement_date', 'quantity', 'unit_cost', 'total_cost', 'status', 'posted_at', 'posted_by', 'created_by'])]
+/**
+ * @property int $product_service_id
+ * @property int $warehouse_id
+ * @property numeric-string $quantity
+ * @property numeric-string $unit_cost
+ * @property numeric-string $total_cost
+ * @property numeric-string|null $balance_quantity_before
+ * @property numeric-string|null $balance_average_cost_before
+ * @property numeric-string|null $balance_quantity_after
+ * @property numeric-string|null $balance_average_cost_after
+ */
+#[Fillable(['inventory_opening_balance_line_id', 'receiving_record_line_id', 'reversal_of_id', 'product_service_id', 'warehouse_id', 'type', 'movement_date', 'quantity', 'unit_cost', 'total_cost', 'balance_quantity_before', 'balance_average_cost_before', 'balance_quantity_after', 'balance_average_cost_after', 'status', 'posted_at', 'posted_by', 'created_by'])]
 class InventoryMovement extends Model
 {
     protected $attributes = ['status' => 'posted'];
@@ -31,9 +42,16 @@ class InventoryMovement extends Model
         return $this->belongsTo(self::class, 'reversal_of_id');
     }
 
+    public function receivingRecordLine(): BelongsTo
+    {
+        return $this->belongsTo(ReceivingRecordLine::class);
+    }
+
     protected function casts(): array
     {
         return ['type' => InventoryMovementType::class, 'movement_date' => 'date', 'quantity' => 'decimal:4',
-            'unit_cost' => 'decimal:4', 'total_cost' => 'decimal:4', 'status' => InventoryMovementStatus::class, 'posted_at' => 'datetime'];
+            'unit_cost' => 'decimal:4', 'total_cost' => 'decimal:4', 'balance_quantity_before' => 'decimal:4',
+            'balance_average_cost_before' => 'decimal:4', 'balance_quantity_after' => 'decimal:4',
+            'balance_average_cost_after' => 'decimal:4', 'status' => InventoryMovementStatus::class, 'posted_at' => 'datetime'];
     }
 }

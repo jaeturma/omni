@@ -32,6 +32,7 @@ final class InventoryWorkflow
 
     public const PERMISSIONS = [
         'inventory-opening.view', 'inventory-opening.create', 'inventory-opening.post', 'inventory-opening.void',
+        'inventory-receipts.view', 'inventory-receipts.post', 'inventory-receipts.reverse',
         'inventory-movements.view', 'inventory-movements.post', 'inventory-movements.reverse',
         'inventory-opening-balances.manage', 'inventory-adjustments.manage', 'inventory-transfers.manage',
         'inventory-counts.manage', 'inventory-costing.view', 'inventory-reports.view', 'inventory-reports.export',
@@ -39,12 +40,13 @@ final class InventoryWorkflow
 
     public const ENCODER_PERMISSIONS = [
         'inventory-opening.view', 'inventory-opening.create',
+        'inventory-receipts.view',
         'inventory-movements.view', 'inventory-opening-balances.manage', 'inventory-adjustments.manage',
         'inventory-transfers.manage', 'inventory-counts.manage', 'inventory-costing.view', 'inventory-reports.view',
     ];
 
     public const VIEW_PERMISSIONS = [
-        'inventory-opening.view', 'inventory-movements.view', 'inventory-costing.view', 'inventory-reports.view',
+        'inventory-opening.view', 'inventory-receipts.view', 'inventory-movements.view', 'inventory-costing.view', 'inventory-reports.view',
     ];
 
     public static function tracks(ProductService $product): bool

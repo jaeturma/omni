@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/** @property numeric-string $ordered_quantity
+/** @property int|null $product_service_id
+ * @property numeric-string $unit_cost
+ * @property numeric-string $ordered_quantity
  * @property numeric-string $received_quantity
  * @property numeric-string $billed_quantity
  * @property numeric-string $cancelled_quantity
