@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductServiceRequest;
 use App\Http\Requests\UpdateProductServiceRequest;
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\ProductService;
 use App\Models\UnitOfMeasure;
@@ -65,6 +66,7 @@ class ProductServiceController extends Controller
     private function formOptions(): array
     {
         return [
+            'brands' => Brand::query()->orderBy('name')->get(['id', 'name']),
             'categories' => Category::query()->orderBy('type')->orderBy('name')->get(['id', 'name', 'type']),
             'unitsOfMeasure' => UnitOfMeasure::query()->orderBy('name')->get(['id', 'code', 'name']),
         ];

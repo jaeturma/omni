@@ -1,9 +1,10 @@
-@props(['action', 'method' => 'POST', 'productService' => null, 'categories', 'unitsOfMeasure', 'submitLabel'])
+@props(['action', 'method' => 'POST', 'productService' => null, 'brands', 'categories', 'unitsOfMeasure', 'submitLabel'])
 
 <form method="POST" action="{{ $action }}" class="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
     @csrf
     @if ($method !== 'POST') @method($method) @endif
     <div class="grid gap-4 md:grid-cols-2">
+        <label class="flex flex-col gap-1 text-sm font-medium">Brand<select name="brand_id" class="rounded-lg border border-slate-300 px-3 py-2"><option value="">Unbranded</option>@foreach ($brands as $brand)<option value="{{ $brand->id }}" @selected((string) old('brand_id', $productService?->brand_id) === (string) $brand->id)>{{ $brand->name }}</option>@endforeach</select>@error('brand_id')<span class="text-red-700">{{ $message }}</span>@enderror</label>
         <label class="flex flex-col gap-1 text-sm font-medium">SKU<input name="sku" value="{{ old('sku', $productService?->sku) }}" required maxlength="50" class="rounded-lg border border-slate-300 px-3 py-2">@error('sku')<span class="text-red-700">{{ $message }}</span>@enderror</label>
         <label class="flex flex-col gap-1 text-sm font-medium">Barcode (optional)<input name="barcode" value="{{ old('barcode', $productService?->barcode) }}" maxlength="100" class="rounded-lg border border-slate-300 px-3 py-2">@error('barcode')<span class="text-red-700">{{ $message }}</span>@enderror</label>
         <label class="flex flex-col gap-1 text-sm font-medium md:col-span-2">Name<input name="name" value="{{ old('name', $productService?->name) }}" required class="rounded-lg border border-slate-300 px-3 py-2">@error('name')<span class="text-red-700">{{ $message }}</span>@enderror</label>

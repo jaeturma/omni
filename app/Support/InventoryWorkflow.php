@@ -40,6 +40,7 @@ final class InventoryWorkflow
         'inventory-movements.view', 'inventory-movements.post', 'inventory-movements.reverse',
         'inventory-opening-balances.manage', 'inventory-adjustments.manage', 'inventory-transfers.manage',
         'inventory-counts.manage', 'inventory-costing.view', 'inventory-reports.view', 'inventory-reports.export',
+        'inventory-valuation.view', 'inventory-cost.view',
     ];
 
     public const ENCODER_PERMISSIONS = [
@@ -51,6 +52,7 @@ final class InventoryWorkflow
         'physical-counts.view', 'physical-counts.create', 'physical-counts.count',
         'inventory-movements.view', 'inventory-opening-balances.manage', 'inventory-adjustments.manage',
         'inventory-transfers.manage', 'inventory-counts.manage', 'inventory-costing.view', 'inventory-reports.view',
+        'inventory-valuation.view', 'inventory-cost.view',
     ];
 
     public const VIEW_PERMISSIONS = [

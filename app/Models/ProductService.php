@@ -7,8 +7,13 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
-#[Fillable(['sku', 'barcode', 'name', 'description', 'type', 'category_id', 'unit_of_measure_id', 'default_cost', 'selling_price', 'reorder_level', 'is_inventory', 'status', 'created_by', 'updated_by'])]
+/**
+ * @property numeric-string $reorder_level
+ * @property numeric-string $report_quantity
+ */
+#[Fillable(['sku', 'barcode', 'name', 'description', 'type', 'category_id', 'brand_id', 'unit_of_measure_id', 'default_cost', 'selling_price', 'reorder_level', 'is_inventory', 'status', 'created_by', 'updated_by'])]
 class ProductService extends Model
 {
     /** @use HasFactory<ProductServiceFactory> */
@@ -22,6 +27,23 @@ class ProductService extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function brand(): BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    /** @return HasMany<InventoryMovement, $this> */
+    public function inventoryMovements(): HasMany
+    {
+        return $this->hasMany(InventoryMovement::class);
+    }
+
+    /** @return HasMany<InventoryBalance, $this> */
+    public function inventoryBalances(): HasMany
+    {
+        return $this->hasMany(InventoryBalance::class);
     }
 
     /** @return BelongsTo<UnitOfMeasure, $this> */

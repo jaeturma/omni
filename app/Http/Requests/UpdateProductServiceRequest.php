@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Brand;
 use App\Models\Category;
 use App\Models\ProductService;
 use App\Models\UnitOfMeasure;
@@ -28,6 +29,7 @@ class UpdateProductServiceRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'], 'description' => ['nullable', 'string', 'max:5000'],
             'type' => ['required', Rule::in(['product', 'service'])],
             'category_id' => ['required', 'integer', Rule::exists(Category::class, 'id')],
+            'brand_id' => ['nullable', 'integer', Rule::exists(Brand::class, 'id')],
             'unit_of_measure_id' => ['required', 'integer', Rule::exists(UnitOfMeasure::class, 'id')],
             'default_cost' => ['required', 'numeric', 'decimal:0,4', 'min:0'],
             'selling_price' => ['required', 'numeric', 'decimal:0,4', 'min:0'],

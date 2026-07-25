@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Inventory Report</title>@vite(['resources/css/app.css'])</head>
+<body class="bg-white p-8 text-slate-900">
+    <header class="mb-6"><h1 class="text-2xl font-bold">Inventory Stock and Valuation Report</h1><p class="text-sm text-slate-600">As of {{ $filters['as_of'] }} · Range {{ $filters['start_date'] }} to {{ $filters['end_date'] }}</p></header>
+    <div class="mb-6 grid grid-cols-2 gap-3 text-sm md:grid-cols-4"><div>As-of quantity<br><strong>{{ $summary['as_of_quantity'] }}</strong></div><div>Opening quantity<br><strong>{{ $summary['opening_quantity'] }}</strong></div><div>Movement<br><strong>{{ $summary['movement_quantity'] }}</strong></div><div>Closing quantity<br><strong>{{ $summary['closing_quantity'] }}</strong></div>@if($canViewValuation)<div>As-of value<br><strong>PHP {{ number_format((float) $summary['as_of_value'], 2) }}</strong></div><div>Closing value<br><strong>PHP {{ number_format((float) $summary['closing_value'], 2) }}</strong></div>@endif</div>
+    <table class="w-full text-sm"><thead><tr class="border-b text-left"><th class="py-2">Product</th><th>Warehouse</th><th class="text-right">Quantity</th>@if($canViewCost)<th class="text-right">Average cost</th>@endif @if($canViewValuation)<th class="text-right">Value</th>@endif</tr></thead><tbody>@forelse($stocks as $stock)<tr class="border-b"><td class="py-2">{{ $stock->product->sku }} — {{ $stock->product->name }}</td><td>{{ $stock->warehouse->code }}</td><td class="text-right">{{ $stock->quantity }}</td>@if($canViewCost)<td class="text-right">{{ $stock->as_of_average_cost }}</td>@endif @if($canViewValuation)<td class="text-right">{{ $stock->as_of_value }}</td>@endif</tr>@empty<tr><td colspan="5" class="py-8 text-center">No stock matches these filters.</td></tr>@endforelse</tbody></table>
+</body>
+</html>

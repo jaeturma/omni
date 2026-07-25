@@ -26,6 +26,7 @@ use App\Http\Controllers\FundTransferController;
 use App\Http\Controllers\GovernmentDeductionController;
 use App\Http\Controllers\InventoryAdjustmentController;
 use App\Http\Controllers\InventoryOpeningBalanceController;
+use App\Http\Controllers\InventoryReportController;
 use App\Http\Controllers\InventoryTransferController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PettyCashController;
@@ -129,6 +130,9 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/cash-reports', [CashPositionReportController::class, 'index'])->name('cash-reports.index');
     Route::get('/cash-reports/print', [CashPositionReportController::class, 'print'])->name('cash-reports.print');
     Route::get('/cash-reports/export', [CashPositionReportController::class, 'export'])->name('cash-reports.export');
+    Route::get('/inventory-reports', [InventoryReportController::class, 'index'])->name('inventory-reports.index');
+    Route::get('/inventory-reports/print', [InventoryReportController::class, 'print'])->name('inventory-reports.print');
+    Route::get('/inventory-reports/export', [InventoryReportController::class, 'export'])->name('inventory-reports.export');
     Route::patch('/inventory-opening-balances/{inventory_opening_balance}/status', [InventoryOpeningBalanceController::class, 'transition'])->name('inventory-opening-balances.transition');
     Route::resource('inventory-opening-balances', InventoryOpeningBalanceController::class)->only(['index', 'create', 'store', 'show']);
     Route::patch('/inventory-adjustments/{inventory_adjustment}/status', [InventoryAdjustmentController::class, 'transition'])->name('inventory-adjustments.transition');
