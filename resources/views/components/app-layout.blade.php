@@ -1,5 +1,76 @@
 @props(['title'])
 
+@php
+    $navigationGroups = [
+        'Workspace' => [
+            ['Dashboard', 'dashboard', null],
+        ],
+        'Setup' => [
+            ['Fiscal Years', 'fiscal-years.index', 'fiscal-years.view'],
+            ['Sequences', 'document-sequences.index', 'document-sequences.view'],
+            ['Users', 'users.index', 'users.view'],
+            ['Settings', 'system-settings.edit', 'system-settings.view'],
+        ],
+        'Master Data' => [
+            ['Customers', 'customers.index', 'customers.view'],
+            ['Suppliers', 'suppliers.index', 'suppliers.view'],
+            ['Catalog', 'products-services.index', 'products-services.view'],
+            ['Categories', 'categories.index', 'categories.view'],
+            ['Brands', 'brands.index', 'brands.view'],
+            ['Units', 'units-of-measure.index', 'units-of-measure.view'],
+            ['Warehouses', 'warehouses.index', 'warehouses.view'],
+            ['Payment Methods', 'payment-methods.index', 'payment-methods.view'],
+            ['Banks', 'banks.index', 'banks.view'],
+        ],
+        'Sales' => [
+            ['Quotations', 'quotations.index', 'quotations.view'],
+            ['Sales Orders', 'sales-orders.index', 'sales-orders.view'],
+            ['Deliveries', 'deliveries.index', 'deliveries.view'],
+            ['Sales Invoices', 'sales-invoices.index', 'sales-invoices.view'],
+            ['Customer Payments', 'customer-payments.index', 'customer-payments.view'],
+            ['Receivables', 'receivables.index', 'receivables.view'],
+            ['Government Deductions', 'government-deductions.index', 'government-deductions.view'],
+        ],
+        'Purchasing' => [
+            ['Purchase Requests', 'purchase-requests.index', 'purchase-requests.view'],
+            ['Purchase Orders', 'purchase-orders.index', 'purchase-orders.view'],
+            ['Receiving', 'receiving-records.index', 'receiving-records.view'],
+            ['Supplier Invoices', 'supplier-invoices.index', 'supplier-invoices.view'],
+            ['Supplier Payments', 'supplier-payments.index', 'supplier-payments.view'],
+            ['Expenses', 'expenses.index', 'expenses.view'],
+            ['Payables', 'payables.index', 'payables.view'],
+        ],
+        'Cash & Banking' => [
+            ['Financial Accounts', 'financial-accounts.index', 'financial-accounts.view'],
+            ['Cash Receipts', 'cash-receipts.index', 'cash-receipts.view'],
+            ['Cash Disbursements', 'cash-disbursements.index', 'cash-disbursements.view'],
+            ['Fund Transfers', 'fund-transfers.index', 'fund-transfers.view'],
+            ['Petty Cash', 'petty-cash.index', 'petty-cash.view'],
+            ['Bank Statements', 'bank-statements.index', 'bank-statements.view'],
+            ['Reconciliation', 'bank-reconciliations.index', 'bank-reconciliation.view'],
+            ['Cash Reports', 'cash-reports.index', 'cash-reports.view'],
+        ],
+        'Inventory' => [
+            ['Opening Balances', 'inventory-opening-balances.index', 'inventory-opening-balances.view'],
+            ['Adjustments', 'inventory-adjustments.index', 'inventory-adjustments.view'],
+            ['Transfers', 'inventory-transfers.index', 'inventory-transfers.view'],
+            ['Physical Counts', 'physical-counts.index', 'physical-counts.view'],
+            ['Inventory Reports', 'inventory-reports.index', 'inventory-reports.view'],
+        ],
+        'Accounting' => [
+            ['Chart of Accounts', 'accounts.index', 'chart-of-accounts.view'],
+        ],
+    ];
+
+    $visibleNavigationGroups = collect($navigationGroups)
+        ->map(fn (array $links) => collect($links)
+            ->filter(fn (array $link) => $link[2] === null || auth()->user()->can($link[2]))
+            ->values()
+            ->all())
+        ->filter()
+        ->all();
+@endphp
+
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
@@ -9,120 +80,22 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="min-h-screen bg-slate-100 text-slate-900 antialiased">
-        <header class="border-b border-slate-200 bg-white">
-            <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 sm:px-6 lg:px-8">
-                <a href="{{ route('dashboard') }}" class="shrink-0" aria-label="Omni Mini-ERP dashboard">
+        <header class="sticky top-0 z-30 border-b border-slate-200 bg-white lg:hidden">
+            <div class="flex items-center justify-between gap-4 px-4 py-3 sm:px-6">
+                <a href="{{ route('dashboard') }}" aria-label="Omni Mini-ERP dashboard">
                     <span class="block text-sm font-semibold text-blue-700">{{ $businessDisplayName ?: config('app.name') }}</span>
                     <span class="block text-xs text-slate-500">Business workspace</span>
                 </a>
-
-                <nav class="hidden items-center gap-1 lg:flex" aria-label="Main navigation">
-                    <a href="{{ route('dashboard') }}" class="rounded-lg bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-800" aria-current="page">Dashboard</a>
-                    @can('fiscal-years.view')<a href="{{ route('fiscal-years.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Fiscal Years</a>@endcan
-                    @can('document-sequences.view')<a href="{{ route('document-sequences.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Sequences</a>@endcan
-                    @can('users.view')<a href="{{ route('users.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Users</a>@endcan
-                    @can('system-settings.view')<a href="{{ route('system-settings.edit') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Settings</a>@endcan
-                    @can('customers.view')<a href="{{ route('customers.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Customers</a>@endcan
-                    @can('suppliers.view')<a href="{{ route('suppliers.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Suppliers</a>@endcan
-                    @can('units-of-measure.view')<a href="{{ route('units-of-measure.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Units</a>@endcan
-                    @can('categories.view')<a href="{{ route('categories.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Categories</a>@endcan
-                    @can('products-services.view')<a href="{{ route('products-services.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Catalog</a>@endcan
-                    @can('brands.view')<a href="{{ route('brands.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Brands</a>@endcan
-                    @can('warehouses.view')<a href="{{ route('warehouses.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Warehouses</a>@endcan
-                    @can('payment-methods.view')<a href="{{ route('payment-methods.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Payment Methods</a>@endcan
-                    @can('banks.view')<a href="{{ route('banks.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Banks</a>@endcan
-                    @can('chart-of-accounts.view')<a href="{{ route('accounts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Chart of Accounts</a>@endcan
-                    @can('financial-accounts.view')<a href="{{ route('financial-accounts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Financial Accounts</a>@endcan
-                    @can('cash-receipts.view')<a href="{{ route('cash-receipts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Cash Receipts</a>@endcan
-                    @can('cash-disbursements.view')<a href="{{ route('cash-disbursements.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Cash Disbursements</a>@endcan
-                    @can('fund-transfers.view')<a href="{{ route('fund-transfers.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Fund Transfers</a>@endcan
-                    @can('petty-cash.view')<a href="{{ route('petty-cash.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Petty Cash</a>@endcan
-                    @can('bank-statements.view')<a href="{{ route('bank-statements.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Bank Statements</a>@endcan
-                    @can('bank-reconciliation.view')<a href="{{ route('bank-reconciliations.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Reconciliation</a>@endcan
-                    @can('cash-reports.view')<a href="{{ route('cash-reports.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Cash Reports</a>@endcan
-                    @can('quotations.view')<a href="{{ route('quotations.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Quotations</a>@endcan
-                    @can('sales-orders.view')<a href="{{ route('sales-orders.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Sales Orders</a>@endcan
-                    @can('deliveries.view')<a href="{{ route('deliveries.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Deliveries</a>@endcan
-                    @can('sales-invoices.view')<a href="{{ route('sales-invoices.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Invoices</a>@endcan
-                    @can('purchase-requests.view')<a href="{{ route('purchase-requests.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Purchase Requests</a>@endcan
-                    @can('purchase-orders.view')<a href="{{ route('purchase-orders.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Purchase Orders</a>@endcan
-                    @can('receiving-records.view')<a href="{{ route('receiving-records.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Receiving</a>@endcan
-                    @can('supplier-invoices.view')<a href="{{ route('supplier-invoices.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Supplier Invoices</a>@endcan
-                    @can('supplier-payments.view')<a href="{{ route('supplier-payments.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Supplier Payments</a>@endcan
-                    @can('expenses.view')<a href="{{ route('expenses.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Expenses</a>@endcan
-                    @can('inventory-reports.view')<a href="{{ route('inventory-reports.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Inventory Reports</a>@endcan
-                    @can('inventory-adjustments.view')<a href="{{ route('inventory-adjustments.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Inventory Adjustments</a>@else<span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">Inventory</span>@endcan
-                    @foreach (['Accounting', 'Tax Reports'] as $navigationLabel)
-                        <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
-                    @endforeach
-                </nav>
-
-                <div class="hidden items-center gap-4 sm:flex">
-                    <div class="text-right">
-                        <p class="text-sm font-medium">{{ auth()->user()->name }}</p>
-                        <p class="text-xs text-slate-500">{{ auth()->user()->email }}</p>
-                    </div>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-semibold transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-300">
-                            Sign out
-                        </button>
-                    </form>
-                </div>
-
-                <details class="relative sm:hidden">
-                    <summary class="cursor-pointer list-none rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-300">
-                        Menu
-                    </summary>
-                    <div class="absolute right-0 z-10 mt-2 w-64 rounded-xl border border-slate-200 bg-white p-3 shadow-lg">
-                        <nav class="flex flex-col gap-1" aria-label="Mobile navigation">
-                            <a href="{{ route('dashboard') }}" class="rounded-lg bg-blue-50 px-3 py-2 text-sm font-semibold text-blue-800" aria-current="page">Dashboard</a>
-                            @can('fiscal-years.view')<a href="{{ route('fiscal-years.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Fiscal Years</a>@endcan
-                            @can('document-sequences.view')<a href="{{ route('document-sequences.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Sequences</a>@endcan
-                            @can('users.view')<a href="{{ route('users.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Users</a>@endcan
-                            @can('system-settings.view')<a href="{{ route('system-settings.edit') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Settings</a>@endcan
-                            @can('customers.view')<a href="{{ route('customers.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Customers</a>@endcan
-                            @can('suppliers.view')<a href="{{ route('suppliers.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Suppliers</a>@endcan
-                            @can('units-of-measure.view')<a href="{{ route('units-of-measure.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Units</a>@endcan
-                            @can('categories.view')<a href="{{ route('categories.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Categories</a>@endcan
-                            @can('products-services.view')<a href="{{ route('products-services.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Catalog</a>@endcan
-                            @can('brands.view')<a href="{{ route('brands.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Brands</a>@endcan
-                            @can('warehouses.view')<a href="{{ route('warehouses.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Warehouses</a>@endcan
-                            @can('payment-methods.view')<a href="{{ route('payment-methods.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Payment Methods</a>@endcan
-                            @can('banks.view')<a href="{{ route('banks.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Banks</a>@endcan
-                            @can('chart-of-accounts.view')<a href="{{ route('accounts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Chart of Accounts</a>@endcan
-                            @can('financial-accounts.view')<a href="{{ route('financial-accounts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Financial Accounts</a>@endcan
-                            @can('cash-receipts.view')<a href="{{ route('cash-receipts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Cash Receipts</a>@endcan
-                            @can('cash-disbursements.view')<a href="{{ route('cash-disbursements.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Cash Disbursements</a>@endcan
-                            @can('fund-transfers.view')<a href="{{ route('fund-transfers.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Fund Transfers</a>@endcan
-                            @can('petty-cash.view')<a href="{{ route('petty-cash.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Petty Cash</a>@endcan
-                            @can('bank-statements.view')<a href="{{ route('bank-statements.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Bank Statements</a>@endcan
-                            @can('bank-reconciliation.view')<a href="{{ route('bank-reconciliations.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Reconciliation</a>@endcan
-                            @can('cash-reports.view')<a href="{{ route('cash-reports.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Cash Reports</a>@endcan
-                            @can('quotations.view')<a href="{{ route('quotations.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Quotations</a>@endcan
-                            @can('sales-orders.view')<a href="{{ route('sales-orders.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Sales Orders</a>@endcan
-                            @can('deliveries.view')<a href="{{ route('deliveries.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Deliveries</a>@endcan
-                            @can('sales-invoices.view')<a href="{{ route('sales-invoices.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Invoices</a>@endcan
-                            @can('purchase-requests.view')<a href="{{ route('purchase-requests.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Purchase Requests</a>@endcan
-                            @can('purchase-orders.view')<a href="{{ route('purchase-orders.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Purchase Orders</a>@endcan
-                            @can('receiving-records.view')<a href="{{ route('receiving-records.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Receiving</a>@endcan
-                            @can('supplier-invoices.view')<a href="{{ route('supplier-invoices.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Supplier Invoices</a>@endcan
-                            @can('supplier-payments.view')<a href="{{ route('supplier-payments.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Supplier Payments</a>@endcan
-                            @can('expenses.view')<a href="{{ route('expenses.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Expenses</a>@endcan
-                            @can('inventory-reports.view')<a href="{{ route('inventory-reports.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Inventory Reports</a>@endcan
-                            @can('inventory-adjustments.view')<a href="{{ route('inventory-adjustments.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Inventory Adjustments</a>@else<span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">Inventory</span>@endcan
-                            @foreach (['Accounting', 'Tax Reports'] as $navigationLabel)
-                                <span class="cursor-not-allowed rounded-lg px-3 py-2 text-sm text-slate-400" aria-disabled="true">{{ $navigationLabel }}</span>
-                            @endforeach
-                        </nav>
-                        <div class="mt-3 border-t border-slate-200 pt-3">
+                <details class="relative">
+                    <summary class="cursor-pointer list-none rounded-lg border border-slate-300 px-3 py-2 text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-300">Menu</summary>
+                    <div class="absolute right-0 mt-2 max-h-[calc(100vh-5rem)] w-72 overflow-y-auto rounded-xl border border-slate-200 bg-white p-3 shadow-xl">
+                        <x-navigation-menu :groups="$visibleNavigationGroups" />
+                        <div class="mt-4 border-t border-slate-200 pt-4">
                             <p class="px-3 text-sm font-medium">{{ auth()->user()->name }}</p>
                             <p class="px-3 text-xs text-slate-500">{{ auth()->user()->email }}</p>
                             <form method="POST" action="{{ route('logout') }}" class="mt-3">
                                 @csrf
-                                <button type="submit" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-left text-sm font-semibold hover:bg-slate-50">
-                                    Sign out
-                                </button>
+                                <button type="submit" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-left text-sm font-semibold hover:bg-slate-50">Sign out</button>
                             </form>
                         </div>
                     </div>
@@ -130,9 +103,33 @@
             </div>
         </header>
 
-        <main class="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-            <x-flash-messages />
-            {{ $slot }}
-        </main>
+        <div class="lg:grid lg:min-h-screen lg:grid-cols-[17rem_minmax(0,1fr)]">
+            <aside class="hidden border-r border-slate-200 bg-white lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col">
+                <div class="border-b border-slate-200 px-5 py-5">
+                    <a href="{{ route('dashboard') }}" aria-label="Omni Mini-ERP dashboard">
+                        <span class="block font-semibold text-blue-700">{{ $businessDisplayName ?: config('app.name') }}</span>
+                        <span class="block text-xs text-slate-500">Business workspace</span>
+                    </a>
+                </div>
+                <nav class="min-h-0 flex-1 overflow-y-auto p-3" aria-label="Main navigation">
+                    <x-navigation-menu :groups="$visibleNavigationGroups" />
+                </nav>
+                <div class="border-t border-slate-200 p-4">
+                    <p class="truncate text-sm font-medium">{{ auth()->user()->name }}</p>
+                    <p class="truncate text-xs text-slate-500">{{ auth()->user()->email }}</p>
+                    <form method="POST" action="{{ route('logout') }}" class="mt-3">
+                        @csrf
+                        <button type="submit" class="w-full rounded-lg border border-slate-300 px-3 py-2 text-left text-sm font-semibold hover:bg-slate-50">Sign out</button>
+                    </form>
+                </div>
+            </aside>
+
+            <main class="min-w-0 px-4 py-8 sm:px-6 lg:px-8">
+                <div class="mx-auto max-w-7xl">
+                    <x-flash-messages />
+                    {{ $slot }}
+                </div>
+            </main>
+        </div>
     </body>
 </html>
