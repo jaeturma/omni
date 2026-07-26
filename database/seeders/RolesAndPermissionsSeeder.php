@@ -21,7 +21,8 @@ class RolesAndPermissionsSeeder extends Seeder
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
         Permission::query()->whereIn('name', ['business-profile.manage', 'tax-profile.manage', 'system-settings.manage', 'quotations.issue', 'deliveries.update',
-            'bank-reconciliations.view', 'bank-reconciliations.create', 'bank-reconciliations.complete', 'bank-reconciliations.reopen'])->where('guard_name', 'web')->delete();
+            'bank-reconciliations.view', 'bank-reconciliations.create', 'bank-reconciliations.complete', 'bank-reconciliations.reopen',
+            'posting-rules.manage'])->where('guard_name', 'web')->delete();
         $permissions = [
             'business-profile.view', 'business-profile.update', 'tax-profile.view', 'tax-profile.update', 'tax-rates.manage',
             'fiscal-years.view', 'fiscal-years.create', 'fiscal-periods.manage', 'fiscal-periods.close', 'fiscal-periods.lock',

@@ -31,14 +31,15 @@ final class AccountingWorkflow
         'chart-of-accounts.view', 'chart-of-accounts.create', 'chart-of-accounts.update', 'chart-of-accounts.activate',
         'chart-of-accounts.deactivate', 'chart-of-accounts.view-balances',
         'journals.view', 'journals.create', 'journals.update', 'journals.post', 'journals.reverse', 'journals.void', 'journals.view-sensitive',
-        'posting-rules.view', 'posting-rules.manage', 'accounting-posting.post', 'accounting-posting.reverse',
+        'posting-rules.view', 'posting-rules.create', 'posting-rules.update', 'posting-rules.activate',
+        'posting-rules.deactivate', 'posting-rules.preview', 'accounting-posting.post', 'accounting-posting.reverse',
         'general-ledger.view', 'general-ledger.export', 'trial-balance.view', 'trial-balance.export',
         'subledger-reconciliation.view', 'accounting-periods.close', 'accounting-periods.lock', 'accounting-periods.reopen',
     ];
 
     public const ENCODER_PERMISSIONS = [
         'chart-of-accounts.view', 'journals.view', 'journals.create', 'journals.update',
-        'posting-rules.view', 'general-ledger.view', 'trial-balance.view', 'subledger-reconciliation.view',
+        'posting-rules.view', 'posting-rules.preview', 'general-ledger.view', 'trial-balance.view', 'subledger-reconciliation.view',
     ];
 
     public const VIEW_PERMISSIONS = [

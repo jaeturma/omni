@@ -2,7 +2,7 @@
 
 ## Objective
 
-Create balanced journal entries and lines with draft, posted, reversed, and voided lifecycle controls.
+Create balanced journal entries and lines with draft, posted, and voided lifecycle controls. Reserve the reversal metadata needed by WP-07-06, but do not implement reversal operations in this work package.
 
 ## Read First
 
@@ -64,6 +64,7 @@ Create journal-entry headers and lines containing:
 - Controlled manual entries require permission.
 - Source links are unique where automatic posting applies.
 - Do not permit hard deletion of posted entries.
+- Reversal columns and status values are schema foundations only; reversal creation, transitions, authorization behavior, and tests belong to WP-07-06.
 
 ## Permissions
 
@@ -71,7 +72,7 @@ Create journal-entry headers and lines containing:
 - journals.create
 - journals.update
 - journals.post
-- journals.reverse
+- journals.reverse (registered for later use by WP-07-06)
 - journals.void
 - journals.view-sensitive
 
@@ -89,7 +90,7 @@ Create journal-entry headers and lines containing:
 ## Acceptance Criteria
 
 1. Journal entries and lines are balanced.
-2. Lifecycle controls are enforced.
+2. Draft, posted, and voided lifecycle controls are enforced; reversal metadata is ready for WP-07-06.
 3. Source links and posting periods are validated.
 4. Posted entries are immutable.
 5. Tests and fresh migrations pass.
@@ -99,7 +100,7 @@ Create journal-entry headers and lines containing:
 - Follow `AGENTS.md`.
 - Use Laravel 13, Blade, Form Requests, policies, services/actions, and focused Pest tests.
 - Use decimal-safe calculations and balanced-entry validation.
-- Use database transactions and row locking for posting, reversal, closing, and reopening.
+- Use database transactions and row locking for posting. Reversal, closing, and reopening operations are implemented by their dedicated later work packages.
 - Never hard-delete posted journal entries or ledger-affecting source links.
 - Preserve source transaction references, posting metadata, and user attribution.
 - Do not implement final financial statements, BIR return filing, payroll, fixed-asset depreciation, or consolidation.

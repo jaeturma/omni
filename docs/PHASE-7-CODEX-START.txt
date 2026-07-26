@@ -4,10 +4,10 @@ Copy the included `docs` folder into the root of the existing Laravel project.
 
 Execute the work packages one at a time:
 
-1. WP-07-01-accounting-settings-conventions.md
-2. WP-07-02-chart-of-accounts.md
-3. WP-07-03-journal-entries-lines.md
-4. WP-07-04-posting-rules-account-mapping.md
+1. WP-07-01-accounting-settings-conventions.md - ok
+2. WP-07-02-chart-of-accounts.md - ok
+3. WP-07-03-journal-entries-lines.md - ok
+4. WP-07-04-posting-rules-account-mapping.md - ok
 5. WP-07-05-automatic-source-posting.md
 6. WP-07-06-reversals-adjusting-entries.md
 7. WP-07-07-general-ledger-account-activity.md

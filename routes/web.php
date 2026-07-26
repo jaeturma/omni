@@ -33,6 +33,7 @@ use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PettyCashController;
 use App\Http\Controllers\PhysicalCountController;
+use App\Http\Controllers\PostingRuleController;
 use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseRequestController;
@@ -98,6 +99,9 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::resource('accounts', AccountController::class)->except(['show', 'destroy']);
     Route::patch('/journal-entries/{journal_entry}/status', [JournalEntryController::class, 'transition'])->name('journal-entries.transition');
     Route::resource('journal-entries', JournalEntryController::class)->except('destroy');
+    Route::post('/posting-rules/preview', [PostingRuleController::class, 'preview'])->name('posting-rules.preview');
+    Route::patch('/posting-rules/{posting_rule}/status', [PostingRuleController::class, 'status'])->name('posting-rules.status');
+    Route::resource('posting-rules', PostingRuleController::class)->except(['show', 'destroy']);
     Route::resource('products-services', ProductServiceController::class)
         ->parameters(['products-services' => 'product_service'])
         ->except('show');

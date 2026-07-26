@@ -1,0 +1,26 @@
+@php($editing = isset($postingRule))
+<x-app-layout :title="$editing ? 'Edit Posting Rule' : 'Create Posting Rule'">
+    <x-page-header :title="$editing ? 'Edit Posting Rule' : 'Create Posting Rule'" description="Blank dimensions create an explicit fallback; populated dimensions make the rule more specific." />
+    <form method="POST" action="{{ $editing ? route('posting-rules.update', $postingRule) : route('posting-rules.store') }}" class="grid gap-5 rounded-2xl bg-white p-6 ring-1 ring-slate-200 md:grid-cols-2">
+        @csrf
+        @if($editing) @method('PUT') @endif
+        <label class="grid gap-1 text-sm">Rule name<input name="name" required value="{{ old('name', $postingRule->name ?? '') }}" class="rounded-lg border-slate-300">@error('name')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Source type<select name="source_type" required class="rounded-lg border-slate-300">@foreach($sourceTypes as $sourceType)<option value="{{ $sourceType->value }}" @selected(old('source_type', isset($postingRule) ? $postingRule->source_type->value : '') === $sourceType->value)>{{ str($sourceType->value)->replace('_', ' ')->title() }}</option>@endforeach</select>@error('source_type')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        @foreach(['debit_account_id' => 'Debit account', 'credit_account_id' => 'Credit account'] as $field => $label)
+            <label class="grid gap-1 text-sm">{{ $label }}<select name="{{ $field }}" required class="rounded-lg border-slate-300"><option value="">Select account</option>@foreach($accounts as $account)<option value="{{ $account->id }}" @selected(old($field, $postingRule->{$field} ?? '') == $account->id)>{{ $account->code }} — {{ $account->name }}</option>@endforeach</select>@error($field)<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        @endforeach
+        <label class="grid gap-1 text-sm">Effective from<input type="date" name="effective_from" required value="{{ old('effective_from', isset($postingRule) ? $postingRule->effective_from->toDateString() : now()->toDateString()) }}" class="rounded-lg border-slate-300">@error('effective_from')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+        <label class="grid gap-1 text-sm">Effective to<input type="date" name="effective_to" value="{{ old('effective_to', isset($postingRule) ? $postingRule->effective_to?->toDateString() : '') }}" class="rounded-lg border-slate-300">@error('effective_to')<span class="text-red-600">{{ $message }}</span>@enderror</label>
+
+        <h2 class="border-t border-slate-200 pt-5 font-semibold md:col-span-2">Optional matching dimensions</h2>
+        <label class="grid gap-1 text-sm">Product category<select name="product_category_id" class="rounded-lg border-slate-300"><option value="">Any</option>@foreach($productCategories as $category)<option value="{{ $category->id }}" @selected(old('product_category_id', $postingRule->product_category_id ?? '') == $category->id)>{{ $category->name }}</option>@endforeach</select></label>
+        <label class="grid gap-1 text-sm">Service category<select name="service_category_id" class="rounded-lg border-slate-300"><option value="">Any</option>@foreach($serviceCategories as $category)<option value="{{ $category->id }}" @selected(old('service_category_id', $postingRule->service_category_id ?? '') == $category->id)>{{ $category->name }}</option>@endforeach</select></label>
+        <label class="grid gap-1 text-sm">Expense category code<input name="expense_category" value="{{ old('expense_category', $postingRule->expense_category ?? '') }}" class="rounded-lg border-slate-300"></label>
+        <label class="grid gap-1 text-sm">Customer type code<input name="customer_type" value="{{ old('customer_type', $postingRule->customer_type ?? '') }}" class="rounded-lg border-slate-300"></label>
+        <label class="grid gap-1 text-sm">Supplier type code<input name="supplier_type" value="{{ old('supplier_type', $postingRule->supplier_type ?? '') }}" class="rounded-lg border-slate-300"></label>
+        <label class="grid gap-1 text-sm">Tax code<input name="tax_code" value="{{ old('tax_code', $postingRule->tax_code ?? '') }}" class="rounded-lg border-slate-300"></label>
+        <label class="grid gap-1 text-sm">Financial account<select name="financial_account_id" class="rounded-lg border-slate-300"><option value="">Any</option>@foreach($financialAccounts as $account)<option value="{{ $account->id }}" @selected(old('financial_account_id', $postingRule->financial_account_id ?? '') == $account->id)>{{ $account->code }} — {{ $account->name }}</option>@endforeach</select></label>
+        <label class="grid gap-1 text-sm">Warehouse<select name="warehouse_id" class="rounded-lg border-slate-300"><option value="">Any</option>@foreach($warehouses as $warehouse)<option value="{{ $warehouse->id }}" @selected(old('warehouse_id', $postingRule->warehouse_id ?? '') == $warehouse->id)>{{ $warehouse->code }} — {{ $warehouse->name }}</option>@endforeach</select></label>
+        <div class="md:col-span-2"><button class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white">Save posting rule</button></div>
+    </form>
+</x-app-layout>
