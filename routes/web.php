@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AccountsPayableReportController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -92,6 +93,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
         ->parameters(['units-of-measure' => 'unit_of_measure'])
         ->except('show');
     Route::resource('categories', CategoryController::class)->except('show');
+    Route::patch('/accounts/{account}/status', [AccountController::class, 'status'])->name('accounts.status');
+    Route::resource('accounts', AccountController::class)->except(['show', 'destroy']);
     Route::resource('products-services', ProductServiceController::class)
         ->parameters(['products-services' => 'product_service'])
         ->except('show');

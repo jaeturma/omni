@@ -28,7 +28,8 @@ final class AccountingWorkflow
     public const OWNER_DRAWINGS_TYPE = AccountType::OwnerDrawings;
 
     public const PERMISSIONS = [
-        'chart-of-accounts.view', 'chart-of-accounts.create', 'chart-of-accounts.update', 'chart-of-accounts.deactivate',
+        'chart-of-accounts.view', 'chart-of-accounts.create', 'chart-of-accounts.update', 'chart-of-accounts.activate',
+        'chart-of-accounts.deactivate', 'chart-of-accounts.view-balances',
         'journal-entries.view', 'journal-entries.create', 'journal-entries.update', 'journal-entries.post', 'journal-entries.reverse',
         'posting-rules.view', 'posting-rules.manage', 'accounting-posting.post', 'accounting-posting.reverse',
         'general-ledger.view', 'general-ledger.export', 'trial-balance.view', 'trial-balance.export',

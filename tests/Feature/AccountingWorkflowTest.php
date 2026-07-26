@@ -82,8 +82,10 @@ test('phase seven permissions are seeded by role', function () {
         ->and(Role::findByName('Viewer')->hasPermissionTo('journal-entries.post'))->toBeFalse();
 });
 
-test('accounting conventions create no account journal or ledger records', function () {
-    foreach (['accounts', 'chart_of_accounts', 'journal_entries', 'journal_entry_lines', 'posting_rules',
+test('chart setup creates no journal or ledger records', function () {
+    expect(Schema::hasTable('accounts'))->toBeTrue();
+
+    foreach (['chart_of_accounts', 'journal_entries', 'journal_entry_lines', 'posting_rules',
         'general_ledgers', 'trial_balances', 'financial_statements', 'tax_returns'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }

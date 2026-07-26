@@ -31,6 +31,7 @@
                     @can('warehouses.view')<a href="{{ route('warehouses.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Warehouses</a>@endcan
                     @can('payment-methods.view')<a href="{{ route('payment-methods.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Payment Methods</a>@endcan
                     @can('banks.view')<a href="{{ route('banks.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Banks</a>@endcan
+                    @can('chart-of-accounts.view')<a href="{{ route('accounts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Chart of Accounts</a>@endcan
                     @can('financial-accounts.view')<a href="{{ route('financial-accounts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Financial Accounts</a>@endcan
                     @can('cash-receipts.view')<a href="{{ route('cash-receipts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Cash Receipts</a>@endcan
                     @can('cash-disbursements.view')<a href="{{ route('cash-disbursements.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Cash Disbursements</a>@endcan
@@ -89,6 +90,7 @@
                             @can('warehouses.view')<a href="{{ route('warehouses.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Warehouses</a>@endcan
                             @can('payment-methods.view')<a href="{{ route('payment-methods.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Payment Methods</a>@endcan
                             @can('banks.view')<a href="{{ route('banks.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Banks</a>@endcan
+                            @can('chart-of-accounts.view')<a href="{{ route('accounts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Chart of Accounts</a>@endcan
                             @can('financial-accounts.view')<a href="{{ route('financial-accounts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Financial Accounts</a>@endcan
                             @can('cash-receipts.view')<a href="{{ route('cash-receipts.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Cash Receipts</a>@endcan
                             @can('cash-disbursements.view')<a href="{{ route('cash-disbursements.index') }}" class="rounded-lg px-3 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-100">Cash Disbursements</a>@endcan
