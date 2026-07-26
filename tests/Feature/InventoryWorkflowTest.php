@@ -3,6 +3,7 @@
 use App\Enums\InventoryMovementStatus;
 use App\Enums\InventoryMovementType;
 use App\Models\DocumentSequence;
+use App\Models\JournalEntry;
 use App\Models\ProductService;
 use App\Support\InventoryWorkflow;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -69,11 +70,13 @@ test('phase six permissions are seeded by role', function () {
         ->and(Role::findByName('Viewer')->hasPermissionTo('inventory-movements.post'))->toBeFalse();
 });
 
-test('opening balance foundations exist without future costing or journal tables', function () {
+test('opening balance foundations exist without future costing or journal effects', function () {
     expect(Schema::hasTable('inventory_movements'))->toBeTrue()
         ->and(Schema::hasTable('inventory_balances'))->toBeTrue();
 
-    foreach (['inventory_cost_layers', 'journal_entries', 'journal_entry_lines'] as $table) {
+    expect(JournalEntry::query()->count())->toBe(0);
+
+    foreach (['inventory_cost_layers'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }
 });

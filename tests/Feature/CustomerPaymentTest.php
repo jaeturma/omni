@@ -9,6 +9,7 @@ use App\Models\CustomerPayment;
 use App\Models\DocumentSequence;
 use App\Models\FiscalPeriod;
 use App\Models\FiscalYear;
+use App\Models\JournalEntry;
 use App\Models\PaymentAllocation;
 use App\Models\PaymentMethod;
 use App\Models\SalesInvoice;
@@ -133,5 +134,5 @@ test('validation authorization and prohibited downstream effects are enforced', 
     $viewer->assignRole('Viewer');
     $this->actingAs($viewer)->get(route('customer-payments.index'))->assertSuccessful();
     $this->actingAs($viewer)->post(route('customer-payments.store'), paymentData($fixture))->assertForbidden();
-    expect(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('tax_returns'))->toBeFalse();
+    expect(JournalEntry::query()->count())->toBe(0)->and(Schema::hasTable('tax_returns'))->toBeFalse();
 });

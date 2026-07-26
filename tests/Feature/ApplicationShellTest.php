@@ -17,7 +17,7 @@ test('authenticated users see the application shell', function () {
         ->assertSee('Sign out');
 });
 
-test('the shell shows placeholders only for modules not yet implemented', function () {
+test('the shell hides unauthorized and future modules', function () {
     $user = User::factory()->create();
 
     $response = $this->actingAs($user)->get(route('dashboard'));
@@ -25,9 +25,9 @@ test('the shell shows placeholders only for modules not yet implemented', functi
     $response->assertSuccessful()
         ->assertDontSee('Purchases')
         ->assertDontSee('Expenses')
-        ->assertSee('Inventory')
-        ->assertSee('Accounting')
-        ->assertSee('Tax Reports');
+        ->assertDontSee('Inventory')
+        ->assertDontSee('Accounting')
+        ->assertDontSee('Tax Reports');
 });
 
 test('the shell renders success flash messages', function () {

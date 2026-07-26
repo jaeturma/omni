@@ -5,6 +5,7 @@ use App\Enums\CashTransactionType;
 use App\Enums\FinancialAccountType;
 use App\Enums\ReconciliationState;
 use App\Models\DocumentSequence;
+use App\Models\JournalEntry;
 use App\Support\CashBankWorkflow;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -69,7 +70,5 @@ test('cash documents map to controlled sequence codes while future operational r
         ->and(Schema::hasTable('bank_reconciliations'))->toBeTrue()
         ->and(Schema::hasTable('bank_reconciliation_matches'))->toBeTrue();
 
-    foreach (['journal_entries'] as $table) {
-        expect(Schema::hasTable($table))->toBeFalse();
-    }
+    expect(JournalEntry::query()->count())->toBe(0);
 });

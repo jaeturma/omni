@@ -9,6 +9,7 @@ use App\Models\DeliveryLine;
 use App\Models\DocumentSequence;
 use App\Models\FiscalPeriod;
 use App\Models\FiscalYear;
+use App\Models\JournalEntry;
 use App\Models\SalesInvoice;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderLine;
@@ -100,5 +101,5 @@ test('invoice authorization printing and prohibited downstream effects are enfor
     $this->actingAs($viewer)->get(route('sales-invoices.print', $invoice))->assertSuccessful();
     $this->actingAs($viewer)->post(route('sales-invoices.store'), directInvoiceData($fixture))->assertForbidden();
     $this->actingAs($viewer)->patch(route('sales-invoices.transition', $invoice), ['status' => 'posted'])->assertForbidden();
-    expect(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('tax_returns'))->toBeFalse();
+    expect(JournalEntry::query()->count())->toBe(0)->and(Schema::hasTable('tax_returns'))->toBeFalse();
 });

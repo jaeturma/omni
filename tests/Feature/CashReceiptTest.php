@@ -9,6 +9,7 @@ use App\Models\DocumentSequence;
 use App\Models\FinancialAccount;
 use App\Models\FiscalPeriod;
 use App\Models\FiscalYear;
+use App\Models\JournalEntry;
 use App\Models\PaymentMethod;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -98,5 +99,5 @@ test('validation authorization and downstream boundaries are enforced', function
     $viewer->assignRole('Viewer');
     $this->actingAs($viewer)->get(route('cash-receipts.index'))->assertOk();
     $this->post(route('cash-receipts.store'), receiptData($f))->assertForbidden();
-    expect(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('bank_reconciliations'))->toBeTrue();
+    expect(JournalEntry::query()->count())->toBe(0)->and(Schema::hasTable('bank_reconciliations'))->toBeTrue();
 });

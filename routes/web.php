@@ -29,6 +29,7 @@ use App\Http\Controllers\InventoryAdjustmentController;
 use App\Http\Controllers\InventoryOpeningBalanceController;
 use App\Http\Controllers\InventoryReportController;
 use App\Http\Controllers\InventoryTransferController;
+use App\Http\Controllers\JournalEntryController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PettyCashController;
 use App\Http\Controllers\PhysicalCountController;
@@ -95,6 +96,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::resource('categories', CategoryController::class)->except('show');
     Route::patch('/accounts/{account}/status', [AccountController::class, 'status'])->name('accounts.status');
     Route::resource('accounts', AccountController::class)->except(['show', 'destroy']);
+    Route::patch('/journal-entries/{journal_entry}/status', [JournalEntryController::class, 'transition'])->name('journal-entries.transition');
+    Route::resource('journal-entries', JournalEntryController::class)->except('destroy');
     Route::resource('products-services', ProductServiceController::class)
         ->parameters(['products-services' => 'product_service'])
         ->except('show');

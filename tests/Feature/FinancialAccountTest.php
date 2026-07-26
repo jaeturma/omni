@@ -5,6 +5,7 @@ use App\Enums\CashTransactionType;
 use App\Enums\FinancialAccountType;
 use App\Models\CashTransaction;
 use App\Models\FinancialAccount;
+use App\Models\JournalEntry;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -101,7 +102,5 @@ test('authorization is enforced without secrets or future operational tables', f
         ->and(Schema::hasTable('bank_statement_imports'))->toBeTrue()
         ->and(Schema::hasTable('bank_statement_lines'))->toBeTrue()
         ->and(Schema::hasTable('bank_reconciliations'))->toBeTrue();
-    foreach (['journal_entries'] as $table) {
-        expect(Schema::hasTable($table))->toBeFalse();
-    }
+    expect(JournalEntry::query()->count())->toBe(0);
 });

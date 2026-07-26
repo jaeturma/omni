@@ -9,6 +9,7 @@ use App\Models\DocumentSequence;
 use App\Models\FiscalYear;
 use App\Models\InventoryBalance;
 use App\Models\InventoryMovement;
+use App\Models\JournalEntry;
 use App\Models\SalesInvoice;
 use App\Models\SalesOrder;
 use App\Models\SalesOrderLine;
@@ -82,7 +83,7 @@ test('delivery lifecycle authorization print and prohibited effects are enforced
     $this->actingAs($f['u'])->patch(route('deliveries.transition', $d), ['status' => 'released']);
     $this->actingAs($f['u'])->patch(route('deliveries.transition', $d), ['status' => 'delivered', 'received_by_name' => 'Juan', 'received_at' => '2026-07-16 10:00'])->assertSessionHasNoErrors();
     $this->actingAs($f['u'])->patch(route('deliveries.transition', $d), ['status' => 'accepted', 'acceptance_notes' => 'Complete'])->assertSessionHasNoErrors();
-    expect($d->fresh()->status)->toBe(DeliveryStatus::Accepted)->and(InventoryMovement::count())->toBe(1)->and(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('sales_invoices'))->toBeTrue()->and(SalesInvoice::count())->toBe(0);
+    expect($d->fresh()->status)->toBe(DeliveryStatus::Accepted)->and(InventoryMovement::count())->toBe(1)->and(JournalEntry::query()->count())->toBe(0)->and(Schema::hasTable('sales_invoices'))->toBeTrue()->and(SalesInvoice::count())->toBe(0);
 });
 
 test('delivered quantities issue stock once and preserve source and cost', function () {

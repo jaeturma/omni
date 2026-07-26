@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\DocumentSequence;
 use App\Models\FiscalYear;
 use App\Models\InventoryMovement;
+use App\Models\JournalEntry;
 use App\Models\ProductService;
 use App\Models\Quotation;
 use App\Models\QuotationLine;
@@ -82,5 +83,5 @@ test('authorization and cancellation reason are enforced without downstream effe
     $this->actingAs($viewer)->post(route('sales-orders.store'), orderData($f))->assertForbidden();
     $this->actingAs($f['u'])->patch(route('sales-orders.transition', $o), ['status' => 'cancelled'])->assertSessionHasErrors('reason');
     $this->actingAs($f['u'])->patch(route('sales-orders.transition', $o), ['status' => 'cancelled', 'reason' => 'Customer cancelled'])->assertSessionHasNoErrors();
-    expect($o->fresh()->cancellation_reason)->toBe('Customer cancelled')->and(InventoryMovement::count())->toBe(0)->and(Schema::hasTable('sales_invoices'))->toBeTrue()->and(SalesInvoice::count())->toBe(0)->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect($o->fresh()->cancellation_reason)->toBe('Customer cancelled')->and(InventoryMovement::count())->toBe(0)->and(Schema::hasTable('sales_invoices'))->toBeTrue()->and(SalesInvoice::count())->toBe(0)->and(JournalEntry::query()->count())->toBe(0);
 });

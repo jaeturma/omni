@@ -9,6 +9,7 @@ use App\Models\DocumentSequence;
 use App\Models\FiscalYear;
 use App\Models\InventoryBalance;
 use App\Models\InventoryMovement;
+use App\Models\JournalEntry;
 use App\Models\ProductService;
 use App\Models\PurchaseOrder;
 use App\Models\ReceivingRecord;
@@ -19,7 +20,6 @@ use App\Models\User;
 use App\Models\Warehouse;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Validation\ValidationException;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -110,7 +110,7 @@ test('receiving access and status actions are authorized and printable', functio
 test('receiving creates no inventory valuation payable or journal effects', function () {
     $f = receivingFixtures();
     createReceiving($this, $f, '1.0000', '1.0000');
-    expect(InventoryMovement::count())->toBe(0)->and(InventoryBalance::count())->toBe(0)->and(SupplierInvoice::query()->count())->toBe(0)->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(InventoryMovement::count())->toBe(0)->and(InventoryBalance::count())->toBe(0)->and(SupplierInvoice::query()->count())->toBe(0)->and(JournalEntry::query()->count())->toBe(0);
 });
 
 test('accepted and partial quantities post once with source traceability', function () {
@@ -198,5 +198,5 @@ test('inventory receipt posting does not create journal entries', function () {
     $this->patch(route('receiving-records.transition', $record), ['status' => 'accepted']);
 
     expect(InventoryMovement::query()->count())->toBe(1)
-        ->and(Schema::hasTable('journal_entries'))->toBeFalse();
+        ->and(JournalEntry::query()->count())->toBe(0);
 });

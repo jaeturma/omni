@@ -1,0 +1,8 @@
+<x-app-layout title="Journal Entries">
+    <x-page-header title="Journal Entries" description="Create, review, and post controlled double-entry journals." />
+    <div class="mb-5 flex justify-end">@can('create', \App\Models\JournalEntry::class)<a href="{{ route('journal-entries.create') }}" class="rounded-lg bg-blue-700 px-4 py-2 text-sm font-semibold text-white">Create journal</a>@endcan</div>
+    <div class="overflow-x-auto rounded-2xl bg-white shadow-sm ring-1 ring-slate-200"><table class="min-w-full divide-y divide-slate-200 text-sm">
+        <thead class="bg-slate-50 text-left text-slate-600"><tr><th class="px-6 py-3">Number</th><th class="px-6 py-3">Date</th><th class="px-6 py-3">Description</th><th class="px-6 py-3 text-right">Debit</th><th class="px-6 py-3 text-right">Credit</th><th class="px-6 py-3">Status</th></tr></thead>
+        <tbody class="divide-y divide-slate-100">@forelse($entries as $entry)<tr><td class="px-6 py-4"><a class="font-mono font-semibold text-blue-700" href="{{ route('journal-entries.show', $entry) }}">{{ $entry->journal_number }}</a></td><td class="px-6 py-4">{{ $entry->journal_date->format('Y-m-d') }}</td><td class="px-6 py-4">{{ $entry->description }}</td><td class="px-6 py-4 text-right font-mono">{{ $entry->total_debit }}</td><td class="px-6 py-4 text-right font-mono">{{ $entry->total_credit }}</td><td class="px-6 py-4 capitalize">{{ $entry->status->value }}</td></tr>@empty<tr><td colspan="6" class="px-6 py-8 text-center text-slate-500">No journal entries found.</td></tr>@endforelse</tbody>
+    </table></div><div class="mt-6">{{ $entries->links() }}</div>
+</x-app-layout>

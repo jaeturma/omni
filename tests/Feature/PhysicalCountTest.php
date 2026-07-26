@@ -8,6 +8,7 @@ use App\Models\FiscalPeriod;
 use App\Models\FiscalYear;
 use App\Models\InventoryBalance;
 use App\Models\InventoryMovement;
+use App\Models\JournalEntry;
 use App\Models\PhysicalCount;
 use App\Models\ProductService;
 use App\Models\User;
@@ -15,7 +16,6 @@ use App\Models\Warehouse;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Schema;
 
 uses(LazilyRefreshDatabase::class);
 
@@ -244,5 +244,5 @@ test('authorization separates physical count responsibilities', function () {
 });
 
 test('physical counts do not create accounting records', function () {
-    expect(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(JournalEntry::query()->count())->toBe(0);
 });

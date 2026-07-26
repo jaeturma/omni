@@ -6,6 +6,7 @@ use App\Enums\SalesInvoiceStatus;
 use App\Models\Customer;
 use App\Models\CustomerPayment;
 use App\Models\FiscalPeriod;
+use App\Models\JournalEntry;
 use App\Models\PaymentAllocation;
 use App\Models\PaymentMethod;
 use App\Models\SalesInvoice;
@@ -144,5 +145,5 @@ test('report validation and all three permissions are enforced without a ledger'
     $viewer->assignRole('Viewer');
     $this->actingAs($viewer)->get(route('receivables.index', ['as_of' => 'invalid']))->assertSessionHasErrors('as_of');
     $this->actingAs($viewer)->get(route('receivables.export', ['as_of' => '2026-07-31']))->assertForbidden();
-    expect(Schema::hasTable('receivable_ledgers'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(Schema::hasTable('receivable_ledgers'))->toBeFalse()->and(JournalEntry::query()->count())->toBe(0);
 });

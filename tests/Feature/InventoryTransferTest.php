@@ -9,12 +9,12 @@ use App\Models\FiscalYear;
 use App\Models\InventoryBalance;
 use App\Models\InventoryMovement;
 use App\Models\InventoryTransfer;
+use App\Models\JournalEntry;
 use App\Models\ProductService;
 use App\Models\User;
 use App\Models\Warehouse;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
-use Illuminate\Support\Facades\Schema;
 
 uses(LazilyRefreshDatabase::class);
 
@@ -260,5 +260,5 @@ test('authorization separates view create approve release receive and void abili
 });
 
 test('warehouse transfers do not create accounting records', function () {
-    expect(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(JournalEntry::query()->count())->toBe(0);
 });

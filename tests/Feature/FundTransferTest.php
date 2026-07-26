@@ -10,6 +10,7 @@ use App\Models\FinancialAccount;
 use App\Models\FiscalPeriod;
 use App\Models\FiscalYear;
 use App\Models\FundTransfer;
+use App\Models\JournalEntry;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -143,7 +144,7 @@ test('authorization and downstream boundaries are enforced', function () {
     $this->actingAs($viewer)->get(route('fund-transfers.index'))->assertOk();
     $this->post(route('fund-transfers.store'), fundTransferData($fixture))->assertForbidden();
     expect(Schema::hasTable('cash_transactions'))->toBeTrue()
-        ->and(Schema::hasTable('journal_entries'))->toBeFalse()
+        ->and(JournalEntry::query()->count())->toBe(0)
         ->and(Schema::hasTable('bank_reconciliations'))->toBeTrue();
 });
 

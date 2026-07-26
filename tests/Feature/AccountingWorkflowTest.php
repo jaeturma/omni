@@ -79,13 +79,15 @@ test('phase seven permissions are seeded by role', function () {
         ->and(Role::findByName('Bookkeeper')->hasAllPermissions(AccountingWorkflow::PERMISSIONS))->toBeTrue()
         ->and(Role::findByName('Encoder')->hasAllPermissions(AccountingWorkflow::ENCODER_PERMISSIONS))->toBeTrue()
         ->and(Role::findByName('Viewer')->hasAllPermissions(AccountingWorkflow::VIEW_PERMISSIONS))->toBeTrue()
-        ->and(Role::findByName('Viewer')->hasPermissionTo('journal-entries.post'))->toBeFalse();
+        ->and(Role::findByName('Viewer')->hasPermissionTo('journals.post'))->toBeFalse();
 });
 
-test('chart setup creates no journal or ledger records', function () {
+test('journal setup creates no posting rules or ledger records', function () {
     expect(Schema::hasTable('accounts'))->toBeTrue();
+    expect(Schema::hasTable('journal_entries'))->toBeTrue();
+    expect(Schema::hasTable('journal_entry_lines'))->toBeTrue();
 
-    foreach (['chart_of_accounts', 'journal_entries', 'journal_entry_lines', 'posting_rules',
+    foreach (['chart_of_accounts', 'posting_rules',
         'general_ledgers', 'trial_balances', 'financial_statements', 'tax_returns'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }

@@ -57,8 +57,12 @@ test('all phase six permissions remain seeded', function () {
         ->toBe(count(InventoryWorkflow::PERMISSIONS));
 });
 
-test('phase seven and prohibited downstream tables do not exist', function () {
-    foreach (['chart_of_accounts', 'journal_entries', 'general_ledgers', 'trial_balances',
+test('phase seven foundations exist while prohibited downstream tables do not', function () {
+    expect(Schema::hasTable('accounts'))->toBeTrue()
+        ->and(Schema::hasTable('journal_entries'))->toBeTrue()
+        ->and(Schema::hasTable('journal_entry_lines'))->toBeTrue();
+
+    foreach (['chart_of_accounts', 'general_ledgers', 'trial_balances',
         'financial_statements', 'tax_returns', 'payroll_runs', 'fixed_assets'] as $table) {
         expect(Schema::hasTable($table))->toBeFalse();
     }

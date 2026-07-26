@@ -59,6 +59,7 @@
         ],
         'Accounting' => [
             ['Chart of Accounts', 'accounts.index', 'chart-of-accounts.view'],
+            ['Journal Entries', 'journal-entries.index', 'journals.view'],
         ],
     ];
 

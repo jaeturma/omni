@@ -7,6 +7,7 @@ use App\Models\BusinessProfile;
 use App\Models\DocumentSequence;
 use App\Models\FiscalPeriod;
 use App\Models\FiscalYear;
+use App\Models\JournalEntry;
 use App\Models\PurchaseOrder;
 use App\Models\ReceivingRecord;
 use App\Models\Supplier;
@@ -106,5 +107,5 @@ test('supplier invoice access is authorized and printable', function () {
 test('supplier invoices create no journal entries or tax returns', function () {
     $f = supplierInvoiceFixtures();
     saveSupplierInvoice($this, $f);
-    expect(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('tax_returns'))->toBeFalse()->and(SupplierPayment::query()->count())->toBe(0);
+    expect(JournalEntry::query()->count())->toBe(0)->and(Schema::hasTable('tax_returns'))->toBeFalse()->and(SupplierPayment::query()->count())->toBe(0);
 });

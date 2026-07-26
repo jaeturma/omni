@@ -10,6 +10,7 @@ use App\Models\DocumentSequence;
 use App\Models\FinancialAccount;
 use App\Models\FiscalPeriod;
 use App\Models\FiscalYear;
+use App\Models\JournalEntry;
 use App\Models\PettyCashFund;
 use App\Models\PettyCashReplenishment;
 use App\Models\PettyCashVoucher;
@@ -201,6 +202,6 @@ test('authorization and downstream boundaries are enforced', function () {
         'financial_account_id' => $fixture['account']->id, 'custodian_id' => $viewer->id, 'approved_fund_limit' => '1000.0000',
     ])->assertForbidden();
     expect(Schema::hasTable('petty_cash_funds'))->toBeTrue()
-        ->and(Schema::hasTable('journal_entries'))->toBeFalse()
+        ->and(JournalEntry::query()->count())->toBe(0)
         ->and(Schema::hasTable('bank_reconciliations'))->toBeTrue();
 });

@@ -6,6 +6,7 @@ use App\Models\Category;
 use App\Models\DocumentSequence;
 use App\Models\FiscalYear;
 use App\Models\InventoryMovement;
+use App\Models\JournalEntry;
 use App\Models\ProductService;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequest;
@@ -118,5 +119,5 @@ test('purchase request and canvass actions are authorized', function () {
 
 test('purchase requests create no purchase order payable stock or journal records', function () {
     createPurchaseRequest($this);
-    expect(Schema::hasTable('purchase_orders'))->toBeTrue()->and(PurchaseOrder::count())->toBe(0)->and(SupplierInvoice::count())->toBe(0)->and(InventoryMovement::count())->toBe(0)->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(Schema::hasTable('purchase_orders'))->toBeTrue()->and(PurchaseOrder::count())->toBe(0)->and(SupplierInvoice::count())->toBe(0)->and(InventoryMovement::count())->toBe(0)->and(JournalEntry::query()->count())->toBe(0);
 });

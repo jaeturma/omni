@@ -6,6 +6,7 @@ use App\Models\DocumentSequence;
 use App\Models\Expense;
 use App\Models\FiscalPeriod;
 use App\Models\FiscalYear;
+use App\Models\JournalEntry;
 use App\Models\PaymentMethod;
 use App\Models\User;
 use Database\Seeders\RolesAndPermissionsSeeder;
@@ -93,5 +94,5 @@ test('voiding requires a reason and preserves the expense audit record', functio
 test('expenses create no accounting payroll depreciation or tax return effects', function () {
     $f = expenseFixtures();
     createExpense($this, $f);
-    expect(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('payroll_runs'))->toBeFalse()->and(Schema::hasTable('depreciation_entries'))->toBeFalse()->and(Schema::hasTable('tax_returns'))->toBeFalse();
+    expect(JournalEntry::query()->count())->toBe(0)->and(Schema::hasTable('payroll_runs'))->toBeFalse()->and(Schema::hasTable('depreciation_entries'))->toBeFalse()->and(Schema::hasTable('tax_returns'))->toBeFalse();
 });

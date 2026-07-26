@@ -7,6 +7,7 @@ use App\Models\BusinessProfile;
 use App\Models\DocumentSequence;
 use App\Models\FiscalPeriod;
 use App\Models\FiscalYear;
+use App\Models\JournalEntry;
 use App\Models\PaymentMethod;
 use App\Models\Supplier;
 use App\Models\SupplierInvoice;
@@ -114,5 +115,5 @@ test('validation and authorization are enforced', function () {
 test('supplier payments create no journal or tax-return effects', function () {
     $f = supplierPaymentFixtures();
     postedSupplierPayment($f, '100.0000');
-    expect(Schema::hasTable('journal_entries'))->toBeFalse()->and(Schema::hasTable('tax_returns'))->toBeFalse();
+    expect(JournalEntry::query()->count())->toBe(0)->and(Schema::hasTable('tax_returns'))->toBeFalse();
 });

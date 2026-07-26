@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\CustomerPayment;
 use App\Models\FiscalPeriod;
 use App\Models\GovernmentDeduction;
+use App\Models\JournalEntry;
 use App\Models\PaymentMethod;
 use App\Models\SalesInvoice;
 use App\Models\TaxProfile;
@@ -115,5 +116,5 @@ test('authorization is enforced and no return or journal is generated', function
     $this->actingAs($viewer)->post(route('government-deductions.store'), governmentDeductionData($fixture))->assertForbidden();
     $unauthorized = User::factory()->create();
     $this->actingAs($unauthorized)->get(route('government-deductions.index'))->assertForbidden();
-    expect(Schema::hasTable('tax_returns'))->toBeFalse()->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(Schema::hasTable('tax_returns'))->toBeFalse()->and(JournalEntry::query()->count())->toBe(0);
 });

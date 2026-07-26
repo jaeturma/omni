@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\DocumentSequence;
 use App\Models\FiscalYear;
 use App\Models\InventoryMovement;
+use App\Models\JournalEntry;
 use App\Models\ProductService;
 use App\Models\PurchaseOrder;
 use App\Models\PurchaseRequest;
@@ -119,5 +120,5 @@ test('purchase order access is authorized and printable', function () {
 
 test('purchase orders create no receiving payable stock or journal effects', function () {
     createDirectPurchaseOrder($this);
-    expect(Schema::hasTable('receivings'))->toBeFalse()->and(SupplierInvoice::query()->count())->toBe(0)->and(InventoryMovement::count())->toBe(0)->and(Schema::hasTable('journal_entries'))->toBeFalse();
+    expect(Schema::hasTable('receivings'))->toBeFalse()->and(SupplierInvoice::query()->count())->toBe(0)->and(InventoryMovement::count())->toBe(0)->and(JournalEntry::query()->count())->toBe(0);
 });

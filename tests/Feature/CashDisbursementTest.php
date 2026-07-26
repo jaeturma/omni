@@ -8,6 +8,7 @@ use App\Models\Expense;
 use App\Models\FinancialAccount;
 use App\Models\FiscalPeriod;
 use App\Models\FiscalYear;
+use App\Models\JournalEntry;
 use App\Models\PaymentMethod;
 use App\Models\Supplier;
 use App\Models\SupplierPayment;
@@ -157,6 +158,6 @@ test('decimal validation and downstream boundaries are enforced', function () {
     $fixture = cashDisbursementFixture();
     $this->actingAs($fixture['user'])->post(route('cash-disbursements.store'), disbursementData($fixture, ['net_cash_out' => '900.0000']))
         ->assertSessionHasErrors('net_cash_out');
-    expect(Schema::hasTable('journal_entries'))->toBeFalse()
+    expect(JournalEntry::query()->count())->toBe(0)
         ->and(Schema::hasTable('bank_reconciliations'))->toBeTrue();
 });
