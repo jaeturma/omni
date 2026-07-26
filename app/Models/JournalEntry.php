@@ -10,14 +10,17 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Support\Carbon;
 
 /** @property string $journal_number
- * @property string $journal_date
+ * @property Carbon $journal_date
+ * @property Carbon $document_date
  * @property string $total_debit
  * @property string $total_credit
  * @property JournalEntryStatus $status
  */
-#[Fillable(['journal_number', 'journal_date', 'document_date', 'fiscal_period_id', 'journal_type', 'source_type', 'source_id', 'reference_number', 'description', 'total_debit', 'total_credit', 'status', 'posted_at', 'posted_by', 'reversed_at', 'reversed_by', 'reversal_entry_id', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
+#[Fillable(['journal_number', 'journal_date', 'document_date', 'fiscal_period_id', 'journal_type', 'source_type', 'source_id', 'reference_number', 'description', 'total_debit', 'total_credit', 'status', 'posted_at', 'posted_by', 'reversed_at', 'reversed_by', 'reversal_entry_id', 'reverses_entry_id', 'correction_of_id', 'reversal_reason', 'auto_reverse_on', 'is_auto_reversal', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
 class JournalEntry extends Model
 {
     protected $attributes = ['total_debit' => '0.0000', 'total_credit' => '0.0000', 'status' => 'draft'];
@@ -36,6 +39,7 @@ class JournalEntry extends Model
         });
     }
 
+    /** @return HasMany<JournalEntryLine, $this> */
     public function lines(): HasMany
     {
         return $this->hasMany(JournalEntryLine::class)->orderBy('line_number');
@@ -51,11 +55,32 @@ class JournalEntry extends Model
         return $this->belongsTo(User::class, 'posted_by');
     }
 
+    public function reversalEntry(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'reversal_entry_id');
+    }
+
+    public function reversedEntry(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'reverses_entry_id');
+    }
+
+    public function correctedEntry(): BelongsTo
+    {
+        return $this->belongsTo(self::class, 'correction_of_id');
+    }
+
+    public function correctionEntry(): HasOne
+    {
+        return $this->hasOne(self::class, 'correction_of_id');
+    }
+
     protected function casts(): array
     {
         return ['journal_date' => 'date', 'document_date' => 'date', 'journal_type' => JournalEntryType::class,
             'source_type' => AccountingSourceType::class, 'status' => JournalEntryStatus::class,
             'total_debit' => 'decimal:4', 'total_credit' => 'decimal:4', 'posted_at' => 'datetime',
-            'reversed_at' => 'datetime', 'voided_at' => 'datetime'];
+            'reversed_at' => 'datetime', 'auto_reverse_on' => 'date', 'is_auto_reversal' => 'boolean',
+            'voided_at' => 'datetime'];
     }
 }

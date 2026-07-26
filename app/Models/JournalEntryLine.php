@@ -8,6 +8,19 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * @property int $account_id
+ * @property string|null $description
+ * @property numeric-string $debit
+ * @property numeric-string $credit
+ * @property int|null $customer_id
+ * @property int|null $supplier_id
+ * @property int|null $financial_account_id
+ * @property int|null $warehouse_id
+ * @property int|null $product_id
+ * @property string|null $source_line_type
+ * @property int|null $source_line_id
+ */
 #[Fillable(['account_id', 'line_number', 'description', 'debit', 'credit', 'customer_id', 'supplier_id', 'financial_account_id', 'warehouse_id', 'product_id', 'source_line_type', 'source_line_id'])]
 class JournalEntryLine extends Model
 {

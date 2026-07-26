@@ -16,9 +16,18 @@ class JournalEntryRequest extends FormRequest
     {
         $entry = $this->route('journal_entry');
 
-        return $entry instanceof JournalEntry
-            ? (bool) $this->user()?->can('update', $entry)
-            : (bool) $this->user()?->can('create', JournalEntry::class);
+        if ($entry instanceof JournalEntry) {
+            return (bool) $this->user()?->can('update', $entry);
+        }
+
+        $canCreate = $this->user()->can('create', JournalEntry::class);
+        $journalType = JournalEntryType::tryFrom($this->string('journal_type')->toString());
+
+        return $canCreate && match ($journalType) {
+            JournalEntryType::Opening => $this->user()->can('createOpening', JournalEntry::class),
+            JournalEntryType::Adjustment => $this->user()->can('createAdjustment', JournalEntry::class),
+            default => true,
+        };
     }
 
     public function rules(): array
@@ -30,8 +39,8 @@ class JournalEntryRequest extends FormRequest
             'journal_date' => ['required', 'date'],
             'document_date' => ['required', 'date'],
             'fiscal_period_id' => ['required', 'integer', 'exists:fiscal_periods,id'],
-            'journal_type' => ['required', Rule::enum(JournalEntryType::class)],
-            'source_type' => ['required', Rule::enum(AccountingSourceType::class)],
+            'journal_type' => ['required', Rule::in([JournalEntryType::Opening->value, JournalEntryType::Adjustment->value])],
+            'source_type' => ['required', Rule::in([AccountingSourceType::Manual->value])],
             'source_id' => ['nullable', 'required_unless:source_type,manual', 'integer', 'min:1'],
             'reference_number' => ['nullable', 'string', 'max:255'],
             'description' => ['required', 'string', 'max:2000'],

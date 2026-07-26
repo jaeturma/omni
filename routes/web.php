@@ -99,6 +99,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::patch('/accounts/{account}/status', [AccountController::class, 'status'])->name('accounts.status');
     Route::resource('accounts', AccountController::class)->except(['show', 'destroy']);
     Route::patch('/journal-entries/{journal_entry}/status', [JournalEntryController::class, 'transition'])->name('journal-entries.transition');
+    Route::post('/journal-entries/{journal_entry}/reverse', [JournalEntryController::class, 'reverse'])->name('journal-entries.reverse');
+    Route::post('/journal-entries/{journal_entry}/correct', [JournalEntryController::class, 'correct'])->name('journal-entries.correct');
     Route::resource('journal-entries', JournalEntryController::class)->except('destroy');
     Route::post('/posting-rules/preview', [PostingRuleController::class, 'preview'])->name('posting-rules.preview');
     Route::patch('/posting-rules/{posting_rule}/status', [PostingRuleController::class, 'status'])->name('posting-rules.status');

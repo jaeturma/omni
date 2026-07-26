@@ -30,7 +30,8 @@ final class AccountingWorkflow
     public const PERMISSIONS = [
         'chart-of-accounts.view', 'chart-of-accounts.create', 'chart-of-accounts.update', 'chart-of-accounts.activate',
         'chart-of-accounts.deactivate', 'chart-of-accounts.view-balances',
-        'journals.view', 'journals.create', 'journals.update', 'journals.post', 'journals.reverse', 'journals.void', 'journals.view-sensitive',
+        'journals.view', 'journals.create', 'journals.update', 'journals.post', 'journals.reverse', 'journals.adjust',
+        'journals.opening-entry', 'journals.auto-reverse', 'journals.void', 'journals.view-sensitive',
         'posting-rules.view', 'posting-rules.create', 'posting-rules.update', 'posting-rules.activate',
         'posting-rules.deactivate', 'posting-rules.preview', 'accounting-posting.post', 'accounting-posting.reverse',
         'source-posting.view', 'source-posting.retry', 'source-posting.rebuild-link', 'source-posting.view-errors',

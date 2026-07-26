@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\CorrectJournalEntry;
+use App\Actions\ReverseJournalEntry;
 use App\Actions\SaveJournalEntry;
 use App\Actions\TransitionJournalEntry;
 use App\Enums\AccountingSourceType;
 use App\Enums\JournalEntryStatus;
 use App\Enums\JournalEntryType;
+use App\Http\Requests\CorrectJournalEntryRequest;
 use App\Http\Requests\JournalEntryRequest;
+use App\Http\Requests\ReverseJournalEntryRequest;
 use App\Models\Account;
 use App\Models\FiscalPeriod;
 use App\Models\JournalEntry;
@@ -43,7 +47,10 @@ class JournalEntryController extends Controller
     {
         Gate::authorize('view', $journalEntry);
 
-        return view('journal-entries.show', ['entry' => $journalEntry->load(['lines.account', 'fiscalPeriod', 'postedBy'])]);
+        return view('journal-entries.show', [
+            'entry' => $journalEntry->load(['lines.account', 'fiscalPeriod', 'postedBy', 'reversalEntry', 'reversedEntry', 'correctionEntry', 'correctedEntry']),
+            'openPeriods' => FiscalPeriod::query()->where('status', 'open')->latest('starts_on')->get(),
+        ]);
     }
 
     public function edit(JournalEntry $journalEntry): View
@@ -70,10 +77,44 @@ class JournalEntryController extends Controller
         return back()->with('success', 'Journal entry status updated.');
     }
 
+    public function reverse(ReverseJournalEntryRequest $request, JournalEntry $journalEntry, ReverseJournalEntry $reverse): RedirectResponse
+    {
+        $validated = $request->validated();
+        $reversal = $reverse->handle(
+            $journalEntry,
+            $validated['reversal_date'],
+            $validated['fiscal_period_id'],
+            $validated['reason'],
+            $request->user()->id,
+            (bool) ($validated['auto_reverse'] ?? false),
+        );
+
+        return redirect()->route('journal-entries.show', $reversal)->with('success', 'Journal reversal posted.');
+    }
+
+    public function correct(CorrectJournalEntryRequest $request, JournalEntry $journalEntry, CorrectJournalEntry $correct): RedirectResponse
+    {
+        $validated = $request->validated();
+        $entries = $correct->handle(
+            $journalEntry,
+            $validated['correction_date'],
+            $validated['fiscal_period_id'],
+            $validated['reason'],
+            $request->user()->id,
+        );
+
+        return redirect()->route('journal-entries.edit', $entries['replacement'])->with('success', 'Reversal posted; edit the correcting draft.');
+    }
+
     private function formData(): array
     {
+        $journalTypes = collect([JournalEntryType::Adjustment, JournalEntryType::Opening])
+            ->filter(fn (JournalEntryType $type): bool => $type === JournalEntryType::Adjustment
+                ? request()->user()->can('createAdjustment', JournalEntry::class)
+                : request()->user()->can('createOpening', JournalEntry::class));
+
         return ['periods' => FiscalPeriod::query()->where('status', 'open')->latest('starts_on')->get(),
             'accounts' => Account::query()->where('is_active', true)->where('is_postable', true)->ordered()->get(),
-            'journalTypes' => JournalEntryType::cases(), 'sourceTypes' => AccountingSourceType::cases()];
+            'journalTypes' => $journalTypes, 'sourceTypes' => [AccountingSourceType::Manual]];
     }
 }

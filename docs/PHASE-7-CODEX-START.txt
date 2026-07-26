@@ -9,7 +9,7 @@ Execute the work packages one at a time:
 3. WP-07-03-journal-entries-lines.md - ok
 4. WP-07-04-posting-rules-account-mapping.md - ok
 5. WP-07-05-automatic-source-posting.md - ok
-6. WP-07-06-reversals-adjusting-entries.md
+6. WP-07-06-reversals-adjusting-entries.md - ok
 7. WP-07-07-general-ledger-account-activity.md
 8. WP-07-08-trial-balance-subledger-reconciliation.md
 9. WP-07-09-period-close-lock-reopen.md
