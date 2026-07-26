@@ -45,6 +45,7 @@ use App\Http\Controllers\RoleMatrixController;
 use App\Http\Controllers\SalesAttachmentController;
 use App\Http\Controllers\SalesInvoiceController;
 use App\Http\Controllers\SalesOrderController;
+use App\Http\Controllers\SourcePostingController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierInvoiceController;
 use App\Http\Controllers\SupplierPaymentController;
@@ -102,6 +103,9 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/posting-rules/preview', [PostingRuleController::class, 'preview'])->name('posting-rules.preview');
     Route::patch('/posting-rules/{posting_rule}/status', [PostingRuleController::class, 'status'])->name('posting-rules.status');
     Route::resource('posting-rules', PostingRuleController::class)->except(['show', 'destroy']);
+    Route::get('/source-postings', [SourcePostingController::class, 'index'])->name('source-postings.index');
+    Route::post('/source-postings/{source_posting}/retry', [SourcePostingController::class, 'retry'])->name('source-postings.retry');
+    Route::post('/source-postings/{source_posting}/rebuild-link', [SourcePostingController::class, 'rebuildLink'])->name('source-postings.rebuild-link');
     Route::resource('products-services', ProductServiceController::class)
         ->parameters(['products-services' => 'product_service'])
         ->except('show');

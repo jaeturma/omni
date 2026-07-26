@@ -11,6 +11,8 @@ enum PostingSourceType: string
     case CustomerWithholding = 'customer_withholding';
     case Purchase = 'purchase';
     case SupplierPayment = 'supplier_payment';
+    case SupplierWithholding = 'supplier_withholding';
+    case PurchaseDiscount = 'purchase_discount';
     case OperatingExpense = 'operating_expense';
     case CashReceipt = 'cash_receipt';
     case CashDisbursement = 'cash_disbursement';
@@ -35,6 +37,8 @@ enum PostingSourceType: string
             self::CustomerWithholding => ['debit' => 'Creditable withholding tax', 'credit' => 'Accounts receivable'],
             self::Purchase => ['debit' => 'Inventory or purchases', 'credit' => 'Accounts payable or cash'],
             self::SupplierPayment => ['debit' => 'Accounts payable', 'credit' => 'Cash or bank'],
+            self::SupplierWithholding => ['debit' => 'Settlement source', 'credit' => 'Withholding tax payable'],
+            self::PurchaseDiscount => ['debit' => 'Accounts payable', 'credit' => 'Purchase discounts or deductions'],
             self::OperatingExpense => ['debit' => 'Operating expense', 'credit' => 'Accounts payable or cash'],
             self::CashReceipt => ['debit' => 'Cash or bank', 'credit' => 'Receipt source'],
             self::CashDisbursement => ['debit' => 'Disbursement purpose', 'credit' => 'Cash or bank'],

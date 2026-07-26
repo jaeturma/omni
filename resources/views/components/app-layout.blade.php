@@ -61,6 +61,7 @@
             ['Chart of Accounts', 'accounts.index', 'chart-of-accounts.view'],
             ['Journal Entries', 'journal-entries.index', 'journals.view'],
             ['Posting Rules', 'posting-rules.index', 'posting-rules.view'],
+            ['Source Postings', 'source-postings.index', 'source-posting.view'],
         ],
     ];
 

@@ -35,7 +35,9 @@ test('journal and source types and status transitions are explicit', function ()
         'cash_disbursement', 'transfer', 'inventory', 'adjustment', 'reversal', 'closing',
     ])->and(array_column(AccountingSourceType::cases(), 'value'))->toBe([
         'sales_invoice', 'customer_payment', 'supplier_invoice', 'supplier_payment', 'expense',
-        'cash_receipt', 'cash_disbursement', 'fund_transfer', 'inventory_movement', 'manual',
+        'cash_receipt', 'cash_disbursement', 'fund_transfer', 'inventory_movement', 'delivery',
+        'receiving_record', 'inventory_adjustment', 'inventory_transfer', 'physical_count',
+        'petty_cash_voucher', 'petty_cash_replenishment', 'manual',
     ])->and(JournalEntryStatus::Draft->canTransitionTo(JournalEntryStatus::Posted))->toBeTrue()
         ->and(JournalEntryStatus::Posted->canTransitionTo(JournalEntryStatus::Draft))->toBeFalse()
         ->and(JournalEntryStatus::Posted->canTransitionTo(JournalEntryStatus::Reversed))->toBeTrue()
