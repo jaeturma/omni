@@ -35,20 +35,23 @@ final class AccountingWorkflow
         'posting-rules.view', 'posting-rules.create', 'posting-rules.update', 'posting-rules.activate',
         'posting-rules.deactivate', 'posting-rules.preview', 'accounting-posting.post', 'accounting-posting.reverse',
         'source-posting.view', 'source-posting.retry', 'source-posting.rebuild-link', 'source-posting.view-errors',
-        'general-ledger.view', 'general-ledger.export', 'trial-balance.view', 'trial-balance.export',
+        'general-ledger.view', 'general-ledger.export', 'general-journal.view', 'account-activity.view',
+        'account-balances.view', 'trial-balance.view', 'trial-balance.export',
         'subledger-reconciliation.view', 'accounting-periods.close', 'accounting-periods.lock', 'accounting-periods.reopen',
     ];
 
     public const ENCODER_PERMISSIONS = [
         'chart-of-accounts.view', 'journals.view', 'journals.create', 'journals.update',
-        'posting-rules.view', 'posting-rules.preview', 'general-ledger.view', 'trial-balance.view', 'subledger-reconciliation.view',
+        'posting-rules.view', 'posting-rules.preview', 'general-ledger.view', 'general-journal.view',
+        'account-activity.view', 'account-balances.view', 'trial-balance.view', 'subledger-reconciliation.view',
         'source-posting.view',
     ];
 
     public const VIEW_PERMISSIONS = [
         'chart-of-accounts.view', 'journals.view', 'posting-rules.view',
         'source-posting.view',
-        'general-ledger.view', 'trial-balance.view', 'subledger-reconciliation.view',
+        'general-ledger.view', 'general-journal.view', 'account-activity.view', 'account-balances.view',
+        'trial-balance.view', 'subledger-reconciliation.view',
     ];
 
     public static function isBalanced(string $totalDebits, string $totalCredits): bool

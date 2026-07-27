@@ -46,6 +46,31 @@ class JournalEntryLine extends Model
         return $this->belongsTo(Account::class);
     }
 
+    public function customer(): BelongsTo
+    {
+        return $this->belongsTo(Customer::class);
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
+    public function financialAccount(): BelongsTo
+    {
+        return $this->belongsTo(FinancialAccount::class);
+    }
+
+    public function warehouse(): BelongsTo
+    {
+        return $this->belongsTo(Warehouse::class);
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(ProductService::class, 'product_id');
+    }
+
     protected function casts(): array
     {
         return ['debit' => 'decimal:4', 'credit' => 'decimal:4'];

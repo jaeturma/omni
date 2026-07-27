@@ -60,6 +60,9 @@
         'Accounting' => [
             ['Chart of Accounts', 'accounts.index', 'chart-of-accounts.view'],
             ['Journal Entries', 'journal-entries.index', 'journals.view'],
+            ['General Journal', 'general-journal.index', 'general-journal.view'],
+            ['General Ledger', 'general-ledger.index', 'general-ledger.view'],
+            ['Account Activity', 'account-activity.index', 'account-activity.view'],
             ['Posting Rules', 'posting-rules.index', 'posting-rules.view'],
             ['Source Postings', 'source-postings.index', 'source-posting.view'],
         ],

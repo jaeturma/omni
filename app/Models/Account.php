@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/** @property NormalBalance $normal_balance */
 #[Fillable([
     'code', 'name', 'account_class', 'account_type', 'normal_balance', 'parent_id',
     'is_header', 'is_postable', 'is_control_account', 'control_account_type',
