@@ -83,6 +83,8 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/tax-profile/rates', [TaxProfileController::class, 'storeRate'])->name('tax-profile.rates.store');
     Route::get('/fiscal-years', [FiscalYearController::class, 'index'])->name('fiscal-years.index');
     Route::post('/fiscal-years', [FiscalYearController::class, 'store'])->name('fiscal-years.store');
+    Route::get('/fiscal-periods/{fiscalPeriod}', [FiscalPeriodController::class, 'show'])->name('fiscal-periods.show');
+    Route::get('/fiscal-periods/{fiscalPeriod}/preclose', [FiscalPeriodController::class, 'preclose'])->name('fiscal-periods.preclose');
     Route::patch('/fiscal-periods/{fiscalPeriod}/status', [FiscalPeriodController::class, 'update'])->name('fiscal-periods.status.update');
     Route::get('/document-sequences', [DocumentSequenceController::class, 'index'])->name('document-sequences.index');
     Route::post('/document-sequences', [DocumentSequenceController::class, 'store'])->name('document-sequences.store');

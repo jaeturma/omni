@@ -35,10 +35,10 @@
                         <thead class="bg-slate-50 text-left text-slate-600"><tr><th class="px-6 py-3">Period</th><th class="px-6 py-3">Dates</th><th class="px-6 py-3">Quarter</th><th class="px-6 py-3">Status</th><th class="px-6 py-3">Actions</th></tr></thead>
                         <tbody class="divide-y divide-slate-100">
                             @foreach ($year->periods as $period)
-                                <tr><td class="px-6 py-3 font-medium">{{ $period->name }}</td><td class="px-6 py-3">{{ $period->starts_on->toDateString() }} – {{ $period->ends_on->toDateString() }}</td><td class="px-6 py-3">Q{{ $period->calendar_quarter }}</td><td class="px-6 py-3 capitalize">{{ $period->status }}</td><td class="px-6 py-3">
+                                <tr><td class="px-6 py-3 font-medium"><a href="{{ route('fiscal-periods.show', $period) }}">{{ $period->name }}</a></td><td class="px-6 py-3">{{ $period->starts_on->toDateString() }} – {{ $period->ends_on->toDateString() }}</td><td class="px-6 py-3">Q{{ $period->calendar_quarter }}</td><td class="px-6 py-3 capitalize">{{ $period->status }}</td><td class="px-6 py-3">
                                     <div class="flex gap-2">
-                                        @if ($period->status === 'open')<form method="POST" action="{{ route('fiscal-periods.status.update', $period) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="closed"><button class="rounded-lg border border-slate-300 px-3 py-1.5 font-semibold">Close</button></form>@endif
-                                        @if ($period->status === 'closed')<form method="POST" action="{{ route('fiscal-periods.status.update', $period) }}">@csrf @method('PATCH')<input type="hidden" name="status" value="locked"><button class="rounded-lg bg-slate-800 px-3 py-1.5 font-semibold text-white">Lock</button></form>@endif
+                                        @if ($period->status === 'open')<a href="{{ route('fiscal-periods.preclose', $period) }}" class="rounded-lg border border-slate-300 px-3 py-1.5 font-semibold">Pre-close review</a>@endif
+                                        @if ($period->status !== 'open')<a href="{{ route('fiscal-periods.show', $period) }}" class="rounded-lg border border-slate-300 px-3 py-1.5 font-semibold">Review controls</a>@endif
                                     </div>
                                 </td></tr>
                             @endforeach

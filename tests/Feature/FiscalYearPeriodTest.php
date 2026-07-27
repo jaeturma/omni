@@ -60,10 +60,10 @@ test('periods must be closed before locking and locked periods cannot change', f
     $user = User::factory()->administrator()->create();
     $period = FiscalPeriod::factory()->create();
 
-    $this->actingAs($user)->patch(route('fiscal-periods.status.update', $period), ['status' => 'locked'])->assertSessionHasErrors('status');
-    $this->actingAs($user)->patch(route('fiscal-periods.status.update', $period), ['status' => 'closed'])->assertSessionHasNoErrors();
-    $this->actingAs($user)->patch(route('fiscal-periods.status.update', $period), ['status' => 'locked'])->assertSessionHasNoErrors();
-    $this->actingAs($user)->patch(route('fiscal-periods.status.update', $period), ['status' => 'closed'])->assertSessionHasErrors('status');
+    $this->actingAs($user)->patch(route('fiscal-periods.status.update', $period), ['status' => 'locked', 'lock_version' => 0])->assertSessionHasErrors('status');
+    $this->actingAs($user)->patch(route('fiscal-periods.status.update', $period), ['status' => 'closed', 'lock_version' => 0])->assertSessionHasNoErrors();
+    $this->actingAs($user)->patch(route('fiscal-periods.status.update', $period), ['status' => 'locked', 'lock_version' => 1])->assertSessionHasNoErrors();
+    $this->actingAs($user)->patch(route('fiscal-periods.status.update', $period), ['status' => 'closed', 'lock_version' => 2])->assertSessionHasErrors('status');
 
     expect($period->fresh()->status)->toBe('locked');
 });

@@ -14,12 +14,23 @@ class FiscalPeriodPolicy
 
     public function close(User $user, FiscalPeriod $fiscalPeriod): bool
     {
-        return $user->can('fiscal-periods.close');
+        return $user->can('accounting-periods.close');
     }
 
     public function lock(User $user, FiscalPeriod $fiscalPeriod): bool
     {
-        return $user->can('fiscal-periods.lock');
+        return $user->can('accounting-periods.lock');
+    }
+
+    public function preclose(User $user, FiscalPeriod $fiscalPeriod): bool
+    {
+        return $user->can('accounting-periods.preclose');
+    }
+
+    public function reopen(User $user, FiscalPeriod $fiscalPeriod): bool
+    {
+        return $user->can('accounting-periods.reopen')
+            && $user->hasAnyRole(['Administrator', 'Owner']);
     }
 
     /**
@@ -27,7 +38,7 @@ class FiscalPeriodPolicy
      */
     public function viewAny(User $user): bool
     {
-        return false;
+        return $user->can('accounting-periods.view');
     }
 
     /**
@@ -35,7 +46,7 @@ class FiscalPeriodPolicy
      */
     public function view(User $user, FiscalPeriod $fiscalPeriod): bool
     {
-        return false;
+        return $user->can('accounting-periods.view');
     }
 
     /**

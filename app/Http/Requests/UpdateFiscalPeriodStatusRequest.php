@@ -16,9 +16,13 @@ class UpdateFiscalPeriodStatusRequest extends FormRequest
     public function authorize(): bool
     {
         $period = $this->route('fiscalPeriod');
-        $ability = $this->input('status') === 'locked' ? 'lock' : 'close';
+        $ability = match ($this->input('status')) {
+            'locked' => 'lock',
+            'open' => 'reopen',
+            default => 'close',
+        };
 
-        return $period instanceof FiscalPeriod && (bool) $this->user()?->can($ability, $period);
+        return $period instanceof FiscalPeriod && $this->user()->can($ability, $period);
     }
 
     /**
@@ -29,7 +33,13 @@ class UpdateFiscalPeriodStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => ['required', Rule::in(['closed', 'locked'])],
+            'status' => ['required', Rule::in(['open', 'closed', 'locked'])],
+            'notes' => [
+                Rule::requiredIf($this->input('status') === 'open' || $this->boolean('override_open_adjustments')),
+                'nullable', 'string', 'max:4000',
+            ],
+            'override_open_adjustments' => ['nullable', 'boolean'],
+            'lock_version' => ['required', 'integer', 'min:0'],
         ];
     }
 
@@ -40,11 +50,14 @@ class UpdateFiscalPeriodStatusRequest extends FormRequest
             if (! $period instanceof FiscalPeriod || $validator->errors()->isNotEmpty()) {
                 return;
             }
-            if ($period->status === 'locked') {
-                $validator->errors()->add('status', 'A locked period cannot be changed.');
-            }
             if ($this->input('status') === 'locked' && $period->status !== 'closed') {
                 $validator->errors()->add('status', 'Close the period before locking it.');
+            }
+            if ($this->input('status') === 'closed' && $period->status !== 'open') {
+                $validator->errors()->add('status', 'Only an open period may be closed.');
+            }
+            if ($this->input('status') === 'open' && ! in_array($period->status, ['closed', 'locked'], true)) {
+                $validator->errors()->add('status', 'Only a closed or locked period may be reopened.');
             }
         }];
     }

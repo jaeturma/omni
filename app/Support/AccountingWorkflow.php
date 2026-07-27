@@ -38,21 +38,22 @@ final class AccountingWorkflow
         'general-ledger.view', 'general-ledger.export', 'general-journal.view', 'account-activity.view',
         'account-balances.view', 'trial-balance.view', 'trial-balance.export',
         'subledger-reconciliation.view', 'subledger-reconciliation.export',
-        'accounting-periods.close', 'accounting-periods.lock', 'accounting-periods.reopen',
+        'accounting-periods.view', 'accounting-periods.preclose', 'accounting-periods.close',
+        'accounting-periods.lock', 'accounting-periods.reopen',
     ];
 
     public const ENCODER_PERMISSIONS = [
         'chart-of-accounts.view', 'journals.view', 'journals.create', 'journals.update',
         'posting-rules.view', 'posting-rules.preview', 'general-ledger.view', 'general-journal.view',
         'account-activity.view', 'account-balances.view', 'trial-balance.view', 'subledger-reconciliation.view',
-        'source-posting.view',
+        'source-posting.view', 'accounting-periods.view',
     ];
 
     public const VIEW_PERMISSIONS = [
         'chart-of-accounts.view', 'journals.view', 'posting-rules.view',
         'source-posting.view',
         'general-ledger.view', 'general-journal.view', 'account-activity.view', 'account-balances.view',
-        'trial-balance.view', 'subledger-reconciliation.view',
+        'trial-balance.view', 'subledger-reconciliation.view', 'accounting-periods.view',
     ];
 
     public static function isBalanced(string $totalDebits, string $totalCredits): bool
