@@ -37,7 +37,8 @@ final class AccountingWorkflow
         'source-posting.view', 'source-posting.retry', 'source-posting.rebuild-link', 'source-posting.view-errors',
         'general-ledger.view', 'general-ledger.export', 'general-journal.view', 'account-activity.view',
         'account-balances.view', 'trial-balance.view', 'trial-balance.export',
-        'subledger-reconciliation.view', 'accounting-periods.close', 'accounting-periods.lock', 'accounting-periods.reopen',
+        'subledger-reconciliation.view', 'subledger-reconciliation.export',
+        'accounting-periods.close', 'accounting-periods.lock', 'accounting-periods.reopen',
     ];
 
     public const ENCODER_PERMISSIONS = [

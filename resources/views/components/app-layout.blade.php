@@ -63,6 +63,8 @@
             ['General Journal', 'general-journal.index', 'general-journal.view'],
             ['General Ledger', 'general-ledger.index', 'general-ledger.view'],
             ['Account Activity', 'account-activity.index', 'account-activity.view'],
+            ['Trial Balance', 'trial-balance.index', 'trial-balance.view'],
+            ['Subledger Reconciliation', 'subledger-reconciliations.index', 'subledger-reconciliation.view'],
             ['Posting Rules', 'posting-rules.index', 'posting-rules.view'],
             ['Source Postings', 'source-postings.index', 'source-posting.view'],
         ],
