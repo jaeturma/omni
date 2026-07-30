@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Enums\AccountClass;
 use App\Enums\AccountType;
+use App\Enums\CashFlowClassification;
+use App\Enums\CurrentClassification;
 use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
 use App\Models\Account;
@@ -69,6 +71,9 @@ class AccountController extends Controller
         return [
             'accountClasses' => AccountClass::cases(),
             'accountTypes' => AccountType::cases(),
+            'currentClassifications' => CurrentClassification::cases(),
+            'cashFlowClassifications' => CashFlowClassification::cases(),
+            'canManageReportingSettings' => Gate::allows('financial-report-settings.manage'),
             'parentAccounts' => Account::query()->when($excluded, fn ($query) => $query->whereKeyNot($excluded->getKey()))->ordered()->get(['id', 'code', 'name', 'account_class']),
         ];
     }

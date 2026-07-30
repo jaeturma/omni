@@ -1,0 +1,29 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::table('accounts', function (Blueprint $table): void {
+            $table->string('current_classification', 20)->nullable()->after('normal_balance')->index();
+            $table->string('cash_flow_classification', 20)->nullable()->after('current_classification')->index();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::table('accounts', function (Blueprint $table): void {
+            $table->dropColumn(['current_classification', 'cash_flow_classification']);
+        });
+    }
+};

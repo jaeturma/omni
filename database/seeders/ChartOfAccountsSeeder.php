@@ -87,6 +87,8 @@ class ChartOfAccountsSeeder extends Seeder
             'account_class' => $type->accountClass(),
             'account_type' => $type,
             'normal_balance' => $type->normalBalance(),
+            'current_classification' => $type->defaultCurrentClassification(),
+            'cash_flow_classification' => $type->defaultCashFlowClassification(),
             'parent_id' => $parentId,
             'is_header' => $header,
             'is_postable' => ! $header,

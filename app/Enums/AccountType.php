@@ -48,4 +48,27 @@ enum AccountType: string
             default => $this->accountClass()->normalBalance(),
         };
     }
+
+    public function defaultCurrentClassification(): ?CurrentClassification
+    {
+        return match ($this) {
+            self::Cash, self::AccountsReceivable, self::Inventory, self::PrepaidExpense,
+            self::AccountsPayable, self::AccruedLiability, self::TaxPayable => CurrentClassification::Current,
+            self::PropertyPlantEquipment, self::AccumulatedDepreciation, self::LoansPayable => CurrentClassification::NonCurrent,
+            default => null,
+        };
+    }
+
+    public function defaultCashFlowClassification(): ?CashFlowClassification
+    {
+        return match ($this) {
+            self::AccountsReceivable, self::Inventory, self::PrepaidExpense, self::AccountsPayable,
+            self::AccruedLiability, self::TaxPayable, self::SalesIncome, self::SalesReturnsDiscounts,
+            self::ServiceIncome, self::CostOfSales, self::OperatingExpense, self::OtherIncome,
+            self::OtherExpense => CashFlowClassification::Operating,
+            self::PropertyPlantEquipment, self::AccumulatedDepreciation => CashFlowClassification::Investing,
+            self::LoansPayable, self::OwnerCapital, self::OwnerDrawings, self::RetainedEarnings => CashFlowClassification::Financing,
+            self::Cash => null,
+        };
+    }
 }

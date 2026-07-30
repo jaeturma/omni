@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Enums\AccountClass;
 use App\Enums\AccountType;
+use App\Enums\CashFlowClassification;
+use App\Enums\CurrentClassification;
 use App\Enums\NormalBalance;
 use DomainException;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -14,7 +16,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /** @property NormalBalance $normal_balance */
 #[Fillable([
-    'code', 'name', 'account_class', 'account_type', 'normal_balance', 'parent_id',
+    'code', 'name', 'account_class', 'account_type', 'normal_balance', 'current_classification',
+    'cash_flow_classification', 'parent_id',
     'is_header', 'is_postable', 'is_control_account', 'control_account_type',
     'is_active', 'is_system', 'description', 'display_order',
 ])]
@@ -86,6 +89,8 @@ class Account extends Model
             'account_class' => AccountClass::class,
             'account_type' => AccountType::class,
             'normal_balance' => NormalBalance::class,
+            'current_classification' => CurrentClassification::class,
+            'cash_flow_classification' => CashFlowClassification::class,
             'is_header' => 'boolean',
             'is_postable' => 'boolean',
             'is_control_account' => 'boolean',
