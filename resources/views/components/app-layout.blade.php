@@ -65,6 +65,7 @@
             ['Account Activity', 'account-activity.index', 'account-activity.view'],
             ['Trial Balance', 'trial-balance.index', 'trial-balance.view'],
             ['Subledger Reconciliation', 'subledger-reconciliations.index', 'subledger-reconciliation.view'],
+            ['Income Statement', 'income-statement.index', 'income-statement.view'],
             ['Posting Rules', 'posting-rules.index', 'posting-rules.view'],
             ['Source Postings', 'source-postings.index', 'source-posting.view'],
         ],

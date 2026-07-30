@@ -73,6 +73,7 @@ class ChartOfAccountsSeeder extends Seeder
             ['6140', 'Meals and Representation', AccountType::OperatingExpense, '6000', null],
             ['6150', 'Depreciation', AccountType::OperatingExpense, '6000', null],
             ['6190', 'Miscellaneous Expense', AccountType::OperatingExpense, '6000', null],
+            ['6200', 'Income Tax Expense', AccountType::IncomeTaxExpense, '6000', null],
         ];
 
         foreach ($accounts as $index => [$code, $name, $type, $parentCode, $controlType]) {

@@ -11,7 +11,6 @@ use App\Models\Account;
 use App\Models\User;
 use App\Reports\BalanceSheetReport;
 use App\Reports\CashFlowStatementReport;
-use App\Reports\IncomeStatementReport;
 use App\Support\FinancialReportingConvention;
 use App\ValueObjects\FinancialReportParameters;
 use Database\Seeders\ChartOfAccountsSeeder;
@@ -90,7 +89,7 @@ it('rounds decimal amounts half up and rounds subtotals from unrounded values', 
         ->and(FinancialReportingConvention::ZERO_BALANCES_VISIBLE_BY_DEFAULT)->toBeFalse();
 });
 
-it('seeds phase eight permissions without creating a financial statement', function (): void {
+it('seeds phase eight permissions without creating stored financial-statement records', function (): void {
     $this->seed(RolesAndPermissionsSeeder::class);
 
     expect(Permission::query()->whereIn('name', FinancialReportingConvention::PERMISSIONS)->count())
@@ -102,8 +101,7 @@ it('seeds phase eight permissions without creating a financial statement', funct
         ->and(Role::findByName('Viewer')->hasPermissionTo('financial-reports.export'))->toBeFalse()
         ->and(Schema::hasTable('financial_statements'))->toBeFalse();
 
-    expect(class_exists(IncomeStatementReport::class))->toBeFalse()
-        ->and(class_exists(BalanceSheetReport::class))->toBeFalse()
+    expect(class_exists(BalanceSheetReport::class))->toBeFalse()
         ->and(class_exists(CashFlowStatementReport::class))->toBeFalse();
 });
 

@@ -14,7 +14,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/** @property NormalBalance $normal_balance */
+/**
+ * @property AccountClass $account_class
+ * @property AccountType $account_type
+ * @property NormalBalance $normal_balance
+ */
 #[Fillable([
     'code', 'name', 'account_class', 'account_type', 'normal_balance', 'current_classification',
     'cash_flow_classification', 'parent_id',

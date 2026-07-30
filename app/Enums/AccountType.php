@@ -22,6 +22,7 @@ enum AccountType: string
     case ServiceIncome = 'service_income';
     case CostOfSales = 'cost_of_sales';
     case OperatingExpense = 'operating_expense';
+    case IncomeTaxExpense = 'income_tax_expense';
     case OtherIncome = 'other_income';
     case OtherExpense = 'other_expense';
 
@@ -34,7 +35,7 @@ enum AccountType: string
             self::OwnerCapital, self::OwnerDrawings, self::RetainedEarnings => AccountClass::OwnerEquity,
             self::SalesIncome, self::SalesReturnsDiscounts, self::ServiceIncome => AccountClass::Income,
             self::CostOfSales => AccountClass::CostOfSales,
-            self::OperatingExpense => AccountClass::Expense,
+            self::OperatingExpense, self::IncomeTaxExpense => AccountClass::Expense,
             self::OtherIncome => AccountClass::OtherIncome,
             self::OtherExpense => AccountClass::OtherExpense,
         };
@@ -64,7 +65,7 @@ enum AccountType: string
         return match ($this) {
             self::AccountsReceivable, self::Inventory, self::PrepaidExpense, self::AccountsPayable,
             self::AccruedLiability, self::TaxPayable, self::SalesIncome, self::SalesReturnsDiscounts,
-            self::ServiceIncome, self::CostOfSales, self::OperatingExpense, self::OtherIncome,
+            self::ServiceIncome, self::CostOfSales, self::OperatingExpense, self::IncomeTaxExpense, self::OtherIncome,
             self::OtherExpense => CashFlowClassification::Operating,
             self::PropertyPlantEquipment, self::AccumulatedDepreciation => CashFlowClassification::Investing,
             self::LoansPayable, self::OwnerCapital, self::OwnerDrawings, self::RetainedEarnings => CashFlowClassification::Financing,

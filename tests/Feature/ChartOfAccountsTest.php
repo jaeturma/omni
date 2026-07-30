@@ -103,8 +103,9 @@ it('seeds the default chart deterministically with protected control accounts', 
     $this->seed(ChartOfAccountsSeeder::class);
 
     expect(Account::query()->count())->toBe($count)
-        ->and($count)->toBe(54)
+        ->and($count)->toBe(55)
         ->and(Account::query()->where('code', '1100')->value('control_account_type'))->toBe('accounts_receivable')
         ->and(Account::query()->where('code', '1000')->value('is_postable'))->toBeFalse()
-        ->and(Account::query()->where('code', '1590')->value('normal_balance'))->toBe(NormalBalance::Credit);
+        ->and(Account::query()->where('code', '1590')->value('normal_balance'))->toBe(NormalBalance::Credit)
+        ->and(Account::query()->where('code', '6200')->value('account_type'))->toBe(AccountType::IncomeTaxExpense);
 });

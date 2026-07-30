@@ -26,6 +26,7 @@ use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\FundTransferController;
 use App\Http\Controllers\GeneralLedgerController;
 use App\Http\Controllers\GovernmentDeductionController;
+use App\Http\Controllers\IncomeStatementController;
 use App\Http\Controllers\InventoryAdjustmentController;
 use App\Http\Controllers\InventoryOpeningBalanceController;
 use App\Http\Controllers\InventoryReportController;
@@ -121,6 +122,10 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/subledger-reconciliations', [TrialBalanceController::class, 'reconciliations'])->name('subledger-reconciliations.index');
     Route::get('/subledger-reconciliations/print', [TrialBalanceController::class, 'print'])->name('subledger-reconciliations.print');
     Route::get('/subledger-reconciliations/export', [TrialBalanceController::class, 'export'])->name('subledger-reconciliations.export');
+    Route::get('/income-statement', [IncomeStatementController::class, 'index'])->name('income-statement.index');
+    Route::get('/income-statement/print', [IncomeStatementController::class, 'print'])->name('income-statement.print');
+    Route::get('/income-statement/export', [IncomeStatementController::class, 'export'])->name('income-statement.export');
+    Route::get('/income-statement/accounts/{account}', [IncomeStatementController::class, 'drilldown'])->name('income-statement.drilldown');
     Route::post('/posting-rules/preview', [PostingRuleController::class, 'preview'])->name('posting-rules.preview');
     Route::patch('/posting-rules/{posting_rule}/status', [PostingRuleController::class, 'status'])->name('posting-rules.status');
     Route::resource('posting-rules', PostingRuleController::class)->except(['show', 'destroy']);

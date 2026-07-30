@@ -32,9 +32,12 @@ final class FinancialReportingConvention
         'financial-reports.export',
         'financial-reports.view-sensitive',
         'financial-report-settings.manage',
+        'income-statement.view',
+        'income-statement.export',
+        'income-statement.drilldown',
     ];
 
-    public const VIEW_PERMISSIONS = ['financial-reports.view'];
+    public const VIEW_PERMISSIONS = ['financial-reports.view', 'income-statement.view'];
 
     public static function balanceBasis(AccountClass $accountClass): ReportBalanceBasis
     {
