@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 /**
  * @property AccountClass $account_class
  * @property AccountType $account_type
+ * @property CurrentClassification|null $current_classification
  * @property NormalBalance $normal_balance
  */
 #[Fillable([

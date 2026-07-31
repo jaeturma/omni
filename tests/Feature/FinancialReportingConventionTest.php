@@ -9,7 +9,6 @@ use App\Enums\NormalBalance;
 use App\Enums\ReportBalanceBasis;
 use App\Models\Account;
 use App\Models\User;
-use App\Reports\BalanceSheetReport;
 use App\Reports\CashFlowStatementReport;
 use App\Support\FinancialReportingConvention;
 use App\ValueObjects\FinancialReportParameters;
@@ -101,8 +100,7 @@ it('seeds phase eight permissions without creating stored financial-statement re
         ->and(Role::findByName('Viewer')->hasPermissionTo('financial-reports.export'))->toBeFalse()
         ->and(Schema::hasTable('financial_statements'))->toBeFalse();
 
-    expect(class_exists(BalanceSheetReport::class))->toBeFalse()
-        ->and(class_exists(CashFlowStatementReport::class))->toBeFalse();
+    expect(class_exists(CashFlowStatementReport::class))->toBeFalse();
 });
 
 it('requires the reporting-settings permission to change account classifications', function (): void {

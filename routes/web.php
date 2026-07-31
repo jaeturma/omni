@@ -5,6 +5,7 @@ use App\Http\Controllers\AccountsPayableReportController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\BalanceSheetController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\BankReconciliationController;
 use App\Http\Controllers\BankStatementImportController;
@@ -126,6 +127,10 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/income-statement/print', [IncomeStatementController::class, 'print'])->name('income-statement.print');
     Route::get('/income-statement/export', [IncomeStatementController::class, 'export'])->name('income-statement.export');
     Route::get('/income-statement/accounts/{account}', [IncomeStatementController::class, 'drilldown'])->name('income-statement.drilldown');
+    Route::get('/balance-sheet', [BalanceSheetController::class, 'index'])->name('balance-sheet.index');
+    Route::get('/balance-sheet/print', [BalanceSheetController::class, 'print'])->name('balance-sheet.print');
+    Route::get('/balance-sheet/export', [BalanceSheetController::class, 'export'])->name('balance-sheet.export');
+    Route::get('/balance-sheet/accounts/{account}', [BalanceSheetController::class, 'drilldown'])->name('balance-sheet.drilldown');
     Route::post('/posting-rules/preview', [PostingRuleController::class, 'preview'])->name('posting-rules.preview');
     Route::patch('/posting-rules/{posting_rule}/status', [PostingRuleController::class, 'status'])->name('posting-rules.status');
     Route::resource('posting-rules', PostingRuleController::class)->except(['show', 'destroy']);

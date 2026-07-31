@@ -35,9 +35,12 @@ final class FinancialReportingConvention
         'income-statement.view',
         'income-statement.export',
         'income-statement.drilldown',
+        'balance-sheet.view',
+        'balance-sheet.export',
+        'balance-sheet.drilldown',
     ];
 
-    public const VIEW_PERMISSIONS = ['financial-reports.view', 'income-statement.view'];
+    public const VIEW_PERMISSIONS = ['financial-reports.view', 'income-statement.view', 'balance-sheet.view'];
 
     public static function balanceBasis(AccountClass $accountClass): ReportBalanceBasis
     {
