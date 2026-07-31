@@ -67,6 +67,7 @@
             ['Subledger Reconciliation', 'subledger-reconciliations.index', 'subledger-reconciliation.view'],
             ['Income Statement', 'income-statement.index', 'income-statement.view'],
             ['Balance Sheet', 'balance-sheet.index', 'balance-sheet.view'],
+            ['Cash Flow Statement', 'cash-flow-statement.index', 'cash-flow-statement.view'],
             ['Posting Rules', 'posting-rules.index', 'posting-rules.view'],
             ['Source Postings', 'source-postings.index', 'source-posting.view'],
         ],
