@@ -34,6 +34,7 @@ use App\Http\Controllers\InventoryOpeningBalanceController;
 use App\Http\Controllers\InventoryReportController;
 use App\Http\Controllers\InventoryTransferController;
 use App\Http\Controllers\JournalEntryController;
+use App\Http\Controllers\OwnerEquityStatementController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PettyCashController;
 use App\Http\Controllers\PhysicalCountController;
@@ -137,6 +138,10 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/cash-flow-statement/export', [CashFlowStatementController::class, 'export'])->name('cash-flow-statement.export');
     Route::get('/cash-flow-statement/mappings', [CashFlowStatementController::class, 'mappings'])->name('cash-flow-statement.mappings');
     Route::get('/cash-flow-statement/accounts/{account}', [CashFlowStatementController::class, 'drilldown'])->name('cash-flow-statement.drilldown');
+    Route::get('/owner-equity-statement', [OwnerEquityStatementController::class, 'index'])->name('owner-equity-statement.index');
+    Route::get('/owner-equity-statement/print', [OwnerEquityStatementController::class, 'print'])->name('owner-equity-statement.print');
+    Route::get('/owner-equity-statement/export', [OwnerEquityStatementController::class, 'export'])->name('owner-equity-statement.export');
+    Route::get('/owner-equity-statement/activities/{activity}', [OwnerEquityStatementController::class, 'drilldown'])->name('owner-equity-statement.drilldown');
     Route::post('/posting-rules/preview', [PostingRuleController::class, 'preview'])->name('posting-rules.preview');
     Route::patch('/posting-rules/{posting_rule}/status', [PostingRuleController::class, 'status'])->name('posting-rules.status');
     Route::resource('posting-rules', PostingRuleController::class)->except(['show', 'destroy']);
