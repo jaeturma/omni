@@ -24,6 +24,8 @@ use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\DocumentSequenceController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\FinancialAccountController;
+use App\Http\Controllers\FinancialDashboardController;
+use App\Http\Controllers\FinancialReportPackController;
 use App\Http\Controllers\FiscalPeriodController;
 use App\Http\Controllers\FiscalYearController;
 use App\Http\Controllers\FundTransferController;
@@ -81,7 +83,10 @@ Route::middleware('guest')->group(function () {
 });
 
 Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
-    Route::view('/dashboard', 'dashboard')->name('dashboard');
+    Route::view('/dashboard', 'dashboard-home')->name('dashboard');
+    Route::get('/financial-dashboard', FinancialDashboardController::class)->name('financial-dashboard');
+    Route::get('/financial-report-pack', [FinancialReportPackController::class, 'show'])->name('financial-report-pack.show');
+    Route::get('/financial-report-pack/download', [FinancialReportPackController::class, 'download'])->name('financial-report-pack.download');
     Route::get('/business-profile', [BusinessProfileController::class, 'edit'])->name('business-profile.edit');
     Route::put('/business-profile', [BusinessProfileController::class, 'update'])->name('business-profile.update');
     Route::get('/tax-profile', [TaxProfileController::class, 'edit'])->name('tax-profile.edit');

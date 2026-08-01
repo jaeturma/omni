@@ -71,6 +71,7 @@
             ["Owner's Equity Statement", 'owner-equity-statement.index', 'owner-equity-statement.view'],
             ['Comparative Reports', 'comparative-reports.index', 'comparative-reports.view'],
             ['Management Reports', 'management-reports.index', 'management-reports.view'],
+            ['Financial Dashboard', 'financial-dashboard', 'financial-dashboard.view'],
             ['Posting Rules', 'posting-rules.index', 'posting-rules.view'],
             ['Source Postings', 'source-postings.index', 'source-posting.view'],
         ],
