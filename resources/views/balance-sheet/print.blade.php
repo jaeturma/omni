@@ -2,6 +2,7 @@
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Balance Sheet</title>@vite(['resources/css/app.css'])</head>
 <body class="bg-white p-8 text-slate-950">
+    <x-financial-report-metadata :metadata="$reportMetadata" />
     <h1 class="text-2xl font-bold">Balance Sheet</h1>
     <p class="text-sm">As of {{ $filters['as_of'] }} · Fiscal-year start {{ $filters['fiscal_year_start'] }} · Fiscal period {{ $filters['fiscal_period_id'] ?? 'Custom' }} · Zero balances {{ $filters['show_zero_balances'] ? 'shown' : 'hidden' }}</p>
     <p class="mt-2 text-sm font-semibold">{{ $balanced ? 'Balanced — final ready' : 'Out of balance — not final ready' }} · Difference PHP {{ $display_summary['difference'] }}</p>

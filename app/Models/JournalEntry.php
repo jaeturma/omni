@@ -19,6 +19,8 @@ use Illuminate\Support\Carbon;
  * @property string $total_debit
  * @property string $total_credit
  * @property JournalEntryStatus $status
+ * @property AccountingSourceType $source_type
+ * @property int|null $source_id
  */
 #[Fillable(['journal_number', 'journal_date', 'document_date', 'fiscal_period_id', 'journal_type', 'source_type', 'source_id', 'reference_number', 'description', 'total_debit', 'total_credit', 'status', 'posted_at', 'posted_by', 'reversed_at', 'reversed_by', 'reversal_entry_id', 'reverses_entry_id', 'correction_of_id', 'reversal_reason', 'auto_reverse_on', 'is_auto_reversal', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
 class JournalEntry extends Model

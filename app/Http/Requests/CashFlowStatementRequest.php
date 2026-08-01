@@ -14,8 +14,9 @@ class CashFlowStatementRequest extends FormRequest
         }
 
         return match (true) {
-            $this->routeIs('cash-flow-statement.export') => (bool) $this->user()->can('cash-flow-statement.export'),
-            $this->routeIs('cash-flow-statement.drilldown') => (bool) $this->user()->can('cash-flow-statement.drilldown'),
+            $this->routeIs('cash-flow-statement.print') => (bool) $this->user()->can('financial-reports.print'),
+            $this->routeIs('cash-flow-statement.export') => (bool) ($this->user()->can('cash-flow-statement.export') && $this->user()->can('financial-reports.export')),
+            $this->routeIs('cash-flow-statement.drilldown') => (bool) ($this->user()->can('cash-flow-statement.drilldown') && $this->user()->can('financial-reports.drilldown')),
             $this->routeIs('cash-flow-statement.mappings') => (bool) $this->user()->can('cash-flow-mapping.manage'),
             default => true,
         };

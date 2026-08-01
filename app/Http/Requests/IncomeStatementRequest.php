@@ -16,8 +16,9 @@ class IncomeStatementRequest extends FormRequest
         }
 
         return match (true) {
-            $this->routeIs('income-statement.export') => (bool) $this->user()->can('income-statement.export'),
-            $this->routeIs('income-statement.drilldown') => (bool) $this->user()->can('income-statement.drilldown'),
+            $this->routeIs('income-statement.print') => (bool) $this->user()->can('financial-reports.print'),
+            $this->routeIs('income-statement.export') => (bool) ($this->user()->can('income-statement.export') && $this->user()->can('financial-reports.export')),
+            $this->routeIs('income-statement.drilldown') => (bool) ($this->user()->can('income-statement.drilldown') && $this->user()->can('financial-reports.drilldown')),
             default => true,
         };
     }

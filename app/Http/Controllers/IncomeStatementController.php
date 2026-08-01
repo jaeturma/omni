@@ -6,6 +6,7 @@ use App\Http\Requests\IncomeStatementRequest;
 use App\Models\Account;
 use App\Models\FiscalPeriod;
 use App\Reports\IncomeStatementReport;
+use App\Services\FinancialReportOutput;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -18,35 +19,38 @@ class IncomeStatementController extends Controller
         return view('income-statement.index', $this->viewData($filters) + $report->generate($filters));
     }
 
-    public function print(IncomeStatementRequest $request, IncomeStatementReport $report): View
+    public function print(IncomeStatementRequest $request, IncomeStatementReport $report, FinancialReportOutput $output): View
     {
         $filters = $request->validated();
 
-        return view('income-statement.print', ['filters' => $filters] + $report->generate($filters));
+        return view('income-statement.print', [
+            'filters' => $filters,
+            'reportMetadata' => $output->metadata($request->user(), 'Income Statement', $filters, 'Accrual basis · Posted general ledger'),
+        ] + $report->generate($filters));
     }
 
-    public function drilldown(IncomeStatementRequest $request, Account $account, IncomeStatementReport $report): View
+    public function drilldown(IncomeStatementRequest $request, Account $account, IncomeStatementReport $report, FinancialReportOutput $output): View
     {
         $filters = $request->validated();
+
+        $drilldown = $report->drilldown($filters, $account);
 
         return view('income-statement.drilldown', [
             'filters' => $filters,
             'account' => $account,
-        ] + $report->drilldown($filters, $account));
+            'rowLinks' => $output->drilldownLinks($drilldown['rows'], $request->user()),
+        ] + $drilldown);
     }
 
-    public function export(IncomeStatementRequest $request, IncomeStatementReport $report): StreamedResponse
+    public function export(IncomeStatementRequest $request, IncomeStatementReport $report, FinancialReportOutput $output): StreamedResponse
     {
         $filters = $request->validated();
         $statement = $report->generate($filters);
+        $metadata = $output->metadata($request->user(), 'Income Statement', $filters, 'Accrual basis · Posted general ledger');
 
-        return response()->streamDownload(function () use ($filters, $statement): void {
+        return response()->streamDownload(function () use ($filters, $statement, $metadata, $output): void {
             $stream = fopen('php://output', 'w');
-            fputcsv($stream, ['Income Statement']);
-            foreach ($filters as $parameter => $value) {
-                fputcsv($stream, [str($parameter)->headline()->toString(), is_bool($value) ? ($value ? 'Yes' : 'No') : $value]);
-            }
-            fputcsv($stream, []);
+            $output->writeCsvMetadata($stream, $metadata, $filters);
             fputcsv($stream, ['Section', 'Account Code', 'Account Name', 'Amount']);
             foreach ($statement['sections'] as $section) {
                 if ($section['key'] === 'income_tax' && ! $statement['has_income_tax']) {
@@ -66,7 +70,7 @@ class IncomeStatementController extends Controller
                 }
             }
             fclose($stream);
-        }, 'income-statement-'.$filters['start_date'].'-'.$filters['end_date'].'.csv', ['Content-Type' => 'text/csv']);
+        }, $output->filename('income-statement', $filters), ['Content-Type' => 'text/csv']);
     }
 
     /** @param array<string, mixed> $filters

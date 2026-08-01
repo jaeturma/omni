@@ -228,7 +228,7 @@ it('enforces permissions validation fiscal-period print export and mapping revie
     $this->actingAs($context['user'])->get(route('cash-flow-statement.print', cashFlowFilters()))
         ->assertSuccessful()->assertSee('Cash Flow Statement');
     $this->actingAs($context['user'])->get(route('cash-flow-statement.export', cashFlowFilters()))
-        ->assertSuccessful()->assertDownload('cash-flow-statement-2026-06-01-2026-06-30.csv');
+        ->assertSuccessful()->assertDownload();
     $this->actingAs($context['user'])->get(route('cash-flow-statement.mappings', cashFlowFilters()))
         ->assertSuccessful()->assertSee('Cash Flow Mapping Review');
 

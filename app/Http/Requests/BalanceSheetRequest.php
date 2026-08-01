@@ -15,8 +15,9 @@ class BalanceSheetRequest extends FormRequest
         }
 
         return match (true) {
-            $this->routeIs('balance-sheet.export') => (bool) $this->user()->can('balance-sheet.export'),
-            $this->routeIs('balance-sheet.drilldown') => (bool) $this->user()->can('balance-sheet.drilldown'),
+            $this->routeIs('balance-sheet.print') => (bool) $this->user()->can('financial-reports.print'),
+            $this->routeIs('balance-sheet.export') => (bool) ($this->user()->can('balance-sheet.export') && $this->user()->can('financial-reports.export')),
+            $this->routeIs('balance-sheet.drilldown') => (bool) ($this->user()->can('balance-sheet.drilldown') && $this->user()->can('financial-reports.drilldown')),
             default => true,
         };
     }

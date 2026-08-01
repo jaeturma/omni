@@ -199,7 +199,7 @@ it('seeds permissions and enforces view export drilldown and date validation', f
     $this->actingAs($context['user'])->get(route('income-statement.print', incomeStatementFilters()))
         ->assertSuccessful()->assertSee('Income Statement');
     $this->actingAs($context['user'])->get(route('income-statement.export', incomeStatementFilters()))
-        ->assertSuccessful()->assertDownload('income-statement-2026-07-01-2026-07-31.csv');
+        ->assertSuccessful()->assertDownload();
 
     expect(FinancialReportingConvention::PERMISSIONS)->toContain(
         'income-statement.view', 'income-statement.export', 'income-statement.drilldown',

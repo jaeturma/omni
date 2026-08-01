@@ -2,6 +2,7 @@
 <html lang="en">
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Income Statement</title>@vite(['resources/css/app.css'])</head>
 <body class="bg-white p-8 text-slate-950">
+    <x-financial-report-metadata :metadata="$reportMetadata" />
     <h1 class="text-2xl font-bold">Income Statement</h1>
     <p class="text-sm">{{ $filters['start_date'] }} to {{ $filters['end_date'] }} · As of {{ $filters['as_of'] }} · Fiscal period {{ $filters['fiscal_period_id'] ?? 'Custom' }} · {{ str($filters['report_view'])->headline() }} · Zero balances {{ $filters['show_zero_balances'] ? 'shown' : 'hidden' }}</p>
     <table class="mt-5 min-w-full text-sm">

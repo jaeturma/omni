@@ -30,6 +30,9 @@ final class FinancialReportingConvention
     public const PERMISSIONS = [
         'financial-reports.view',
         'financial-reports.export',
+        'financial-reports.print',
+        'financial-reports.drilldown',
+        'financial-reports.view-source',
         'financial-reports.view-sensitive',
         'financial-report-settings.manage',
         'income-statement.view',

@@ -2,7 +2,7 @@
     <x-page-header title="Income Statement" description="Period activity from posted journals, presented using the configured chart-of-accounts hierarchy." />
 
     <nav class="mb-5 flex flex-wrap gap-3 text-sm">
-        <a href="{{ route('income-statement.print', request()->query()) }}">Print</a>
+        @can('financial-reports.print')<a href="{{ route('income-statement.print', request()->query()) }}">Print</a>@endcan
         @can('income-statement.export')
             <a href="{{ route('income-statement.export', request()->query()) }}">CSV export</a>
         @endcan

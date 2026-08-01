@@ -22,7 +22,7 @@
     </form>
 
     <div class="mt-5 flex flex-wrap gap-3 text-sm">
-        <a href="{{ route('cash-flow-statement.print', $filters) }}">Print view</a>
+        @can('financial-reports.print')<a href="{{ route('cash-flow-statement.print', $filters) }}">Print view</a>@endcan
         @can('cash-flow-statement.export')<a href="{{ route('cash-flow-statement.export', $filters) }}">Export CSV</a>@endcan
         @can('cash-flow-mapping.manage')<a href="{{ route('cash-flow-statement.mappings', $filters) }}">Review mappings</a>@endcan
     </div>

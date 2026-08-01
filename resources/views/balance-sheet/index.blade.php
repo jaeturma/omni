@@ -2,7 +2,7 @@
     <x-page-header title="Balance Sheet" description="Cumulative asset, liability, and owner's-equity balances from posted journals." />
 
     <nav class="mb-5 flex flex-wrap gap-3 text-sm">
-        <a href="{{ route('balance-sheet.print', request()->query()) }}">Print</a>
+        @can('financial-reports.print')<a href="{{ route('balance-sheet.print', request()->query()) }}">Print</a>@endcan
         @can('balance-sheet.export')
             <a href="{{ route('balance-sheet.export', request()->query()) }}">CSV export</a>
         @endcan

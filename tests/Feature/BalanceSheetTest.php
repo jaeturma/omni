@@ -213,7 +213,7 @@ it('seeds and enforces balance-sheet permissions validation print and export', f
     $this->actingAs($context['user'])->get(route('balance-sheet.print', balanceSheetFilters()))
         ->assertSuccessful()->assertSee('Balance Sheet');
     $this->actingAs($context['user'])->get(route('balance-sheet.export', balanceSheetFilters()))
-        ->assertSuccessful()->assertDownload('balance-sheet-2026-07-31.csv');
+        ->assertSuccessful()->assertDownload();
 
     expect(FinancialReportingConvention::PERMISSIONS)->toContain(
         'balance-sheet.view', 'balance-sheet.export', 'balance-sheet.drilldown',

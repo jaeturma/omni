@@ -10,7 +10,7 @@
             <thead class="bg-slate-50"><tr><th class="px-4 py-3 text-left">Date</th><th class="px-4 py-3 text-left">Journal</th><th class="px-4 py-3 text-left">Reference</th><th class="px-4 py-3 text-left">Account</th><th class="px-4 py-3 text-right">Debit</th><th class="px-4 py-3 text-right">Credit</th></tr></thead>
             <tbody>
                 @forelse($rows as $row)
-                    <tr class="border-t"><td class="px-4 py-3">{{ $row->journalEntry->journal_date->toDateString() }}</td><td class="px-4 py-3">{{ $row->journalEntry->journal_number }}</td><td class="px-4 py-3">{{ $row->journalEntry->reference_number }}</td><td class="px-4 py-3">{{ $row->account->code }} — {{ $row->account->name }}</td><td class="px-4 py-3 text-right">{{ $row->debit }}</td><td class="px-4 py-3 text-right">{{ $row->credit }}</td></tr>
+                    <tr class="border-t"><td class="px-4 py-3">{{ $row->journalEntry->journal_date->toDateString() }}</td><td class="px-4 py-3">@if($rowLinks[$row->id]['journal_url'])<a href="{{ $rowLinks[$row->id]['journal_url'] }}">{{ $row->journalEntry->journal_number }}</a>@else{{ $row->journalEntry->journal_number }}@endif</td><td class="px-4 py-3">{{ $row->journalEntry->reference_number }} @if($rowLinks[$row->id]['source_url'])· <a href="{{ $rowLinks[$row->id]['source_url'] }}">{{ $rowLinks[$row->id]['source_label'] }}</a>@endif</td><td class="px-4 py-3">{{ $row->account->code }} — {{ $row->account->name }}</td><td class="px-4 py-3 text-right">{{ $row->debit }}</td><td class="px-4 py-3 text-right">{{ $row->credit }}</td></tr>
                 @empty
                     <tr><td colspan="6" class="p-8 text-center text-slate-500">No posted activity for this selection.</td></tr>
                 @endforelse

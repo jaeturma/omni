@@ -6,6 +6,7 @@ use App\Http\Requests\CashFlowStatementRequest;
 use App\Models\Account;
 use App\Models\FiscalPeriod;
 use App\Reports\CashFlowStatementReport;
+use App\Services\FinancialReportOutput;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -18,24 +19,31 @@ class CashFlowStatementController extends Controller
         return view('cash-flow-statement.index', $this->viewData($filters) + $report->generate($filters));
     }
 
-    public function print(CashFlowStatementRequest $request, CashFlowStatementReport $report): View
+    public function print(CashFlowStatementRequest $request, CashFlowStatementReport $report, FinancialReportOutput $output): View
     {
         $filters = $request->validated();
 
-        return view('cash-flow-statement.print', ['filters' => $filters] + $report->generate($filters));
+        return view('cash-flow-statement.print', [
+            'filters' => $filters,
+            'reportMetadata' => $output->metadata($request->user(), 'Cash Flow Statement', $filters, 'Indirect method · Posted general ledger'),
+        ] + $report->generate($filters));
     }
 
     public function drilldown(
         CashFlowStatementRequest $request,
         Account $account,
         CashFlowStatementReport $report,
+        FinancialReportOutput $output,
     ): View {
         $filters = $request->validated();
+
+        $drilldown = $report->drilldown($filters, $account);
 
         return view('cash-flow-statement.drilldown', [
             'filters' => $filters,
             'account' => $account,
-        ] + $report->drilldown($filters, $account));
+            'rowLinks' => $output->drilldownLinks($drilldown['rows'], $request->user()),
+        ] + $drilldown);
     }
 
     public function mappings(CashFlowStatementRequest $request, CashFlowStatementReport $report): View
@@ -49,17 +57,15 @@ class CashFlowStatementController extends Controller
     public function export(
         CashFlowStatementRequest $request,
         CashFlowStatementReport $report,
+        FinancialReportOutput $output,
     ): StreamedResponse {
         $filters = $request->validated();
         $statement = $report->generate($filters);
+        $metadata = $output->metadata($request->user(), 'Cash Flow Statement', $filters, 'Indirect method · Posted general ledger');
 
-        return response()->streamDownload(function () use ($filters, $statement): void {
+        return response()->streamDownload(function () use ($filters, $statement, $metadata, $output): void {
             $stream = fopen('php://output', 'w');
-            fputcsv($stream, ['Cash Flow Statement — Indirect Method']);
-            foreach ($filters as $parameter => $value) {
-                fputcsv($stream, [str($parameter)->headline()->toString(), $value]);
-            }
-            fputcsv($stream, []);
+            $output->writeCsvMetadata($stream, $metadata, $filters);
             fputcsv($stream, ['Section', 'Account Code', 'Activity', 'Amount']);
             foreach ($statement['sections'] as $section) {
                 foreach ($section['rows'] as $row) {
@@ -73,7 +79,7 @@ class CashFlowStatementController extends Controller
             }
             fputcsv($stream, ['Final Ready', null, null, $statement['final_ready'] ? 'Yes' : 'No']);
             fclose($stream);
-        }, 'cash-flow-statement-'.$filters['start_date'].'-'.$filters['end_date'].'.csv', ['Content-Type' => 'text/csv']);
+        }, $output->filename('cash-flow-statement', $filters), ['Content-Type' => 'text/csv']);
     }
 
     /** @param array<string, mixed> $filters
