@@ -8,12 +8,12 @@ Execute the work packages one at a time:
 2. WP-08-02-income-statement.md - ok
 3. WP-08-03-balance-sheet.md - ok
 4. WP-08-04-cash-flow-statement.md - ok
-5. WP-08-05-owner-equity-statement.md - ok
+5. WP-08-05-owner-equity-statement.md - OK
 6. WP-08-06-comparative-period-reports.md - ok
 7. WP-08-07-management-profitability-reports.md - ok
 8. WP-08-08-drilldowns-exports.md - ok
-9. WP-08-09-financial-dashboard-report-pack.md
-10. WP-08-10-phase-validation-gap-review.md
+9. WP-08-09-financial-dashboard-report-pack.md - ok
+10. WP-08-10-phase-validation-gap-review.md - 0k
 
 FIRST CODEX PROMPT
 
