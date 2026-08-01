@@ -10,8 +10,8 @@ Execute the work packages one at a time:
 4. WP-07-04-posting-rules-account-mapping.md - ok
 5. WP-07-05-automatic-source-posting.md - ok
 6. WP-07-06-reversals-adjusting-entries.md - ok
-7. WP-07-07-general-ledger-account-activity.md
-8. WP-07-08-trial-balance-subledger-reconciliation.md
+7. WP-07-07-general-ledger-account-activity.md - ok
+8. WP-07-08-trial-balance-subledger-reconciliation.md - ok
 9. WP-07-09-period-close-lock-reopen.md
 10. WP-07-10-phase-validation-gap-review.md
 
