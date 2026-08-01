@@ -17,6 +17,7 @@ use App\Http\Controllers\CashFlowStatementController;
 use App\Http\Controllers\CashPositionReportController;
 use App\Http\Controllers\CashReceiptController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ComparativeReportController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerPaymentController;
 use App\Http\Controllers\DeliveryController;
@@ -142,6 +143,9 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/owner-equity-statement/print', [OwnerEquityStatementController::class, 'print'])->name('owner-equity-statement.print');
     Route::get('/owner-equity-statement/export', [OwnerEquityStatementController::class, 'export'])->name('owner-equity-statement.export');
     Route::get('/owner-equity-statement/activities/{activity}', [OwnerEquityStatementController::class, 'drilldown'])->name('owner-equity-statement.drilldown');
+    Route::get('/comparative-reports', [ComparativeReportController::class, 'index'])->name('comparative-reports.index');
+    Route::get('/comparative-reports/print', [ComparativeReportController::class, 'print'])->name('comparative-reports.print');
+    Route::get('/comparative-reports/export', [ComparativeReportController::class, 'export'])->name('comparative-reports.export');
     Route::post('/posting-rules/preview', [PostingRuleController::class, 'preview'])->name('posting-rules.preview');
     Route::patch('/posting-rules/{posting_rule}/status', [PostingRuleController::class, 'status'])->name('posting-rules.status');
     Route::resource('posting-rules', PostingRuleController::class)->except(['show', 'destroy']);

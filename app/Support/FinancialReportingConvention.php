@@ -48,6 +48,8 @@ final class FinancialReportingConvention
         'owner-equity-statement.view',
         'owner-equity-statement.export',
         'owner-equity-statement.drilldown',
+        'comparative-reports.view',
+        'comparative-reports.export',
     ];
 
     public const VIEW_PERMISSIONS = [
@@ -56,6 +58,7 @@ final class FinancialReportingConvention
         'balance-sheet.view',
         'cash-flow-statement.view',
         'owner-equity-statement.view',
+        'comparative-reports.view',
     ];
 
     public static function balanceBasis(AccountClass $accountClass): ReportBalanceBasis

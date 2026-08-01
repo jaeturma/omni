@@ -69,6 +69,7 @@
             ['Balance Sheet', 'balance-sheet.index', 'balance-sheet.view'],
             ['Cash Flow Statement', 'cash-flow-statement.index', 'cash-flow-statement.view'],
             ["Owner's Equity Statement", 'owner-equity-statement.index', 'owner-equity-statement.view'],
+            ['Comparative Reports', 'comparative-reports.index', 'comparative-reports.view'],
             ['Posting Rules', 'posting-rules.index', 'posting-rules.view'],
             ['Source Postings', 'source-postings.index', 'source-posting.view'],
         ],
