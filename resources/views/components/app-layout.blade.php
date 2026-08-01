@@ -7,6 +7,7 @@
         ],
         'Setup' => [
             ['Fiscal Years', 'fiscal-years.index', 'fiscal-years.view'],
+            ['Tax Rules', 'tax-rules.index', 'tax-rules.view'],
             ['Sequences', 'document-sequences.index', 'document-sequences.view'],
             ['Users', 'users.index', 'users.view'],
             ['Settings', 'system-settings.edit', 'system-settings.view'],

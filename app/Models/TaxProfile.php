@@ -30,6 +30,12 @@ class TaxProfile extends Model
         return $this->hasMany(TaxFormRegistration::class);
     }
 
+    /** @return HasMany<TaxComplianceRule, $this> */
+    public function complianceRules(): HasMany
+    {
+        return $this->hasMany(TaxComplianceRule::class);
+    }
+
     protected function casts(): array
     {
         return ['percentage_tax_registered' => 'boolean', 'percentage_tax_rate' => 'decimal:6', 'percentage_tax_effective_from' => 'date', 'percentage_tax_effective_to' => 'date', 'registration_start_date' => 'date', 'active' => 'boolean'];

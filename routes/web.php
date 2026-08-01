@@ -59,6 +59,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\SupplierInvoiceController;
 use App\Http\Controllers\SupplierPaymentController;
 use App\Http\Controllers\SystemSettingController;
+use App\Http\Controllers\TaxComplianceRuleController;
 use App\Http\Controllers\TaxProfileController;
 use App\Http\Controllers\TrialBalanceController;
 use App\Http\Controllers\UnitOfMeasureController;
@@ -92,6 +93,12 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/tax-profile', [TaxProfileController::class, 'edit'])->name('tax-profile.edit');
     Route::put('/tax-profile', [TaxProfileController::class, 'update'])->name('tax-profile.update');
     Route::post('/tax-profile/rates', [TaxProfileController::class, 'storeRate'])->name('tax-profile.rates.store');
+    Route::patch('/tax-rules/{tax_compliance_rule}/activate', [TaxComplianceRuleController::class, 'activate'])->name('tax-rules.activate');
+    Route::patch('/tax-rules/{tax_compliance_rule}/deactivate', [TaxComplianceRuleController::class, 'deactivate'])->name('tax-rules.deactivate');
+    Route::patch('/tax-rules/{tax_compliance_rule}/review', [TaxComplianceRuleController::class, 'review'])->name('tax-rules.review');
+    Route::resource('tax-rules', TaxComplianceRuleController::class)
+        ->parameters(['tax-rules' => 'tax_compliance_rule'])
+        ->only(['index', 'store', 'edit', 'update']);
     Route::get('/fiscal-years', [FiscalYearController::class, 'index'])->name('fiscal-years.index');
     Route::post('/fiscal-years', [FiscalYearController::class, 'store'])->name('fiscal-years.store');
     Route::get('/fiscal-periods/{fiscalPeriod}', [FiscalPeriodController::class, 'show'])->name('fiscal-periods.show');
