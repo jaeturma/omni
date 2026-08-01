@@ -54,6 +54,8 @@ function complianceRuleData(array $changes = []): array
         'tax_base_rule' => 'Configured gross taxable sales or receipts.',
         'credit_rule' => 'Configured allowable credits supported by records.',
         'deadline_rule' => 'Review the current official deadline guidance.',
+        'deadline_months_after_period_end' => 1,
+        'deadline_day' => 25,
         'amendment_supported' => true,
         'attachment_requirements' => ['Supporting sales schedule'],
         'official_reference_title' => 'BIR Form No. 2551Q Guidelines and Instructions',
@@ -195,6 +197,5 @@ it('supports every required initial tax type without exposing worksheet calculat
 
     expect($taxRuleRoutes)->not->toBeEmpty()
         ->and($taxRuleRoutes->contains(fn ($route): bool => str_contains($route->uri(), 'calculate')))->toBeFalse()
-        ->and(Schema::hasTable('tax_periods'))->toBeFalse()
         ->and(Schema::hasTable('tax_worksheets'))->toBeFalse();
 });

@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/** @property CarbonInterface $registration_start_date */
 class TaxProfile extends Model
 {
     protected $fillable = ['business_profile_id', 'taxpayer_type', 'registration_type', 'vat_status', 'income_tax_option', 'percentage_tax_registered', 'percentage_tax_rate', 'percentage_tax_effective_from', 'percentage_tax_effective_to', 'filing_frequency', 'registration_start_date', 'first_filing_period', 'rdo_code', 'tin', 'branch_code', 'registered_books_type', 'notes', 'active'];
@@ -34,6 +36,12 @@ class TaxProfile extends Model
     public function complianceRules(): HasMany
     {
         return $this->hasMany(TaxComplianceRule::class);
+    }
+
+    /** @return HasMany<TaxPeriod, $this> */
+    public function taxPeriods(): HasMany
+    {
+        return $this->hasMany(TaxPeriod::class);
     }
 
     protected function casts(): array

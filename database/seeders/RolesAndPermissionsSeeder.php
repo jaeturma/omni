@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Services\TaxComplianceCalendar;
 use App\Services\TaxRuleRegistry;
 use App\Support\AccountingWorkflow;
 use App\Support\CashBankWorkflow;
@@ -46,6 +47,7 @@ class RolesAndPermissionsSeeder extends Seeder
             ...AccountingWorkflow::PERMISSIONS,
             ...FinancialReportingConvention::PERMISSIONS,
             ...TaxRuleRegistry::PERMISSIONS,
+            ...TaxComplianceCalendar::PERMISSIONS,
         ];
         foreach ($permissions as $permission) {
             Permission::findOrCreate($permission, 'web');
