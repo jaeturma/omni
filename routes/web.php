@@ -35,6 +35,7 @@ use App\Http\Controllers\InventoryOpeningBalanceController;
 use App\Http\Controllers\InventoryReportController;
 use App\Http\Controllers\InventoryTransferController;
 use App\Http\Controllers\JournalEntryController;
+use App\Http\Controllers\ManagementReportController;
 use App\Http\Controllers\OwnerEquityStatementController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PettyCashController;
@@ -146,6 +147,9 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/comparative-reports', [ComparativeReportController::class, 'index'])->name('comparative-reports.index');
     Route::get('/comparative-reports/print', [ComparativeReportController::class, 'print'])->name('comparative-reports.print');
     Route::get('/comparative-reports/export', [ComparativeReportController::class, 'export'])->name('comparative-reports.export');
+    Route::get('/management-reports', [ManagementReportController::class, 'index'])->name('management-reports.index');
+    Route::get('/management-reports/print', [ManagementReportController::class, 'print'])->name('management-reports.print');
+    Route::get('/management-reports/export', [ManagementReportController::class, 'export'])->name('management-reports.export');
     Route::post('/posting-rules/preview', [PostingRuleController::class, 'preview'])->name('posting-rules.preview');
     Route::patch('/posting-rules/{posting_rule}/status', [PostingRuleController::class, 'status'])->name('posting-rules.status');
     Route::resource('posting-rules', PostingRuleController::class)->except(['show', 'destroy']);

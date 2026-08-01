@@ -30,6 +30,11 @@ class SalesInvoiceLine extends Model
         return $this->belongsTo(DeliveryLine::class);
     }
 
+    public function productService(): BelongsTo
+    {
+        return $this->belongsTo(ProductService::class);
+    }
+
     protected function casts(): array
     {
         return ['line_number' => 'integer', 'quantity' => 'decimal:4', 'unit_price' => 'decimal:4', 'discount_rate' => 'decimal:6', 'gross_amount' => 'decimal:4', 'discount_amount' => 'decimal:4', 'net_amount' => 'decimal:4'];
