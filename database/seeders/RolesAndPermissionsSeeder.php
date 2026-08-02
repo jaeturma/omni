@@ -38,6 +38,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'fiscal-years.view', 'fiscal-years.create', 'fiscal-periods.manage', 'fiscal-periods.close', 'fiscal-periods.lock',
             'document-sequences.view', 'document-sequences.manage', 'document-sequences.issue',
             'users.view', 'users.manage', 'roles.view', 'system-settings.view', 'system-settings.update',
+            'audit-logs.view', 'audit-logs.export', 'audit-logs.view-sensitive',
             'customers.view', 'customers.create', 'customers.update', 'customers.delete',
             'suppliers.view', 'suppliers.create', 'suppliers.update', 'suppliers.delete',
             'units-of-measure.view', 'units-of-measure.create', 'units-of-measure.update', 'units-of-measure.delete',

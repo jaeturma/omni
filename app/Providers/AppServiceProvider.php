@@ -21,11 +21,14 @@ use App\Models\SalesInvoice;
 use App\Models\SalesOrder;
 use App\Models\SupplierInvoice;
 use App\Models\SupplierPayment;
+use App\Observers\AuditObserver;
 use App\Observers\AutomaticSourcePostingObserver;
+use App\Services\AuditLogger;
 use App\Services\SystemSettings;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
@@ -38,7 +41,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(AuditLogger::class);
     }
 
     /**
@@ -49,6 +52,12 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('sensitive', fn (Request $request): Limit => Limit::perMinute(20)->by((string) ($request->user()->id ?? $request->ip())));
         if ($this->app->isProduction()) {
             URL::forceScheme('https');
+        }
+
+        foreach (['created', 'updated', 'deleted'] as $auditEvent) {
+            Event::listen("eloquent.{$auditEvent}: *", function (string $event, array $models) use ($auditEvent): void {
+                app(AuditObserver::class)->{$auditEvent}($models[0]);
+            });
         }
 
         foreach ([

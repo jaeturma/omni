@@ -19,6 +19,7 @@
             ['Tax Filing History', 'tax-filings.index', 'tax-filings.view'],
             ['Sequences', 'document-sequences.index', 'document-sequences.view'],
             ['Users', 'users.index', 'users.view'],
+            ['Audit Log', 'audit-logs.index', 'audit-logs.view'],
             ['Settings', 'system-settings.edit', 'system-settings.view'],
         ],
         'Master Data' => [
