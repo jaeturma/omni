@@ -12,6 +12,7 @@ use App\Models\SupplierInvoice;
 use App\Models\SupplierPayment;
 use App\Models\User;
 use App\Services\PurchasingAttachmentManager;
+use Illuminate\Support\Facades\Gate;
 
 class PurchasingAttachmentPolicy
 {
@@ -19,7 +20,8 @@ class PurchasingAttachmentPolicy
 
     public function view(User $user, PurchasingAttachment $attachment): bool
     {
-        return $user->can('purchasing-attachments.view');
+        return $user->can('purchasing-attachments.view')
+            && Gate::forUser($user)->allows('view', $attachment->attachable);
     }
 
     public function create(User $user): bool
@@ -35,6 +37,8 @@ class PurchasingAttachmentPolicy
             return false;
         }
 
-        return $user->can('purchasing-attachments.delete') && ! $this->manager->isProtected($record);
+        return $user->can('purchasing-attachments.delete')
+            && Gate::forUser($user)->allows('view', $record)
+            && ! $this->manager->isProtected($record);
     }
 }

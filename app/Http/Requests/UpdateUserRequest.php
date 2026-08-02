@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\Validator;
 use Spatie\Permission\Models\Role;
 
@@ -31,7 +32,7 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', Rule::unique(User::class)->ignore($this->route('user'))],
-            'password' => ['nullable', 'string', 'min:12', 'confirmed'],
+            'password' => ['nullable', 'confirmed', Password::min(12)->mixedCase()->letters()->numbers()->symbols()],
             'active' => ['required', 'boolean'],
             'roles' => ['required', 'array', 'min:1'],
             'roles.*' => ['string', 'distinct', Rule::exists('roles', 'name')->where('guard_name', 'web')],
@@ -44,6 +45,13 @@ class UpdateUserRequest extends FormRequest
             $target = $this->route('user');
             if (! $target instanceof User || $validator->errors()->isNotEmpty()) {
                 return;
+            }
+            $roles = $this->input('roles', []);
+            if (in_array('Administrator', $roles, true) && ! $this->user()?->hasRole('Administrator')) {
+                $validator->errors()->add('roles', 'Only an administrator may assign the Administrator role.');
+            }
+            if (in_array('Owner', $roles, true) && ! $this->user()?->hasRole('Owner')) {
+                $validator->errors()->add('roles', 'Only an owner may assign the Owner role.');
             }
             $removesAdministrator = $target->hasRole('Administrator') && (! $this->boolean('active') || ! in_array('Administrator', $this->input('roles', []), true));
             $retainsUserManagement = Role::query()->whereIn('name', $this->input('roles', []))->whereHas('permissions', fn ($query) => $query->where('name', 'users.manage'))->exists();

@@ -16,6 +16,7 @@ class PurchasingAttachmentController extends Controller
     public function store(StorePurchasingAttachmentRequest $request, string $attachableType, int $attachableId, PurchasingAttachmentManager $manager): RedirectResponse
     {
         $record = $manager->resolve($attachableType, $attachableId);
+        Gate::authorize('view', $record);
         $manager->store($record, $request->file('file'), $request->safe()->except('file'), $request->user());
 
         return back()->with('success', 'Attachment uploaded.');

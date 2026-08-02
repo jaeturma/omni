@@ -88,7 +88,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
     Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->middleware('throttle:5,1')->name('password.email');
     Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
-    Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
+    Route::post('/reset-password', [NewPasswordController::class, 'store'])->middleware('throttle:5,1')->name('password.update');
 });
 
 Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
@@ -155,7 +155,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/document-sequences', [DocumentSequenceController::class, 'store'])->name('document-sequences.store');
     Route::put('/document-sequences/{documentSequence}', [DocumentSequenceController::class, 'update'])->name('document-sequences.update');
     Route::post('/document-sequences/{documentSequence}/issue', [DocumentSequenceController::class, 'issue'])->name('document-sequences.issue');
-    Route::resource('users', UserController::class)->except(['show', 'destroy']);
+    Route::resource('users', UserController::class)->except(['show', 'destroy'])->middleware('throttle:sensitive');
     Route::get('/roles', RoleMatrixController::class)->name('roles.index');
     Route::get('/system-settings', [SystemSettingController::class, 'edit'])->name('system-settings.edit');
     Route::put('/system-settings', [SystemSettingController::class, 'update'])->name('system-settings.update');
@@ -332,10 +332,10 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::post('/government-deductions/{government_deduction}/applications', [WithholdingCertificateReconciliationController::class, 'apply'])->name('government-deductions.applications.store');
     Route::resource('government-deductions', GovernmentDeductionController::class)->except('destroy');
     Route::post('/sales-attachments/{attachableType}/{attachableId}', [SalesAttachmentController::class, 'store'])->whereNumber('attachableId')->name('sales-attachments.store');
-    Route::get('/sales-attachments/{salesAttachment}/download', [SalesAttachmentController::class, 'download'])->name('sales-attachments.download');
+    Route::get('/sales-attachments/{salesAttachment}/download', [SalesAttachmentController::class, 'download'])->middleware('throttle:sensitive')->name('sales-attachments.download');
     Route::delete('/sales-attachments/{salesAttachment}', [SalesAttachmentController::class, 'destroy'])->name('sales-attachments.destroy');
     Route::post('/purchasing-attachments/{attachableType}/{attachableId}', [PurchasingAttachmentController::class, 'store'])->whereNumber('attachableId')->name('purchasing-attachments.store');
-    Route::get('/purchasing-attachments/{purchasingAttachment}/download', [PurchasingAttachmentController::class, 'download'])->name('purchasing-attachments.download');
+    Route::get('/purchasing-attachments/{purchasingAttachment}/download', [PurchasingAttachmentController::class, 'download'])->middleware('throttle:sensitive')->name('purchasing-attachments.download');
     Route::delete('/purchasing-attachments/{purchasingAttachment}', [PurchasingAttachmentController::class, 'destroy'])->name('purchasing-attachments.destroy');
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

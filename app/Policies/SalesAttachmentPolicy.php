@@ -5,6 +5,7 @@ namespace App\Policies;
 use App\Models\SalesAttachment;
 use App\Models\User;
 use App\Services\SalesAttachmentManager;
+use Illuminate\Support\Facades\Gate;
 
 class SalesAttachmentPolicy
 {
@@ -23,7 +24,8 @@ class SalesAttachmentPolicy
      */
     public function view(User $user, SalesAttachment $salesAttachment): bool
     {
-        return $user->can('sales-attachments.view');
+        return $user->can('sales-attachments.view')
+            && Gate::forUser($user)->allows('view', $salesAttachment->attachable);
     }
 
     /**
@@ -47,7 +49,9 @@ class SalesAttachmentPolicy
      */
     public function delete(User $user, SalesAttachment $salesAttachment): bool
     {
-        return $user->can('sales-attachments.delete') && ! $this->manager->isProtected($salesAttachment->attachable);
+        return $user->can('sales-attachments.delete')
+            && Gate::forUser($user)->allows('view', $salesAttachment->attachable)
+            && ! $this->manager->isProtected($salesAttachment->attachable);
     }
 
     /**

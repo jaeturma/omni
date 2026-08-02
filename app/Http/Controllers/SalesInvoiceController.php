@@ -13,6 +13,7 @@ use App\Models\Delivery;
 use App\Models\FiscalPeriod;
 use App\Models\SalesInvoice;
 use App\Models\SalesOrder;
+use App\Support\SensitiveData;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -44,6 +45,7 @@ class SalesInvoiceController extends Controller
     public function show(SalesInvoice $salesInvoice): View
     {
         Gate::authorize('view', $salesInvoice);
+        $salesInvoice->setAttribute('customer_tin', SensitiveData::mask($salesInvoice->customer_tin, 4, 'No TIN'));
 
         return view('sales-invoices.show', ['invoice' => $salesInvoice->load(['fiscalPeriod', 'salesOrder', 'delivery', 'lines'])]);
     }

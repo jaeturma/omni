@@ -13,6 +13,7 @@ use App\Models\FiscalPeriod;
 use App\Models\ReceivingRecord;
 use App\Models\Supplier;
 use App\Models\SupplierInvoice;
+use App\Support\SensitiveData;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -46,6 +47,7 @@ class SupplierInvoiceController extends Controller
     public function show(SupplierInvoice $supplierInvoice): View
     {
         Gate::authorize('view', $supplierInvoice);
+        $supplierInvoice->setAttribute('supplier_tin', SensitiveData::mask($supplierInvoice->supplier_tin, 4, '—'));
 
         return view('supplier-invoices.show', ['invoice' => $supplierInvoice->load(['supplier', 'purchaseOrder', 'receivingRecord', 'fiscalPeriod', 'lines'])]);
     }

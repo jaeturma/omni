@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 use App\Models\User;
+use App\Services\UserSessionManager;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
@@ -45,8 +46,9 @@ class UserController extends Controller
         return view('users.edit', ['managedUser' => $user->load('roles'), 'roles' => Role::query()->orderBy('name')->get()]);
     }
 
-    public function update(UpdateUserRequest $request, User $user): RedirectResponse
+    public function update(UpdateUserRequest $request, User $user, UserSessionManager $sessions): RedirectResponse
     {
+        $invalidateSessions = $request->filled('password') || ! $request->boolean('active');
         DB::transaction(function () use ($request, $user): void {
             $data = $request->safe()->except(['roles', 'password_confirmation']);
             if (blank($data['password'] ?? null)) {
@@ -55,6 +57,9 @@ class UserController extends Controller
             $user->update($data);
             $user->syncRoles($request->validated('roles'));
         });
+        if ($invalidateSessions) {
+            $sessions->invalidate($user);
+        }
 
         return redirect()->route('users.index')->with('success', 'User updated.');
     }

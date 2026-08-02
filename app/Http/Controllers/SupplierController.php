@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
 use App\Models\Supplier;
+use App\Support\SensitiveData;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -19,6 +20,7 @@ class SupplierController extends Controller
             ->when($request->string('search')->isNotEmpty(), fn ($query) => $query->where(fn ($query) => $query->where('code', 'like', '%'.$request->string('search').'%')->orWhere('name', 'like', '%'.$request->string('search').'%')->orWhere('tin', 'like', '%'.$request->string('search').'%')))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
             ->orderBy('name')->paginate(25)->withQueryString();
+        $suppliers->getCollection()->each(fn (Supplier $supplier) => $supplier->setAttribute('tin', SensitiveData::mask($supplier->tin, 4, 'No TIN')));
 
         return view('suppliers.index', ['suppliers' => $suppliers]);
     }

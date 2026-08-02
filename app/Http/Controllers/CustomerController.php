@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
 use App\Models\Customer;
+use App\Support\SensitiveData;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -20,6 +21,7 @@ class CustomerController extends Controller
             ->when($request->filled('type'), fn ($query) => $query->where('type', $request->string('type')))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
             ->orderBy('name')->paginate(25)->withQueryString();
+        $customers->getCollection()->each(fn (Customer $customer) => $customer->setAttribute('tin', SensitiveData::mask($customer->tin, 4, 'No TIN')));
 
         return view('customers.index', ['customers' => $customers]);
     }

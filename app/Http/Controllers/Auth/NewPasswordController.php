@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Models\User;
+use App\Services\UserSessionManager;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,10 +20,11 @@ class NewPasswordController extends Controller
         return view('auth.reset-password', ['token' => $token, 'email' => $request->string('email')]);
     }
 
-    public function store(ResetPasswordRequest $request): RedirectResponse
+    public function store(ResetPasswordRequest $request, UserSessionManager $sessions): RedirectResponse
     {
-        $status = Password::reset($request->only('email', 'password', 'password_confirmation', 'token'), function (User $user, string $password): void {
+        $status = Password::reset($request->only('email', 'password', 'password_confirmation', 'token'), function (User $user, string $password) use ($sessions): void {
             $user->forceFill(['password' => $password, 'remember_token' => Str::random(60)])->save();
+            $sessions->invalidate($user);
             event(new PasswordReset($user));
         });
 
