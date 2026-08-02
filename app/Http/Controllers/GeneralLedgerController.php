@@ -50,26 +50,31 @@ class GeneralLedgerController extends Controller
     {
         $filters = $request->validated();
         $journal = $request->routeIs('general-journal.*');
-        $rows = $journal ? $report->journal($filters, false) : $report->ledger($filters, false)['rows'];
 
-        return response()->streamDownload(function () use ($rows, $journal): void {
+        return response()->streamDownload(function () use ($report, $filters, $journal): void {
             $stream = fopen('php://output', 'w');
             fputcsv($stream, $journal
                 ? ['Date', 'Journal Number', 'Type', 'Source Type', 'Source ID', 'Reference', 'Description', 'Debit', 'Credit', 'Status']
                 : ['Date', 'Account', 'Journal Number', 'Source Type', 'Source ID', 'Reference', 'Description', 'Customer', 'Supplier', 'Financial Account', 'Product', 'Warehouse', 'Debit', 'Credit', 'Running Balance']);
-            foreach ($rows as $row) {
-                fputcsv($stream, $journal ? [
-                    $row->journal_date->toDateString(), $row->journal_number, $row->journal_type->value,
-                    $row->source_type->value, $row->source_id, $row->reference_number, $row->description,
-                    $row->total_debit, $row->total_credit, $row->status->value,
-                ] : [
-                    $row->journalEntry->journal_date->toDateString(), $row->account->code,
-                    $row->journalEntry->journal_number, $row->journalEntry->source_type->value,
-                    $row->journalEntry->source_id, $row->journalEntry->reference_number,
-                    $row->description ?? $row->journalEntry->description, $row->customer?->name,
-                    $row->supplier?->name, $row->financialAccount?->code, $row->product?->sku,
-                    $row->warehouse?->code, $row->debit, $row->credit, $row->running_balance,
-                ]);
+            if ($journal) {
+                foreach ($report->journalLazy($filters) as $row) {
+                    fputcsv($stream, [
+                        $row->journal_date->toDateString(), $row->journal_number, $row->journal_type->value,
+                        $row->source_type->value, $row->source_id, $row->reference_number, $row->description,
+                        $row->total_debit, $row->total_credit, $row->status->value,
+                    ]);
+                }
+            } else {
+                foreach ($report->ledgerLazy($filters) as $row) {
+                    fputcsv($stream, [
+                        $row->journalEntry->journal_date->toDateString(), $row->account->code,
+                        $row->journalEntry->journal_number, $row->journalEntry->source_type->value,
+                        $row->journalEntry->source_id, $row->journalEntry->reference_number,
+                        $row->description ?? $row->journalEntry->description, $row->customer?->name,
+                        $row->supplier?->name, $row->financialAccount?->code, $row->product?->sku,
+                        $row->warehouse?->code, $row->debit, $row->credit, $row->running_balance,
+                    ]);
+                }
             }
             fclose($stream);
         }, ($journal ? 'general-journal-' : 'general-ledger-').$filters['end_date'].'.csv', ['Content-Type' => 'text/csv']);

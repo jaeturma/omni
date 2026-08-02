@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $product_id
  * @property string|null $source_line_type
  * @property int|null $source_line_id
+ * @property string $running_balance
  */
 #[Fillable(['account_id', 'line_number', 'description', 'debit', 'credit', 'customer_id', 'supplier_id', 'financial_account_id', 'warehouse_id', 'product_id', 'source_line_type', 'source_line_id'])]
 class JournalEntryLine extends Model
@@ -48,26 +49,31 @@ class JournalEntryLine extends Model
         return $this->belongsTo(Account::class);
     }
 
+    /** @return BelongsTo<Customer, $this> */
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
 
+    /** @return BelongsTo<Supplier, $this> */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);
     }
 
+    /** @return BelongsTo<FinancialAccount, $this> */
     public function financialAccount(): BelongsTo
     {
         return $this->belongsTo(FinancialAccount::class);
     }
 
+    /** @return BelongsTo<Warehouse, $this> */
     public function warehouse(): BelongsTo
     {
         return $this->belongsTo(Warehouse::class);
     }
 
+    /** @return BelongsTo<ProductService, $this> */
     public function product(): BelongsTo
     {
         return $this->belongsTo(ProductService::class, 'product_id');

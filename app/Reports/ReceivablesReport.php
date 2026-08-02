@@ -13,6 +13,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 
 class ReceivablesReport
 {
@@ -38,6 +39,18 @@ class ReceivablesReport
         $asOf = Carbon::parse($filters['as_of']);
 
         return $this->openInvoiceQuery($filters, $asOf)->get()->map(fn (SalesInvoice $invoice): array => $this->invoiceRow($invoice, $asOf));
+    }
+
+    /** @param array<string, mixed> $filters
+     * @return LazyCollection<int, array{invoice: SalesInvoice, allocated: string, balance: string, daysOverdue: int, bucket: string}>
+     */
+    public function detailLazy(array $filters, int $chunkSize = 500): LazyCollection
+    {
+        $asOf = Carbon::parse($filters['as_of']);
+
+        return $this->openInvoiceQuery($filters, $asOf)
+            ->lazy($chunkSize)
+            ->map(fn (SalesInvoice $invoice): array => $this->invoiceRow($invoice, $asOf));
     }
 
     /** @param Collection<int, array{invoice: SalesInvoice, allocated: numeric-string, balance: numeric-string, daysOverdue: int, bucket: string}> $rows */

@@ -15,6 +15,7 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 
 class AccountsPayableReport
 {
@@ -34,6 +35,18 @@ class AccountsPayableReport
         $asOf = Carbon::parse($filters['as_of']);
 
         return $this->openInvoiceQuery($filters, $asOf)->get()->map(fn (SupplierInvoice $invoice): array => $this->invoiceRow($invoice, $asOf));
+    }
+
+    /** @param array<string, mixed> $filters
+     * @return LazyCollection<int, array{invoice: SupplierInvoice, allocated: string, balance: string, daysOverdue: int, bucket: string}>
+     */
+    public function detailLazy(array $filters, int $chunkSize = 500): LazyCollection
+    {
+        $asOf = Carbon::parse($filters['as_of']);
+
+        return $this->openInvoiceQuery($filters, $asOf)
+            ->lazy($chunkSize)
+            ->map(fn (SupplierInvoice $invoice): array => $this->invoiceRow($invoice, $asOf));
     }
 
     public function summary(Collection $rows): Collection
@@ -160,6 +173,7 @@ class AccountsPayableReport
         };
     }
 
+    /** @return array{invoice: SupplierInvoice, allocated: string, balance: string, daysOverdue: int, bucket: string} */
     private function invoiceRow(SupplierInvoice $invoice, Carbon $asOf): array
     {
         $allocated = bcadd('0', (string) $invoice->getAttribute('allocated_as_of'), 4);

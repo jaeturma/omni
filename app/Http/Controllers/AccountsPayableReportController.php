@@ -51,12 +51,11 @@ class AccountsPayableReportController extends Controller
     {
         Gate::authorize('payables.export');
         $filters = $request->validated();
-        $rows = $report->detailCollection($filters);
 
-        return response()->streamDownload(function () use ($rows): void {
+        return response()->streamDownload(function () use ($report, $filters): void {
             $stream = fopen('php://output', 'w');
             fputcsv($stream, ['Invoice', 'Supplier', 'Invoice Date', 'Due Date', 'Payable', 'Allocated', 'Balance', 'Days Overdue', 'Bucket']);
-            foreach ($rows as $row) {
+            foreach ($report->detailLazy($filters) as $row) {
                 $invoice = $row['invoice'];
                 fputcsv($stream, [$invoice->supplier_invoice_number, $invoice->supplier->name, $invoice->invoice_date->toDateString(),
                     $invoice->due_date->toDateString(), $invoice->total_payable, $row['allocated'], $row['balance'], $row['daysOverdue'], $row['bucket']]);

@@ -11,26 +11,27 @@ use App\Support\AccountingWorkflow;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\LazyCollection;
 
 class GeneralLedgerReport
 {
     /** @param array<string, mixed> $filters */
     public function journal(array $filters, bool $paginate = true): LengthAwarePaginator|Collection
     {
-        $query = JournalEntry::query()
-            ->select(['id', 'journal_number', 'journal_date', 'journal_type', 'source_type', 'source_id',
-                'reference_number', 'description', 'total_debit', 'total_credit', 'status', 'reverses_entry_id'])
-            ->whereIn('status', [JournalEntryStatus::Posted, JournalEntryStatus::Reversed])
-            ->whereBetween('journal_date', [$filters['start_date'], $filters['end_date']])
-            ->with('postedBy:id,name')
-            ->withCount('lines')
-            ->when($filters['source_type'] ?? null, fn (Builder $query, string $value) => $query->where('source_type', $value))
-            ->when($filters['reference'] ?? null, fn (Builder $query, string $value) => $query->where(function (Builder $query) use ($value): void {
-                $query->where('reference_number', 'like', "%{$value}%")->orWhere('journal_number', 'like', "%{$value}%");
-            }))
-            ->orderBy('journal_date')->orderBy('id');
+        $query = $this->journalQuery($filters);
 
-        return $paginate ? $query->paginate(50)->withQueryString() : $query->cursor()->collect();
+        return $paginate ? $query->paginate(50)->withQueryString() : $query->get();
+    }
+
+    /** @param array<string, mixed> $filters
+     * @return LazyCollection<int, JournalEntry>
+     */
+    public function journalLazy(array $filters, int $chunkSize = 500): LazyCollection
+    {
+        /** @var Builder<JournalEntry> $query */
+        $query = $this->journalQuery($filters);
+
+        return $query->lazy($chunkSize);
     }
 
     /** @param array<string, mixed> $filters
@@ -59,6 +60,47 @@ class GeneralLedgerReport
 
         return ['rows' => $rows, 'opening' => $opening, ...$totals,
             'closing' => $this->movement($opening, $totals['debit'], $totals['credit'], $account)];
+    }
+
+    /** @param array<string, mixed> $filters
+     * @return LazyCollection<int, JournalEntryLine>
+     */
+    public function ledgerLazy(array $filters, int $chunkSize = 500): LazyCollection
+    {
+        $account = isset($filters['account_id']) ? Account::find($filters['account_id']) : null;
+        $accountIds = $account ? $this->accountIds($account, (bool) ($filters['include_descendants'] ?? false)) : [];
+        $running = $this->openingBalance($filters, $accountIds, $account);
+
+        return $this->lineQuery($filters, $accountIds)->lazy($chunkSize)
+            ->map(function (JournalEntryLine $row) use ($account, &$running): JournalEntryLine {
+                $rowAccount = $account ?? $row->account;
+                if (! $rowAccount instanceof Account) {
+                    throw new \LogicException('Every journal line must belong to an account.');
+                }
+                $running = $this->movement($running, $row->debit, $row->credit, $rowAccount);
+                $row->setAttribute('running_balance', $running);
+
+                return $row;
+            });
+    }
+
+    /** @param array<string, mixed> $filters
+     * @return Builder<JournalEntry>
+     */
+    private function journalQuery(array $filters): Builder
+    {
+        return JournalEntry::query()
+            ->select(['id', 'journal_number', 'journal_date', 'journal_type', 'source_type', 'source_id',
+                'reference_number', 'description', 'total_debit', 'total_credit', 'status', 'reverses_entry_id'])
+            ->whereIn('status', [JournalEntryStatus::Posted, JournalEntryStatus::Reversed])
+            ->whereBetween('journal_date', [$filters['start_date'], $filters['end_date']])
+            ->with('postedBy:id,name')
+            ->withCount('lines')
+            ->when($filters['source_type'] ?? null, fn (Builder $query, string $value) => $query->where('source_type', $value))
+            ->when($filters['reference'] ?? null, fn (Builder $query, string $value) => $query->where(function (Builder $query) use ($value): void {
+                $query->where('reference_number', 'like', "%{$value}%")->orWhere('journal_number', 'like', "%{$value}%");
+            }))
+            ->orderBy('journal_date')->orderBy('id');
     }
 
     /** @param array<string, mixed> $filters

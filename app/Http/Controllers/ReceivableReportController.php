@@ -44,12 +44,11 @@ class ReceivableReportController extends Controller
     {
         Gate::authorize('receivables.export');
         $filters = $request->validated();
-        $rows = $report->detailCollection($filters);
 
-        return response()->streamDownload(function () use ($rows): void {
+        return response()->streamDownload(function () use ($report, $filters): void {
             $stream = fopen('php://output', 'w');
             fputcsv($stream, ['Invoice', 'Customer', 'Type', 'Invoice Date', 'Due Date', 'Receivable', 'Allocated', 'Balance', 'Days Overdue', 'Bucket']);
-            foreach ($rows as $row) {
+            foreach ($report->detailLazy($filters) as $row) {
                 $invoice = $row['invoice'];
                 fputcsv($stream, [$invoice->invoice_number, $invoice->customer->name, $invoice->customer->type,
                     $invoice->invoice_date->toDateString(), $invoice->due_date->toDateString(), $invoice->total_receivable,
