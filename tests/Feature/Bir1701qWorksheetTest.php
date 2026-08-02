@@ -7,6 +7,7 @@ use App\Models\TaxPeriod;
 use App\Models\TaxProfile;
 use App\Models\User;
 use App\Reports\IncomeStatementReport;
+use App\Services\Bir1701qEncodingPresenter;
 use App\Services\Bir1701qPreparation;
 use Database\Seeders\RolesAndPermissionsSeeder;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
@@ -105,4 +106,29 @@ it('enforces 1701Q worksheet permissions', function (): void {
     $this->actingAs($unauthorized)->get(route('bir-1701q.index'))->assertForbidden();
     $this->actingAs($unauthorized)->get(route('bir-1701q.show', $worksheet))->assertForbidden();
     expect($fixture['user']->can('bir-1701q.approve'))->toBeTrue()->and($fixture['user']->can('bir-1701q.export'))->toBeTrue();
+});
+
+it('presents and exports whole-peso encoding amounts without changing exact values', function (): void {
+    $fixture = bir1701qFixture();
+    mockIncomeStatement();
+    $worksheet = app(Bir1701qPreparation::class)->create($fixture['obligation'], [
+        'return_type' => 'original',
+        'surcharge' => '0.5000',
+        'penalty_authority' => 'Approved assessment',
+        'penalty_evidence' => 'PENALTY-001',
+    ], $fixture['user']);
+    $presenter = app(Bir1701qEncodingPresenter::class);
+
+    expect($presenter->wholePeso('1.4999'))->toBe('1')
+        ->and($presenter->wholePeso('1.5000'))->toBe('2')
+        ->and($presenter->wholePeso('-1.5000'))->toBe('-2')
+        ->and($worksheet->total_amount_payable)->toBe('50.5000')
+        ->and($presenter->amounts($worksheet)['total_amount_payable']['whole_peso'])->toBe('51');
+
+    $this->actingAs($fixture['user'])->get(route('bir-1701q.show', $worksheet))
+        ->assertSuccessful()->assertSee('Whole-peso amounts for BIR encoding')->assertSee('PHP 51');
+    $export = $this->get(route('bir-1701q.export', $worksheet))->assertSuccessful();
+    expect($export->streamedContent())->toContain('Whole-peso amount for encoding')
+        ->toContain('"Total Amount Payable",50.5000,51');
+    expect($worksheet->fresh()->total_amount_payable)->toBe('50.5000');
 });

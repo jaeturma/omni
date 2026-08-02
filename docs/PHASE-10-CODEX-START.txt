@@ -4,13 +4,13 @@ Copy the included `docs` folder into the root of the existing Laravel project.
 
 Execute the work packages one at a time:
 
-1. WP-10-01-security-access-hardening.md
-2. WP-10-02-audit-trail-completion.md
-3. WP-10-03-backup-restore-disaster-recovery.md
-4. WP-10-04-data-privacy-retention.md
-5. WP-10-05-error-logging-monitoring.md
-6. WP-10-06-performance-database-optimization.md
-7. WP-10-07-deployment-environment-governance.md
+1. WP-10-01-security-access-hardening.md - ok
+2. WP-10-02-audit-trail-completion.md - ok
+3. WP-10-03-backup-restore-disaster-recovery.md - ok
+4. WP-10-04-data-privacy-retention.md - ok
+5. WP-10-05-error-logging-monitoring.md - ok
+6. WP-10-06-performance-database-optimization.md - ok
+7. WP-10-07-deployment-environment-governance.md - ok
 8. WP-10-08-uat-operating-procedures.md
 9. WP-10-09-production-cutover-opening-balances.md
 10. WP-10-10-final-production-readiness-review.md

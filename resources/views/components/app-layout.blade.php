@@ -21,6 +21,7 @@
             ['Users', 'users.index', 'users.view'],
             ['Audit Log', 'audit-logs.index', 'audit-logs.view'],
             ['Backup Status', 'backup-runs.index', 'backup-runs.view'],
+            ['Production Cutover', 'production-cutovers.index', 'production-cutover.view'],
             ['Privacy & Retention', 'privacy.index', 'privacy-settings.view'],
             ['Settings', 'system-settings.edit', 'system-settings.view'],
         ],

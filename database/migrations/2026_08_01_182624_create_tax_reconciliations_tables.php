@@ -39,7 +39,7 @@ return new class extends Migration
             $table->foreignId('reviewed_by')->nullable()->constrained('users')->restrictOnDelete();
             $table->foreignId('created_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
-            $table->index(['tax_reconciliation_id', 'status']);
+            $table->index(['tax_reconciliation_id', 'status'], 'tax_recon_adjustment_status_index');
         });
     }
 

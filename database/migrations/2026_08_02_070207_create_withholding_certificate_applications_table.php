@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('withholding_certificate_applications', function (Blueprint $table): void {
             $table->id();
-            $table->foreignId('government_deduction_id')->constrained()->restrictOnDelete();
+            $table->foreignId('government_deduction_id');
+            $table->foreign('government_deduction_id', 'withholding_application_deduction_fk')->references('id')->on('government_deductions')->restrictOnDelete();
             $table->foreignId('tax_obligation_id')->constrained()->restrictOnDelete();
             $table->decimal('amount', 19, 4);
             $table->string('evidence_reference');
@@ -22,7 +23,7 @@ return new class extends Migration
             $table->timestamp('applied_at');
             $table->timestamps();
             $table->unique(['government_deduction_id', 'tax_obligation_id'], 'withholding_application_unique');
-            $table->index(['tax_obligation_id', 'applied_at']);
+            $table->index(['tax_obligation_id', 'applied_at'], 'withholding_application_obligation_date_index');
         });
     }
 

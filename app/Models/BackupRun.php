@@ -5,7 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Carbon;
 
+/**
+ * @property int $id
+ * @property string $status
+ * @property bool $offsite_copied
+ * @property Carbon|null $restore_tested_at
+ */
 #[Fillable(['backup_class', 'status', 'disk', 'location', 'size_bytes', 'sha256', 'encrypted', 'offsite_copied', 'started_at', 'completed_at', 'verified_at', 'restore_tested_at', 'failure_reason', 'initiated_by'])]
 class BackupRun extends Model
 {

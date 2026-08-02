@@ -1,0 +1,42 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name erp.example.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    listen [::]:443 ssl http2;
+    server_name erp.example.com;
+
+    root /var/www/omni/current/public;
+    index index.php;
+    client_max_body_size 11M;
+
+    ssl_certificate /etc/letsencrypt/live/erp.example.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/erp.example.com/privkey.pem;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    add_header X-Content-Type-Options nosniff always;
+    add_header Referrer-Policy strict-origin-when-cross-origin always;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_param DOCUMENT_ROOT $realpath_root;
+        fastcgi_pass unix:/run/php/php8.3-fpm-omni.sock;
+        fastcgi_read_timeout 120s;
+    }
+
+    location ~ /\.(?!well-known).* {
+        deny all;
+    }
+
+    access_log /var/log/nginx/omni-access.log;
+    error_log /var/log/nginx/omni-error.log warn;
+}

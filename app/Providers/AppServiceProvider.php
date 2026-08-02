@@ -27,6 +27,7 @@ use App\Services\AuditLogger;
 use App\Services\SystemSettings;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Database\Eloquent\Relations\Relation;
+use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\RateLimiter;
@@ -49,6 +50,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        AboutCommand::add('Deployment', fn (): array => [
+            'Version' => (string) config('app.version'),
+            'Deployed At' => (string) (config('app.deployed_at') ?: 'not recorded'),
+        ]);
+
         RateLimiter::for('sensitive', fn (Request $request): Limit => Limit::perMinute(20)->by((string) ($request->user()->id ?? $request->ip())));
         if ($this->app->isProduction()) {
             URL::forceScheme('https');

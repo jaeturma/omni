@@ -6,6 +6,7 @@ use App\Http\Requests\ApproveBir1701qWorksheetRequest;
 use App\Http\Requests\SaveBir1701qWorksheetRequest;
 use App\Models\Bir1701qWorksheet;
 use App\Models\TaxObligation;
+use App\Services\Bir1701qEncodingPresenter;
 use App\Services\Bir1701qPreparation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
@@ -14,7 +15,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Bir1701qWorksheetController extends Controller
 {
-    public function __construct(private Bir1701qPreparation $preparation) {}
+    public function __construct(private Bir1701qPreparation $preparation, private Bir1701qEncodingPresenter $encoding) {}
 
     public function index(): View
     {
@@ -35,7 +36,7 @@ class Bir1701qWorksheetController extends Controller
         Gate::authorize('view', $bir1701qWorksheet);
         $bir1701qWorksheet->load(['taxObligation.taxPeriod', 'previousRevision:id,revision_number']);
 
-        return view('bir-1701q.show', ['worksheet' => $bir1701qWorksheet]);
+        return view('bir-1701q.show', ['worksheet' => $bir1701qWorksheet, 'encodingAmounts' => $this->encoding->amounts($bir1701qWorksheet)]);
     }
 
     public function update(SaveBir1701qWorksheetRequest $request, Bir1701qWorksheet $bir1701qWorksheet): RedirectResponse
@@ -82,8 +83,10 @@ class Bir1701qWorksheetController extends Controller
         return response()->streamDownload(function () use ($bir1701qWorksheet): void {
             $stream = fopen('php://output', 'w');
             fputcsv($stream, ['BIR Form 1701Q Preparation Worksheet', 'Review worksheet only - not an official electronic submission file']);
+            fputcsv($stream, ['Field', 'Exact stored amount', 'Whole-peso amount for encoding']);
+            $encodingAmounts = $this->encoding->amounts($bir1701qWorksheet);
             foreach (['taxable_year', 'quarter', 'return_type', 'revision_number', 'income_tax_method', 'deduction_method', 'cumulative_gross_sales', 'sales_returns_discounts', 'net_sales', 'cost_of_sales', 'other_income', 'gross_income', 'financial_itemized_deductions', 'osd_deduction', 'manual_deduction_adjustment', 'taxable_income_adjustment', 'taxable_income', 'income_tax_due', 'prior_quarter_payments', 'verified_creditable_withholding', 'manual_creditable_withholding', 'other_allowable_credits', 'surcharge', 'interest', 'compromise_penalty', 'total_amount_payable', 'filing_status', 'review_status'] as $field) {
-                fputcsv($stream, [str($field)->headline()->toString(), $bir1701qWorksheet->getAttribute($field)]);
+                fputcsv($stream, [str($field)->headline()->toString(), $bir1701qWorksheet->getAttribute($field), $encodingAmounts[$field]['whole_peso'] ?? '']);
             }
             fclose($stream);
         }, 'bir-1701q-'.$bir1701qWorksheet->taxable_year.'-q'.$bir1701qWorksheet->quarter.'-r'.$bir1701qWorksheet->revision_number.'.csv', ['Content-Type' => 'text/csv']);
