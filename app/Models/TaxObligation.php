@@ -6,8 +6,13 @@ use Carbon\CarbonInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
-/** @property CarbonInterface $original_due_date @property CarbonInterface|null $adjusted_due_date */
+/**
+ * @property CarbonInterface $original_due_date
+ * @property CarbonInterface|null $adjusted_due_date
+ * @property TaxReconciliation|null $reconciliation
+ */
 class TaxObligation extends Model
 {
     protected $fillable = [
@@ -41,6 +46,30 @@ class TaxObligation extends Model
     public function deadlineAdjustments(): HasMany
     {
         return $this->hasMany(TaxObligationDeadlineAdjustment::class);
+    }
+
+    /** @return HasOne<TaxReconciliation, $this> */
+    public function reconciliation(): HasOne
+    {
+        return $this->hasOne(TaxReconciliation::class);
+    }
+
+    /** @return HasMany<Bir2551qWorksheet, $this> */
+    public function bir2551qWorksheets(): HasMany
+    {
+        return $this->hasMany(Bir2551qWorksheet::class)->latest('revision_number');
+    }
+
+    /** @return HasMany<Bir1701qWorksheet, $this> */
+    public function bir1701qWorksheets(): HasMany
+    {
+        return $this->hasMany(Bir1701qWorksheet::class)->latest('revision_number');
+    }
+
+    /** @return HasMany<TaxFiling, $this> */
+    public function taxFilings(): HasMany
+    {
+        return $this->hasMany(TaxFiling::class)->latest('filing_date')->latest('id');
     }
 
     public function effectiveDueDate(): CarbonInterface

@@ -28,6 +28,7 @@ class SaveGovernmentDeduction
             $values = [
                 'customer_id' => $invoice->customer_id, 'sales_invoice_id' => $invoice->id,
                 'customer_payment_id' => $data['customer_payment_id'] ?? null, 'tax_rate_setting_id' => $rate->id,
+                'journal_entry_line_id' => $data['journal_entry_line_id'] ?? null,
                 'deduction_type' => $data['deduction_type'], 'certificate_type' => $data['certificate_type'],
                 'certificate_number' => $data['certificate_number'] ?? null, 'certificate_date' => $data['certificate_date'] ?? null,
                 'covered_from' => $data['covered_from'], 'covered_to' => $data['covered_to'],

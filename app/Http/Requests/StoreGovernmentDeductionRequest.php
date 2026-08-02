@@ -3,10 +3,10 @@
 namespace App\Http\Requests;
 
 use App\Enums\CustomerPaymentStatus;
-use App\Enums\GovernmentDeductionStatus;
 use App\Enums\SalesInvoiceStatus;
 use App\Models\CustomerPayment;
 use App\Models\GovernmentDeduction;
+use App\Models\JournalEntryLine;
 use App\Models\SalesInvoice;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -27,6 +27,7 @@ class StoreGovernmentDeductionRequest extends FormRequest
     {
         return ['sales_invoice_id' => ['required', 'integer', 'exists:sales_invoices,id'],
             'customer_payment_id' => ['nullable', 'integer', 'exists:customer_payments,id'],
+            'journal_entry_line_id' => ['nullable', 'integer', 'exists:journal_entry_lines,id'],
             'tax_rate_setting_id' => ['required', 'integer', 'exists:tax_rate_settings,id'],
             'deduction_type' => ['required', Rule::in(GovernmentDeduction::DEDUCTION_TYPES)],
             'certificate_type' => ['required', Rule::in(GovernmentDeduction::CERTIFICATE_TYPES)],
@@ -58,16 +59,23 @@ class StoreGovernmentDeductionRequest extends FormRequest
                     $validator->errors()->add('customer_payment_id', 'Select a posted payment for the same customer.');
                 }
             }
+            if ($lineId = $this->integer('journal_entry_line_id')) {
+                $matched = JournalEntryLine::query()->whereKey($lineId)->where('customer_id', $invoice->customer_id)
+                    ->whereHas('journalEntry', fn ($query) => $query->where('status', 'posted'))->exists();
+                if (! $matched) {
+                    $validator->errors()->add('journal_entry_line_id', 'Select a posted accounting line for the same customer.');
+                }
+            }
             $current = $this->route('government_deduction');
             $duplicates = GovernmentDeduction::where('sales_invoice_id', $invoice->id)->where('deduction_type', $this->input('deduction_type'))
                 ->whereDate('covered_from', $this->input('covered_from'))->whereDate('covered_to', $this->input('covered_to'))
-                ->where('status', '!=', GovernmentDeductionStatus::Voided)->when($current instanceof GovernmentDeduction, fn ($query) => $query->whereKeyNot($current->id));
+                ->when($current instanceof GovernmentDeduction, fn ($query) => $query->whereKeyNot($current->id));
             if ($duplicates->exists()) {
                 $validator->errors()->add('deduction_type', 'A matching non-voided deduction already exists for this invoice and covered period.');
             }
             if ($number = $this->input('certificate_number')) {
                 $certificateExists = GovernmentDeduction::where('certificate_type', $this->input('certificate_type'))->where('certificate_number', $number)
-                    ->where('status', '!=', GovernmentDeductionStatus::Voided)->when($current instanceof GovernmentDeduction, fn ($query) => $query->whereKeyNot($current->id))->exists();
+                    ->when($current instanceof GovernmentDeduction, fn ($query) => $query->whereKeyNot($current->id))->exists();
                 if ($certificateExists) {
                     $validator->errors()->add('certificate_number', 'This certificate is already recorded.');
                 }

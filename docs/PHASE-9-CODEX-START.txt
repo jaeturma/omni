@@ -4,14 +4,14 @@ Copy the included `docs` folder into the root of the existing Laravel project.
 
 Execute the work packages one at a time:
 
-1. WP-09-01-tax-compliance-settings-rule-registry.md
-2. WP-09-02-tax-periods-compliance-calendar.md
-3. WP-09-03-sales-receipts-tax-reconciliation.md
-4. WP-09-04-bir-2551q-preparation.md
-5. WP-09-05-bir-1701q-preparation.md
-6. WP-09-06-withholding-certificates-tax-credits.md
-7. WP-09-07-books-accounts-supporting-schedules.md
-8. WP-09-08-filing-payment-attachment-history.md
+1. WP-09-01-tax-compliance-settings-rule-registry.md - ok
+2. WP-09-02-tax-periods-compliance-calendar.md - ok
+3. WP-09-03-sales-receipts-tax-reconciliation.md - ok
+4. WP-09-04-bir-2551q-preparation.md - ok
+5. WP-09-05-bir-1701q-preparation.md - ok
+6. WP-09-06-withholding-certificates-tax-credits.md - ok
+7. WP-09-07-books-accounts-supporting-schedules.md - ok
+8. WP-09-08-filing-payment-attachment-history.md - ok
 9. WP-09-09-tax-dashboard-review-pack.md
 10. WP-09-10-phase-validation-gap-review.md
 

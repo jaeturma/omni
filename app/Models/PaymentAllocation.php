@@ -21,6 +21,7 @@ class PaymentAllocation extends Model
 
     protected $attributes = ['status' => 'active'];
 
+    /** @return BelongsTo<CustomerPayment, $this> */
     public function customerPayment(): BelongsTo
     {
         return $this->belongsTo(CustomerPayment::class);

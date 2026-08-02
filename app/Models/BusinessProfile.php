@@ -30,6 +30,7 @@ class BusinessProfile extends Model
         return $query->where('active', true);
     }
 
+    /** @return HasOne<TaxProfile, $this> */
     public function taxProfile(): HasOne
     {
         return $this->hasOne(TaxProfile::class);

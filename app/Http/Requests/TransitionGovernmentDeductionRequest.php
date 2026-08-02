@@ -16,14 +16,16 @@ class TransitionGovernmentDeductionRequest extends FormRequest
             return false;
         }
 
-        return $this->input('status') === GovernmentDeductionStatus::Voided->value
-            ? (bool) $this->user()?->can('void', $deduction)
-            : (bool) $this->user()?->can('verify', $deduction);
+        return match ($this->input('status')) {
+            GovernmentDeductionStatus::Voided->value => (bool) $this->user()?->can('void', $deduction),
+            GovernmentDeductionStatus::Rejected->value => (bool) $this->user()?->can('reject', $deduction),
+            default => (bool) $this->user()?->can('verify', $deduction),
+        };
     }
 
     public function rules(): array
     {
-        return ['status' => ['required', Rule::in([GovernmentDeductionStatus::Verified->value, GovernmentDeductionStatus::Voided->value])],
-            'reason' => [Rule::requiredIf($this->input('status') === GovernmentDeductionStatus::Voided->value), 'nullable', 'string', 'max:2000']];
+        return ['status' => ['required', Rule::in([GovernmentDeductionStatus::Verified->value, GovernmentDeductionStatus::Rejected->value, GovernmentDeductionStatus::Voided->value])],
+            'reason' => [Rule::requiredIf(in_array($this->input('status'), [GovernmentDeductionStatus::Rejected->value, GovernmentDeductionStatus::Voided->value], true)), 'nullable', 'string', 'max:2000']];
     }
 }

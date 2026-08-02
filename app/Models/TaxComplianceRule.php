@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property array<int, int>|null $applicable_quarters
  * @property int $deadline_months_after_period_end
  * @property int $deadline_day
+ * @property int $id
+ * @property numeric-string|null $tax_rate
+ * @property array<string, mixed>|null $calculation_parameters
  */
 class TaxComplianceRule extends Model
 {
@@ -24,6 +27,7 @@ class TaxComplianceRule extends Model
         'tax_profile_id', 'supersedes_id', 'tax_type', 'bir_form_number', 'form_title',
         'taxpayer_applicability', 'registration_applicability', 'filing_frequency', 'applicable_quarters',
         'effective_from', 'effective_to', 'tax_rate', 'tax_base_rule', 'credit_rule',
+        'calculation_parameters',
         'deadline_rule', 'deadline_months_after_period_end', 'deadline_day', 'amendment_supported', 'attachment_requirements',
         'official_reference_title', 'official_reference_url', 'last_reviewed_on',
         'reviewed_by', 'reviewer_notes', 'change_reason', 'used_at', 'active',
@@ -81,6 +85,7 @@ class TaxComplianceRule extends Model
             'effective_from' => 'date',
             'effective_to' => 'date',
             'tax_rate' => 'decimal:6',
+            'calculation_parameters' => 'array',
             'applicable_quarters' => 'array',
             'deadline_months_after_period_end' => 'integer',
             'deadline_day' => 'integer',

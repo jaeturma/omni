@@ -17,6 +17,7 @@ class TaxProfile extends Model
         static::saving(fn (self $model) => $model->active_marker = $model->active ? 1 : null);
     }
 
+    /** @return BelongsTo<BusinessProfile, $this> */
     public function businessProfile(): BelongsTo
     {
         return $this->belongsTo(BusinessProfile::class);

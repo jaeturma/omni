@@ -20,6 +20,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property CashFlowClassification|null $cash_flow_classification
  * @property CurrentClassification|null $current_classification
  * @property NormalBalance $normal_balance
+ * @property string $code
+ * @property string $name
  */
 #[Fillable([
     'code', 'name', 'account_class', 'account_type', 'normal_balance', 'current_classification',

@@ -77,6 +77,9 @@ class TaxComplianceCalendar
     public function update(TaxObligation $obligation, array $data): void
     {
         if (isset($data['status']) && $data['status'] !== $obligation->status) {
+            if ($data['status'] === 'ready_to_file' && (($obligation->bir_form_number === '2551Q' && $obligation->reconciliation === null) || $obligation->reconciliation()->where('critical_difference_count', '>', 0)->exists())) {
+                throw ValidationException::withMessages(['status' => 'Resolve all critical sales-tax reconciliation differences before marking this obligation ready to file.']);
+            }
             $allowed = self::TRANSITIONS[$obligation->status] ?? [];
             if (! in_array($data['status'], $allowed, true)) {
                 throw ValidationException::withMessages(['status' => 'The requested tax-obligation status transition is not allowed.']);
@@ -149,7 +152,7 @@ class TaxComplianceCalendar
             'status' => CarbonImmutable::parse($periodEnd)->isFuture() ? 'upcoming' : 'open',
             'rule_snapshot' => $rule->only([
                 'id', 'tax_type', 'bir_form_number', 'form_title', 'filing_frequency', 'effective_from', 'effective_to',
-                'tax_rate', 'tax_base_rule', 'credit_rule', 'deadline_rule', 'deadline_months_after_period_end',
+                'tax_rate', 'tax_base_rule', 'credit_rule', 'calculation_parameters', 'deadline_rule', 'deadline_months_after_period_end',
                 'deadline_day', 'applicable_quarters', 'amendment_supported', 'attachment_requirements',
                 'official_reference_title', 'official_reference_url', 'last_reviewed_on',
             ]),

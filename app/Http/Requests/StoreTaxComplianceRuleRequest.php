@@ -18,6 +18,12 @@ class StoreTaxComplianceRuleRequest extends FormRequest
                 ->all();
             $this->merge(['attachment_requirements' => $requirements]);
         }
+        if ($this->filled('calculation_parameters_text')) {
+            $decoded = json_decode($this->string('calculation_parameters_text')->toString(), true);
+            $this->merge(['calculation_parameters' => is_array($decoded) ? $decoded : $this->input('calculation_parameters_text')]);
+        } elseif ($this->has('calculation_parameters_text')) {
+            $this->merge(['calculation_parameters' => null]);
+        }
     }
 
     public function authorize(): bool
@@ -42,6 +48,8 @@ class StoreTaxComplianceRuleRequest extends FormRequest
             'tax_rate' => ['nullable', 'decimal:0,6', 'between:0,100'],
             'tax_base_rule' => ['required', 'string', 'max:5000'],
             'credit_rule' => ['required', 'string', 'max:5000'],
+            'calculation_parameters' => ['nullable', 'array'],
+            'calculation_parameters_text' => ['nullable', 'json', 'max:20000'],
             'deadline_rule' => ['required', 'string', 'max:5000'],
             'deadline_months_after_period_end' => ['required', 'integer', 'between:0,24'],
             'deadline_day' => ['required', 'integer', 'between:1,31'],

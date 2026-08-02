@@ -13,7 +13,9 @@ use App\Http\Requests\TransitionGovernmentDeductionRequest;
 use App\Models\Customer;
 use App\Models\CustomerPayment;
 use App\Models\GovernmentDeduction;
+use App\Models\JournalEntryLine;
 use App\Models\SalesInvoice;
+use App\Models\TaxObligation;
 use App\Models\TaxRateSetting;
 use App\Reports\GovernmentDeductionSummary;
 use Illuminate\Http\RedirectResponse;
@@ -49,7 +51,8 @@ class GovernmentDeductionController extends Controller
     {
         Gate::authorize('view', $governmentDeduction);
 
-        return view('government-deductions.show', ['deduction' => $governmentDeduction->load(['customer', 'salesInvoice', 'customerPayment', 'taxRateSetting'])]);
+        return view('government-deductions.show', ['deduction' => $governmentDeduction->load(['customer', 'salesInvoice', 'customerPayment', 'taxRateSetting', 'journalEntryLine.journalEntry', 'applications.taxObligation.taxPeriod']),
+            'obligations' => TaxObligation::query()->with('taxPeriod:id,label')->whereIn('bir_form_number', ['1701Q', '2551Q'])->whereNotIn('status', ['filed', 'paid', 'closed'])->latest('id')->get()]);
     }
 
     public function edit(GovernmentDeduction $governmentDeduction): View
@@ -81,6 +84,7 @@ class GovernmentDeductionController extends Controller
         $payments = CustomerPayment::whereIn('customer_id', $customerIds)->whereNotIn('status', [CustomerPaymentStatus::Draft, CustomerPaymentStatus::Voided])->latest('payment_date')->get();
 
         return ['invoices' => $invoices, 'payments' => $payments, 'rates' => TaxRateSetting::where('active', true)->latest('effective_from')->get(),
+            'journalLines' => JournalEntryLine::query()->with(['journalEntry:id,journal_number,status', 'account:id,code,name'])->whereHas('journalEntry', fn ($query) => $query->where('status', 'posted'))->latest('id')->limit(250)->get(),
             'selectedInvoice' => $invoices->firstWhere('id', $request->integer('sales_invoice_id'))];
     }
 }

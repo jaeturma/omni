@@ -7,6 +7,7 @@ use App\Models\Concerns\HasSalesAttachments;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
@@ -16,8 +17,11 @@ use Illuminate\Support\Carbon;
  * @property numeric-string $gross_basis
  * @property numeric-string $rate
  * @property numeric-string $amount
+ * @property Carbon|null $certificate_date
+ * @property string|null $certificate_number
+ * @property string|null $attachment_reference
  */
-#[Fillable(['customer_id', 'sales_invoice_id', 'customer_payment_id', 'tax_rate_setting_id', 'deduction_type', 'certificate_type', 'certificate_number', 'certificate_date', 'covered_from', 'covered_to', 'gross_basis', 'rate', 'amount', 'status', 'notes', 'attachment_reference', 'verified_at', 'verified_by', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
+#[Fillable(['customer_id', 'sales_invoice_id', 'customer_payment_id', 'journal_entry_line_id', 'tax_rate_setting_id', 'deduction_type', 'certificate_type', 'certificate_number', 'certificate_date', 'covered_from', 'covered_to', 'gross_basis', 'rate', 'amount', 'status', 'notes', 'attachment_reference', 'verified_at', 'verified_by', 'rejected_at', 'rejected_by', 'rejection_reason', 'voided_at', 'voided_by', 'void_reason', 'created_by', 'updated_by'])]
 class GovernmentDeduction extends Model
 {
     use HasSalesAttachments;
@@ -52,6 +56,30 @@ class GovernmentDeduction extends Model
         return $this->belongsTo(TaxRateSetting::class);
     }
 
+    /** @return BelongsTo<JournalEntryLine, $this> */
+    public function journalEntryLine(): BelongsTo
+    {
+        return $this->belongsTo(JournalEntryLine::class);
+    }
+
+    /** @return HasMany<WithholdingCertificateApplication, $this> */
+    public function applications(): HasMany
+    {
+        return $this->hasMany(WithholdingCertificateApplication::class);
+    }
+
+    /** @return numeric-string */
+    public function appliedAmount(): string
+    {
+        return (string) $this->applications()->sum('amount');
+    }
+
+    /** @return numeric-string */
+    public function remainingAmount(): string
+    {
+        return bcsub($this->amount, $this->appliedAmount(), 4);
+    }
+
     /** @return numeric-string */
     public function netAfterDeduction(): string
     {
@@ -62,6 +90,6 @@ class GovernmentDeduction extends Model
     {
         return ['certificate_date' => 'date', 'covered_from' => 'date', 'covered_to' => 'date', 'gross_basis' => 'decimal:4',
             'rate' => 'decimal:6', 'amount' => 'decimal:4', 'status' => GovernmentDeductionStatus::class,
-            'verified_at' => 'datetime', 'voided_at' => 'datetime'];
+            'verified_at' => 'datetime', 'rejected_at' => 'datetime', 'voided_at' => 'datetime'];
     }
 }

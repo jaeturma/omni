@@ -3,6 +3,7 @@
 @php
     $value = fn (string $field, mixed $default = null) => old($field, $rule?->{$field} ?? $default);
     $requirements = old('attachment_requirements_text', $rule ? implode("\n", $rule->attachment_requirements ?? []) : '');
+    $calculationParameters = old('calculation_parameters_text', $rule?->calculation_parameters ? json_encode($rule->calculation_parameters, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) : '');
 @endphp
 
 <form method="POST" action="{{ $action }}" class="grid gap-5 rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 md:grid-cols-2">
@@ -67,6 +68,11 @@
             @error($field)<span class="text-red-700">{{ $message }}</span>@enderror
         </label>
     @endforeach
+    <label class="flex flex-col gap-1 text-sm font-medium md:col-span-2">Calculation parameters (JSON) — required for structured 1701Q methods
+        <textarea name="calculation_parameters_text" rows="8" class="rounded-lg border border-slate-300 px-3 py-2 font-mono text-xs">{{ $calculationParameters }}</textarea>
+        @error('calculation_parameters_text')<span class="text-red-700">{{ $message }}</span>@enderror
+        @error('calculation_parameters')<span class="text-red-700">{{ $message }}</span>@enderror
+    </label>
     <label class="flex flex-col gap-1 text-sm font-medium">Deadline months after period end
         <input type="number" min="0" max="24" name="deadline_months_after_period_end" value="{{ $value('deadline_months_after_period_end') }}" required class="rounded-lg border border-slate-300 px-3 py-2">
         @error('deadline_months_after_period_end')<span class="text-red-700">{{ $message }}</span>@enderror

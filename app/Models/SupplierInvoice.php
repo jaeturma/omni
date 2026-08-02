@@ -25,6 +25,7 @@ class SupplierInvoice extends Model
 
     protected $attributes = ['gross_purchase_amount' => 0, 'discount_amount' => 0, 'net_purchase_amount' => 0, 'freight_amount' => 0, 'other_charges_amount' => 0, 'withholding_expected_amount' => 0, 'total_payable' => 0, 'paid_amount' => 0, 'balance_due' => 0, 'status' => 'draft'];
 
+    /** @return BelongsTo<Supplier, $this> */
     public function supplier(): BelongsTo
     {
         return $this->belongsTo(Supplier::class);

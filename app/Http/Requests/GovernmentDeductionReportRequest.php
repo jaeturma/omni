@@ -16,7 +16,7 @@ class GovernmentDeductionReportRequest extends FormRequest
     {
         return ['year' => ['required', 'integer', 'between:2000,2100'], 'quarter' => ['nullable', 'integer', 'between:1,4'],
             'customer_id' => ['nullable', 'integer', Rule::exists('customers', 'id')->where('type', 'government')],
-            'status' => ['nullable', Rule::in(['pending', 'received', 'verified', 'voided'])], 'missing_certificate' => ['nullable', 'boolean']];
+            'status' => ['nullable', Rule::in(['pending', 'received', 'verified', 'rejected', 'applied', 'voided'])], 'missing_certificate' => ['nullable', 'boolean']];
     }
 
     protected function prepareForValidation(): void
