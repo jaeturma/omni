@@ -48,6 +48,7 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\PettyCashController;
 use App\Http\Controllers\PhysicalCountController;
 use App\Http\Controllers\PostingRuleController;
+use App\Http\Controllers\PrivacyController;
 use App\Http\Controllers\ProductServiceController;
 use App\Http\Controllers\PurchaseOrderController;
 use App\Http\Controllers\PurchaseRequestController;
@@ -99,6 +100,10 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('audit-logs.show');
     Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
     Route::get('/backup-status', [BackupRunController::class, 'index'])->name('backup-runs.index');
+    Route::get('/privacy', [PrivacyController::class, 'index'])->name('privacy.index');
+    Route::post('/privacy/retention-policies', [PrivacyController::class, 'storePolicy'])->name('privacy.retention-policies.store');
+    Route::post('/privacy/archive/{type}/{id}', [PrivacyController::class, 'archive'])->whereNumber('id')->name('privacy.archive');
+    Route::get('/privacy/data-subjects/export', [PrivacyController::class, 'export'])->name('privacy.data-subjects.export');
     Route::get('/tax-dashboard', [TaxDashboardController::class, 'index'])->name('tax-dashboard.index');
     Route::get('/tax-dashboard/{tax_period}', [TaxDashboardController::class, 'show'])->name('tax-dashboard.show');
     Route::get('/tax-review-pack/{tax_period}/print', [TaxDashboardController::class, 'print'])->name('tax-review-pack.print');

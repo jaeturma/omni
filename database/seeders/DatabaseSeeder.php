@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RolesAndPermissionsSeeder::class);
         $this->call(ChartOfAccountsSeeder::class);
         $this->call(InventoryAdjustmentReasonSeeder::class);
+        $this->call(PrivacyRetentionPolicySeeder::class);
 
         $user = User::factory()->create([
             'name' => 'Test User',

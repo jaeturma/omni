@@ -21,7 +21,13 @@ class CustomerController extends Controller
             ->when($request->filled('type'), fn ($query) => $query->where('type', $request->string('type')))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
             ->orderBy('name')->paginate(25)->withQueryString();
-        $customers->getCollection()->each(fn (Customer $customer) => $customer->setAttribute('tin', SensitiveData::mask($customer->tin, 4, 'No TIN')));
+        if (Gate::denies('sensitive-data.view')) {
+            $customers->getCollection()->each(function (Customer $customer): void {
+                $customer->setAttribute('tin', SensitiveData::mask($customer->tin, 4, 'No TIN'));
+                $customer->setAttribute('email', SensitiveData::email($customer->email, 'No email'));
+                $customer->setAttribute('contact_person', filled($customer->contact_person) ? '[PROTECTED]' : null);
+            });
+        }
 
         return view('customers.index', ['customers' => $customers]);
     }

@@ -20,7 +20,13 @@ class SupplierController extends Controller
             ->when($request->string('search')->isNotEmpty(), fn ($query) => $query->where(fn ($query) => $query->where('code', 'like', '%'.$request->string('search').'%')->orWhere('name', 'like', '%'.$request->string('search').'%')->orWhere('tin', 'like', '%'.$request->string('search').'%')))
             ->when($request->filled('status'), fn ($query) => $query->where('status', $request->string('status')))
             ->orderBy('name')->paginate(25)->withQueryString();
-        $suppliers->getCollection()->each(fn (Supplier $supplier) => $supplier->setAttribute('tin', SensitiveData::mask($supplier->tin, 4, 'No TIN')));
+        if (Gate::denies('sensitive-data.view')) {
+            $suppliers->getCollection()->each(function (Supplier $supplier): void {
+                $supplier->setAttribute('tin', SensitiveData::mask($supplier->tin, 4, 'No TIN'));
+                $supplier->setAttribute('email', SensitiveData::email($supplier->email, 'No email'));
+                $supplier->setAttribute('contact_person', filled($supplier->contact_person) ? '[PROTECTED]' : null);
+            });
+        }
 
         return view('suppliers.index', ['suppliers' => $suppliers]);
     }

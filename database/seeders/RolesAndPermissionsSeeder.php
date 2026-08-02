@@ -40,6 +40,7 @@ class RolesAndPermissionsSeeder extends Seeder
             'users.view', 'users.manage', 'roles.view', 'system-settings.view', 'system-settings.update',
             'audit-logs.view', 'audit-logs.export', 'audit-logs.view-sensitive',
             'backup-runs.view',
+            'privacy-settings.view', 'privacy-settings.manage', 'sensitive-data.view', 'sensitive-data.export', 'records.archive', 'records.dispose',
             'customers.view', 'customers.create', 'customers.update', 'customers.delete',
             'suppliers.view', 'suppliers.create', 'suppliers.update', 'suppliers.delete',
             'units-of-measure.view', 'units-of-measure.create', 'units-of-measure.update', 'units-of-measure.delete',

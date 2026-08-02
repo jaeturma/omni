@@ -4,9 +4,12 @@ namespace App\Policies;
 
 use App\Models\Supplier;
 use App\Models\User;
+use App\Services\RecordProtection;
 
 class SupplierPolicy
 {
+    public function __construct(private readonly RecordProtection $protection) {}
+
     public function viewAny(User $user): bool
     {
         return $user->can('suppliers.view');
@@ -29,7 +32,7 @@ class SupplierPolicy
 
     public function delete(User $user, Supplier $supplier): bool
     {
-        return $user->can('suppliers.delete');
+        return $user->can('suppliers.delete') && ! $this->protection->supplierHasHistory($supplier);
     }
 
     public function restore(User $user, Supplier $supplier): bool

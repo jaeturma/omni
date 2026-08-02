@@ -58,6 +58,9 @@ class AuditLogger
             if (preg_match('/(^|_)(tin|account_number|swift_code)$/i', $key) && filled($value)) {
                 return [$key => Str::mask((string) $value, '*', 0, max(0, Str::length((string) $value) - 4))];
             }
+            if (preg_match('/email|phone|address|contact_person|user_agent/i', $key) && filled($value)) {
+                return [$key => '[PROTECTED]'];
+            }
 
             return [$key => is_array($value) ? $this->redact($value) : $value];
         })->all();
