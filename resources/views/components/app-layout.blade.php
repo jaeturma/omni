@@ -20,6 +20,7 @@
             ['Sequences', 'document-sequences.index', 'document-sequences.view'],
             ['Users', 'users.index', 'users.view'],
             ['Audit Log', 'audit-logs.index', 'audit-logs.view'],
+            ['Backup Status', 'backup-runs.index', 'backup-runs.view'],
             ['Settings', 'system-settings.edit', 'system-settings.view'],
         ],
         'Master Data' => [

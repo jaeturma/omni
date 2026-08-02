@@ -6,6 +6,7 @@ use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\BackupRunController;
 use App\Http\Controllers\BalanceSheetController;
 use App\Http\Controllers\BankController;
 use App\Http\Controllers\BankReconciliationController;
@@ -97,6 +98,7 @@ Route::middleware(['auth', EnsureUserIsActive::class])->group(function () {
     Route::get('/audit-logs/export', [AuditLogController::class, 'export'])->name('audit-logs.export');
     Route::get('/audit-logs/{auditLog}', [AuditLogController::class, 'show'])->name('audit-logs.show');
     Route::get('/audit-logs', [AuditLogController::class, 'index'])->name('audit-logs.index');
+    Route::get('/backup-status', [BackupRunController::class, 'index'])->name('backup-runs.index');
     Route::get('/tax-dashboard', [TaxDashboardController::class, 'index'])->name('tax-dashboard.index');
     Route::get('/tax-dashboard/{tax_period}', [TaxDashboardController::class, 'show'])->name('tax-dashboard.show');
     Route::get('/tax-review-pack/{tax_period}/print', [TaxDashboardController::class, 'print'])->name('tax-review-pack.print');
